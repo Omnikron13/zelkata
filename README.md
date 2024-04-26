@@ -44,5 +44,5 @@ when you were making the notes.
 There is, of course, somewhat more to it than that (or will be, though don't worry; for the *system*, not so much for
 *you*).
 
-For more details, you should review the manual.
+For more details, you should review [The Manual](https://Omnikron13/github.io/Zelkata).
 
