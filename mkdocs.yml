@@ -1,0 +1,37 @@
+# Main config file for generating the manual(S).
+# Primarily will generate online gh-pages with more exhaustive documentation than the bog-standard API docs from e.g.
+# go-doc.
+# Hopefully can also be extended to offline/downloadable formats (HTML, ePub, man file, whatever.)
+
+# Couple of variants for the header I quite like
+site_name: '⧼Zelkata Manual⧽'
+#site_name: '⦗Zelkata Manual⦘'
+
+# Could be github.io URL, or a domain/subdomain of mine?
+site_url: https://Omnikron13.github.io/Zelkata/
+site_author: Joey Sabey
+copyright: Copyright &copy; 2024 Joey Sabey
+
+# Main navigation
+nav:
+   - Introduction: index.md
+   - Specifications: specifications/index.md
+
+# Leverage the impressive feature set of the material theme (though the actual theming needs some work...)
+theme:
+   name: material
+
+   # Disable default font loading from Google fonts - we are going to be using patched Nerd Fonts for now
+   fonts: none
+
+# Pulling in a patched Nerd Font for the icons, at least for now; I think you may be able to just map the symbols?
+extra_css:
+   - assets/stylesheets/ubuntu.css
+#   - assets/stylesheets/arimo.css
+
+# TODO: properly review what we may need
+markdown_extensions:
+ - admonition
+ - pymdownx.details
+ - pymdownx.superfences
+
