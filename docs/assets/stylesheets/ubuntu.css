@@ -1,0 +1,153 @@
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font Mono';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFont-Light.ttf') format('truetype');
+   font-weight: 300;
+   font-style: normal;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font Mono';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFont-LightItalic.ttf') format('truetype');
+   font-weight: 300;
+   font-style: italic;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font Mono';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFont-Regular.ttf') format('truetype');
+   font-weight: 400;
+   font-style: normal;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font Mono';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFont-Italic.ttf') format('truetype');
+   font-weight: 400;
+   font-style: italic;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font Mono';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFont-Condensed.ttf') format('truetype');
+   font-weight: 400;
+   font-style: normal;
+   font-stretch: condensed;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font Mono';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFont-Medium.ttf') format('truetype');
+   font-weight: 500;
+   font-style: normal;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font Mono';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFont-MediumItalic.ttf') format('truetype');
+   font-weight: 500;
+   font-style: italic;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font Mono';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFont-Bold.ttf') format('truetype');
+   font-weight: 700;
+   font-style: normal;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font Mono';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFont-BoldItalic.ttf') format('truetype');
+   font-weight: 700;
+   font-style: italic;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFontPropo-Light.ttf') format('truetype');
+   font-weight: 300;
+   font-style: normal;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFontPropo-LightItalic.ttf') format('truetype');
+   font-weight: 300;
+   font-style: italic;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFontPropo-Regular.ttf') format('truetype');
+   font-weight: 400;
+   font-style: normal;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFontPropo-Italic.ttf') format('truetype');
+   font-weight: 400;
+   font-style: italic;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFontPropo-Condensed.ttf') format('truetype');
+   font-weight: 400;
+   font-style: normal;
+   font-stretch: condensed;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFontPropo-Medium.ttf') format('truetype');
+   font-weight: 500;
+   font-style: normal;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFontPropo-MediumItalic.ttf') format('truetype');
+   font-weight: 500;
+   font-style: italic;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFontPropo-Bold.ttf') format('truetype');
+   font-weight: 700;
+   font-style: normal;
+}
+
+@font-face {
+   font-family: 'Ubuntu Nerd Font';
+   src:
+      url('../fonts/Ubuntu/UbuntuNerdFontPropo-BoldItalic.ttf') format('truetype');
+   font-weight: 700;
+   font-style: italic;
+}
+
+
+:root {
+   --md-text-font: "Ubuntu Nerd Font";
+   --md-code-font: "Ubuntu Nerd Font Mono";
+}
+

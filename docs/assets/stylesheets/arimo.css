@@ -1,0 +1,72 @@
+
+@font-face {
+   font-family: 'Arimo Nerd Font Mono';
+   src:
+      url(../fonts/Arimo/ArimoNerdFont-Regular.ttf) format('truetype');
+   font-weight: normal;
+   font-style: normal;
+}
+
+@font-face {
+   font-family: 'Arimo Nerd Font Mono';
+   src:
+      url(../fonts/Arimo/ArimoNerdFont-Bold.ttf) format('truetype');
+   font-weight: bold;
+   font-style: normal;
+}
+
+@font-face {
+   font-family: 'Arimo Nerd Font Mono';
+   src:
+      url(../fonts/Arimo/ArimoNerdFont-Italic.ttf) format('truetype');
+   font-weight: normal;
+   font-style: italic;
+}
+
+@font-face {
+   font-family: 'Arimo Nerd Font Mono'; 
+   src:
+      url(../fonts/Arimo/ArimoNerdFont-BoldItalic.ttf) format('truetype');
+   font-weight: bold;
+   font-style: italic;
+}
+
+@font-face {
+   font-family: 'Arimo Nerd Font';
+   src:
+      url(../fonts/Arimo/ArimoNerdFontPropo-Regular.ttf) format('truetype');
+   font-weight: normal;
+   font-weight: 300;
+   font-style: normal;
+}
+
+@font-face {
+   font-family: 'Arimo Nerd Font';
+   src:
+      url(../fonts/Arimo/ArimoNerdFontPropo-Bold.ttf) format('truetype');
+   font-weight: bold;
+   font-style: normal;
+}
+
+@font-face {
+   font-family: 'Arimo Nerd Font';
+   src:
+      url(../fonts/Arimo/ArimoNerdFontPropo-Italic.ttf) format('truetype');
+   font-weight: normal;
+   font-style: italic;
+}
+
+@font-face {
+   font-family: 'Arimo Nerd Font';
+   src:
+      url(../fonts/Arimo/ArimoNerdFontPropo-BoldItalic.ttf) format('truetype');
+   font-weight: bold;
+   font-style: italic;
+}
+
+
+:root {
+   --md-text-font: "Arimo Nerd Font";
+   --md-code-font: "Arimo Nerd Font Mono";
+}
+
