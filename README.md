@@ -1,4 +1,4 @@
-󰭷  Zelkata 🥬
+󰭷 Zelkata 🥬
 ============
 
 Zelkata is, or ultimately aims to be, a tool (or perhaps more accurately tool-box, or even tool-*shed*) for
@@ -10,6 +10,7 @@ emergent property 🥬🫨🥬.
 
 On the other hand, it may utterly clash with with the way your brain naturally prefers to process information, or that
  you have tirelessly trained yourself to think and work in a very different way 🤨.
+
 
 ## 󰿀 Etymology 🫎
 
