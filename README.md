@@ -1,7 +1,7 @@
 🗃️ Zelkata 🥬
 ============
 
-Zelkata is, or ultimately aims to be, a tool (or perhaps more accurately tool-box, or even tool-*shed*) for
+_Zelkata_ is, or ultimately aims to be, a tool (or perhaps more accurately tool-box, or even tool-*shed*) for
 note-taking, inspiration provoking, project visualisation, development, and refinement.
 
 Getting started should seem dubiously easy and simplistic 🤔, improving your confidence and productivity should prove
