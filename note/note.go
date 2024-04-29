@@ -43,7 +43,6 @@ func New(body string) Note {
 func (n Note) Write(p []byte) (int, error) {
    // TODO
    panic("Unimplemented!")
-   //return 0, nil
 }
 
 
