@@ -1,7 +1,7 @@
 // This main package, which builds a 'zelkata' binary, will serve as a simple CLI entry point for creatuing, curating,
 // querying, and generally _using_ the Zelkata system. The urfave/cli package seems to quite nicely supply all the
 // tools I need to not get bogged down in CLI work., and I can focus on the core functionality of the system itself.
-package main 
+package main
 
 import (
    "context"
