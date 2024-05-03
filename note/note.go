@@ -3,6 +3,9 @@ package note
 
 import (
    _"io"
+   "bytes"
+
+   "gopkg.in/yaml.v3"
 )
 
 // TOTO: split out some of this waffle into the package docstring, and probably workshop some if it into the manual...
@@ -36,5 +39,20 @@ type Note struct {
 // automated processes to be able to create notes with a body already in place.
 func New(body string) Note {
    return Note{NewMeta(), body}
+}
+
+
+// GenFile generates a byte slice representing the on-disk representation of the note.
+func (n *Note) GenFile() []byte {
+   var b bytes.Buffer
+   b.WriteString("---\n")
+   yml, err := yaml.Marshal(n.Meta)
+   if err != nil {
+      panic(err)
+   }
+   b.Write(yml)
+   b.WriteString("...\n")
+   b.WriteString(n.Body)
+   return b.Bytes()
 }
 
