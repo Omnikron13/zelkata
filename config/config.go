@@ -3,43 +3,34 @@ package config
 import (
    "io/fs"
    "os"
+   "path/filepath"
    "slices"
 
    "github.com/adrg/xdg"
 )
 
 
-// TODO: refactor this monstrosity so it isn't reusing quite as disgusting amount of code...
+// findYAMLFiles finds YAML files in the XDG configuration directories.
 func findYAMLFiles() (yamlFiles []string) {
    for _, dir := range append(xdg.ConfigDirs, xdg.ConfigHome) {
-      configDir := os.DirFS(dir + "/zelkata")
-      println("looking in", dir + "/zelkata", configDir, "for YAML files")
-      if f, err := fs.Glob(configDir, "*.yml"); f != nil && err == nil {
-         for i := range f {
-            yamlFiles = append(yamlFiles, dir + "/zelkata/" + f[i])
-         }
-      }
-      if f, err := fs.Glob(configDir, "*.yaml"); f != nil && err == nil {
-         for i := range f {
-            yamlFiles = append(yamlFiles, dir + "/zelkata/" + f[i])
-         }
-      }
-
-      conf_d := []string{}
-      if f, err := fs.Glob(configDir, "\\conf.d/*.yml"); f != nil && err == nil {
-         for i := range f {
-            conf_d = append(conf_d, dir + "/zelkata/" + f[i])
-         }
-      }
-      if f, err := fs.Glob(configDir, "\\conf.d/*.yaml"); f != nil && err == nil {
-         for i := range f {
-            conf_d = append(conf_d, dir + "/zelkata/" + f[i])
-         }
-      }
-
-      slices.Sort(conf_d)
-      yamlFiles = append(yamlFiles, conf_d...)
+      yamlFiles = append(yamlFiles, findYAMLFilesIn(filepath.Join(dir, "zelkata"))...)
+      yamlFiles = append(yamlFiles, findYAMLFilesIn(filepath.Join(dir, "zelkata", "conf.d"))...)
    }
+   return
+}
+
+
+// findYAMLFilesIn finds YAML files in the specified directory.
+func findYAMLFilesIn(dir string) (yamlFiles []string) {
+   configDir := os.DirFS(dir)
+   for _, glob := range []string{"*.yml", "*.yaml"} {
+      if f, err := fs.Glob(configDir, glob); f != nil && err == nil {
+         for i := range f {
+            yamlFiles = append(yamlFiles, filepath.Join(dir, f[i]))
+         }
+      }
+   }
+   slices.Sort(yamlFiles)
    return
 }
 
