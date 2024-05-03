@@ -48,6 +48,7 @@ func (n *Note) GenFile() []byte {
    b.WriteString("---\n")
    yml, err := yaml.Marshal(n.Meta)
    if err != nil {
+      // TODO: rework this to more idiomatic Go error handling
       panic(err)
    }
    b.Write(yml)
