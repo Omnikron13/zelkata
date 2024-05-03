@@ -7,6 +7,7 @@
 *.dll
 *.so
 *.dylib
+zelkata
 
 # Test binary, built with `go test -c`
 *.test
