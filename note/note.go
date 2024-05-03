@@ -45,7 +45,9 @@ func New(body string) Note {
 // GenFile generates a byte slice representing the on-disk representation of the note.
 func (n *Note) GenFile() []byte {
    var b bytes.Buffer
-   b.WriteString("---\n")
+   // NOTE: the double newline after the front matter is intentional, as it provents `glow` from rendering the front
+   // matter as part of a line 1 headering in the rendered markdown.
+   b.WriteString("---\n\n")
    yml, err := yaml.Marshal(n.Meta)
    if err != nil {
       // TODO: rework this to more idiomatic Go error handling
