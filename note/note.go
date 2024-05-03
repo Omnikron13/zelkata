@@ -38,12 +38,3 @@ func New(body string) Note {
    return Note{NewMeta(), body}
 }
 
-
-// Write implements the io.Writer interface, allowing a Note to be written to a file (or elsewhere, theoretically).
-func (n Note) Write(p []byte) (int, error) {
-   // TODO
-   panic("Unimplemented!")
-}
-
-
-// TODO: fill out this utter stub o stud/interface/
