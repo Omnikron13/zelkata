@@ -21,6 +21,15 @@ func main() {
    cmd:= &cli.Command{
       Name:  "Zelkata",
       Usage: "add notes and stuff",
+
+      Commands: []*cli.Command{
+         {
+            Name: "add",
+            Aliases: []string{"a"},
+            Usage: "add a note",
+            Action: addCmd,
+         },
+      },
    }
 
    cmd.Run(context.Background(), os.Args)
