@@ -7,6 +7,7 @@ import (
    "time"
 
    "github.com/google/uuid"
+   "gopkg.in/yaml.v3"
 )
 
 
@@ -38,7 +39,7 @@ type Meta struct {
    // Modified is the date & time the note was last modified. It is optional as a lot of notes will likely never be
    // modified, and if Zelkata is set up to use Git (or other possible VCS) then changes will be tracked there.
    // Assuming it does actually get used, it maybe should be replaced with a slice?
-   Modified *string
+   Modified *string `yaml:"modified,omitempty"`
 
    // Refs are a secondary layer of of hyperlinking that can be necessary in some cases. They are entirely optional for
    // most notes, but can be crucial for some. They can be URLs pointing to related information or resources. They
@@ -47,16 +48,16 @@ type Meta struct {
    //
    // This basic key:value map is very likely to just serve as a placeholder until a more robust and powerful system
    // is implemented.
-   Refs *map[string]string
+   Refs *map[string]string `yaml:"refs,omitempty"`
 
    // Format can be used to store the format of the note, e.g. MarkDown, AsciiDoc, etc. if it can't be inferred from
    // the note itself, user configuration, or file extension hints.
-   Format *string
+   Format *string `yaml:"format,omitempty"`
 
    // Title could very well be nil, as the note itself is likely to be in a markup format allowing a title there.
    // The fact this is an option raises a point of caution in that duplication (or worse inconsistency) could arise.
    // Plain text notes (etc?) _might_ want an explicit title though?
-   Title *string
+   Title *string `yaml:"title,omitempty"`
 }
 
 
@@ -94,5 +95,16 @@ func (m *Meta) GenFileName() string {
    // TODO: add config (&default?) for encoding the UUID to a more concise form
    // TODO: add config for file extension? Also probably depend on what the actual Note is told the format is.
    return fmt.Sprintf("%s.%s.%s.md", m.Created.Format(time.DateOnly), m.Created.Format("15-04"), m.base32UUID())
+}
+
+
+// GenYAML generates the YAML front matter for a note based on the Meta data.
+// TODO: remove this? it doesn'r seem to actually be necessary to wrap yaml.Marshal()
+func (m *Meta) GenYAML() []byte {
+   b, err := yaml.Marshal(m)
+   if err != nil {
+      panic(err)
+   }
+   return b
 }
 
