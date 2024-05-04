@@ -1,0 +1,116 @@
+/*
+ * Catpuccino Macchiato color scheme draft.
+ * There are seemingly interesting differences in design between the two color scheme formats, so a fair amoutn of
+ * tweaking and testing seems to be required to produce pleasant results.
+ */
+/* TODO: seriously rework this if/when SASS pre-processing is integrated */
+[data-md-color-scheme="catpuccin-macchiato"] {
+   /* Catpuccin-Macchiato palette */
+   --catpuccin-rosewater: #f4dbd6;
+   --catpuccin-flamingo:  #f0c6c6;
+   --catpuccin-pink:      #f5bde6;
+   --catpuccin-mauve:     #c6a0f6;
+   --catpuccin-red:       #ed8796;
+   --catpuccin-maroon:    #ee99a0;
+   --catpuccin-peach:     #f5a97f;
+   --catpuccin-yellow:    #eed49f;
+   --catpuccin-green:     #a6da95;
+   --catpuccin-teal:      #8bd5ca;
+   --catpuccin-sky:       #91d7e3;
+   --catpuccin-sapphire:  #7dc4e4;
+   --catpuccin-blue:      #8aadf4;
+   --catpuccin-lavender:  #b7bdf8;
+   --catpuccin-text:      #cad3f5;
+   --catpuccin-subtext-1: #b8c0e0;
+   --catpuccin-subtext-0: #a5adcb;
+   --catpuccin-overlay-2: #939ab7;
+   --catpuccin-overlay-1: #8087a2;
+   --catpuccin-overlay-0: #6e738d;
+   --catpuccin-surface-2: #5b6078;
+   --catpuccin-surface-1: #494d64;
+   --catpuccin-surface-0: #363a4f;
+   --catpuccin-base:      #24273a;
+   --catpuccin-mantle:    #1e2030;
+   --catpuccin-crust:     #181926;
+
+   /* Default color shades */
+   --md-default-fg-color:           var(--catpuccin-text);
+   --md-default-fg-color--light:    var(--catpuccin-teal);
+   --md-default-fg-color--lighter:  var(--catpuccin-peach);
+   --md-default-fg-color--lightest: var(--catpuccin-maroon);
+   --md-default-bg-color:           var(--catpuccin-base);
+   --md-default-bg-color--light:    var(--catpuccin-surface-0);
+   --md-default-bg-color--lighter:  var(--catpuccin-surface-1);
+   --md-default-bg-color--lightest: var(--catpuccin-surface-2);
+
+   /* --md-primary-fg-color: var(--catpuccin-blue); */
+   --md-primary-fg-color: var(--catpuccin-surface-2);
+   --md-accent-fg-color:  var(--catpuccin-mauve);
+
+   /*
+    * Main text/typesetting colours
+    */
+   --md-typeset-color:   var(--md-default-fg-color);
+   /* Links */
+   --md-typeset-a-color: var(--catpuccin-blue);
+   /* Typeset `del` and `ins` color shades */
+   /*
+   --md-typeset-del-color:              hsla(6, 90%, 60%, 0.15);
+   --md-typeset-ins-color:              hsla(150, 90%, 44%, 0.15);
+   */
+   /* Typeset `kbd` color shades */
+   /*
+   --md-typeset-kbd-color:              hsla(0, 0%, 98%, 1);
+   --md-typeset-kbd-accent-color:       hsla(0, 100%, 100%, 1);
+   --md-typeset-kbd-border-color:       hsla(0, 0%, 72%, 1);
+   */
+   /* Typeset `mark` color shades */
+   /*
+   --md-typeset-mark-color:             hsla(#{hex2hsl($clr-yellow-a200)}, 0.5);
+   */
+   /* Typeset `table` color shades */
+   /*
+   --md-typeset-table-color:            hsla(0, 0%, 0%, 0.12);
+   --md-typeset-table-color--light:     hsla(0, 0%, 0%, 0.035);
+   */
+
+
+   /* Admonition color shades */
+   --md-admonition-fg-color: var(--catpuccin-blue);
+   --md-admonition-bg-color: var(--catpuccin-surface-0);
+
+   /* Warning color shades */
+   --md-warning-fg-color: var(--catpuccin-red);
+   --md-warning-bg-color: hsla(60, 100%, 80%, 1);
+
+  /* Footer color shades */
+  --md-footer-fg-color:          var(--catpuccin-subtext-0);
+  --md-footer-fg-color--light:   var(--catpuccin-subtext-1);
+  --md-footer-fg-color--lighter: var(--catpuccin-text);
+  --md-footer-bg-color:          var(--catpuccin-mantle);
+  --md-footer-bg-color--dark:    var(--catpuccin-crust);
+
+  /*
+   * Syntax highlighting color shades
+   */
+  /* Code color shades */
+  --md-code-fg-color:                  var(--catpuccin-subtext-1);
+  --md-code-bg-color:                  var(--catpuccin-surface-0);
+  /* Code highlighting color shades */
+  --md-code-hl-color:                  hsla(#{hex2hsl($clr-blue-a200)}, 1);
+  --md-code-hl-color--light:           hsla(#{hex2hsl($clr-blue-a200)}, 0.1);
+  /* Code highlighting syntax color shades */
+  --md-code-hl-number-color:           var(--catpuccin-peach);
+  --md-code-hl-special-color:          hsla(340, 83%, 47%, 1);
+  --md-code-hl-function-color:         var(--catpuccin-mauve);
+  --md-code-hl-constant-color:         hsla(250, 63%, 60%, 1);
+  --md-code-hl-keyword-color:          hsla(219, 54%, 51%, 1);
+  --md-code-hl-string-color:           hsla(150, 63%, 30%, 1);
+  --md-code-hl-name-color:             var(--md-code-fg-color);
+  --md-code-hl-operator-color:         var(--md-default-fg-color--light);
+  --md-code-hl-punctuation-color:      var(--md-default-fg-color--light);
+  --md-code-hl-comment-color:          var(--catpuccin-lavender);
+  --md-code-hl-generic-color:          var(--md-default-fg-color--light);
+  --md-code-hl-variable-color:         var(--md-default-fg-color--light);
+}
+
