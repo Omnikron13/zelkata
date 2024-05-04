@@ -1,6 +1,7 @@
 package config
 
 import (
+   _ "embed"
    "io/fs"
    "os"
    "path/filepath"
@@ -8,6 +9,16 @@ import (
 
    "github.com/adrg/xdg"
 )
+
+// defaultConfig holds the default configuration values for Zelkata.
+// Embedding it directly into the binary makes it easy to maintain a canonical DRY version of the entire default
+// configuration. This allows devs to view and maintain the default configuration from a central location in a format
+// which can be extensively commented/documented inline, which should lead to greater consistency, prevent redundancy,
+// reduce maintenance burden, and make it easier to understand the system as a whole.
+// Additionally, always-correct default values can be accessed at runtime, for e.g. outputting a complete commented
+// config template, dynamically outputting help text for config options, etc.
+//go:embed defaults.yaml
+var defaultConfig []byte
 
 
 // findYAMLFiles finds YAML files in the XDG configuration directories.
