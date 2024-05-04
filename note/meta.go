@@ -7,7 +7,6 @@ import (
    "time"
 
    "github.com/google/uuid"
-   "gopkg.in/yaml.v3"
 )
 
 
@@ -95,16 +94,5 @@ func (m *Meta) GenFileName() string {
    // TODO: add config (&default?) for encoding the UUID to a more concise form
    // TODO: add config for file extension? Also probably depend on what the actual Note is told the format is.
    return fmt.Sprintf("%s.%s.%s.md", m.Created.Format(time.DateOnly), m.Created.Format("15-04"), m.base32UUID())
-}
-
-
-// GenYAML generates the YAML front matter for a note based on the Meta data.
-// TODO: remove this? it doesn'r seem to actually be necessary to wrap yaml.Marshal()
-func (m *Meta) GenYAML() []byte {
-   b, err := yaml.Marshal(m)
-   if err != nil {
-      panic(err)
-   }
-   return b
 }
 
