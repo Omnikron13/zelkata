@@ -27,6 +27,6 @@ func Test_findYAMLFilesIn(t *testing.T) {
    for _, f := range findYAMLFilesIn(filepath.Join(configPath, "conf.d")) {
       yamlFiles = append(yamlFiles, filepath.Base(f))
    }
-   assert.Equal(t, []string{"config_a.yaml", "config_b.yml", "00_conf.yaml", "01_conf.yml"}, yamlFiles)
+   assert.Equal(t, []string{"config_e.yaml", "config_f.yml", "04_conf.yaml", "05_conf.yml"}, yamlFiles)
 }
 
