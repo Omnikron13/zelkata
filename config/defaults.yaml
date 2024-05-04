@@ -1,0 +1,24 @@
+data-directory: "$XDG_DATA_HOME/zelkata"
+notes:
+   metadata:
+      id:
+         type: UUIDv4
+         encode:
+            format: base32
+            charset: StdEncoding
+            padding: false
+   data:
+      format:
+         name: MarkDown
+         flavour: original
+   filenames:
+      prefix: 
+         date: true
+         time: true
+      uuid:
+         encode:
+            format: base32
+            charset: StdEncoding
+            padding: false
+      suffix:
+         extension: md
