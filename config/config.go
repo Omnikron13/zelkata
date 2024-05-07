@@ -35,6 +35,25 @@ type Config struct {
 }
 
 
+// Init initialises the config by reading the config file hierarchy from all the applicable YAML files which can
+// be found. At the bottom of the hierarchy the embedded default config is inserted.
+func Init() (*Config, error) {
+   // TODO: consider inverting the order of the filesData slice so the default config is at the end of the hierarchy,
+   //       and the hierarchy is read from most important to least important.
+   filesData := [][]byte{defaultConfig}
+
+   for _, yamlFile := range findYAMLFiles() {
+      data, err := os.ReadFile(yamlFile)
+      if err != nil {
+         return nil, err
+      }
+      filesData = append(filesData, data)
+   }
+
+   return &Config{filesData: filesData}, nil
+}
+
+
 // findYAMLFiles finds YAML files in the XDG configuration directories.
 func findYAMLFiles() (yamlFiles []string) {
    for _, dir := range append(xdg.ConfigDirs, xdg.ConfigHome) {
