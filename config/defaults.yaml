@@ -1,3 +1,11 @@
+# This is a complete configuration file for every configurable value in Zelkata.
+# It is statically embedded into the binary at build time, and so is canonical and the values are always correct for
+# a given build of Zelkata.
+# As such, it is very suitable to use as a reference/template when writing your own configuration files.
+# Every effort is made to document and explain the purpose and options for each value in the comments throughout, but
+# please feel free to report any outright errors, or simply request clearer explanations, on the issue tracker on the
+# project's GitHub page: https://github.com/omnikron13/zelkata/issues
+#
 data-directory: "$XDG_DATA_HOME/zelkata"
 notes:
    metadata:
