@@ -3,11 +3,13 @@ package config
 import (
    _ "embed"
    "io/fs"
+   "maps"
    "os"
    "path/filepath"
    "slices"
 
    "github.com/adrg/xdg"
+   "gopkg.in/yaml.v3"
 )
 
 // defaultConfig holds the default configuration values for Zelkata.
@@ -51,6 +53,34 @@ func Init() (*Config, error) {
    }
 
    return &Config{filesData: filesData}, nil
+}
+
+
+// unmarshalNext unmarshals the next YAML document from the byte slice and integrates it with the existing config data.
+// It operates top-down, effectively lazy-loading the config data.
+func (c *Config) unmarshalNext() error {
+   if len(c.filesData) == 0 {
+      // TODO: check if the slice is wasting memory by not being truncated, and free it up if so?
+      // Returning nil because it's irrelevant if there's no more data to unmarshal.
+      return nil
+   }
+
+   // Generic container for unmarshalled YAML data. Might be better to define a struct for this, but I think it's ok
+   // for the time being...
+   yml := map[string]any{}
+
+   last := len(c.filesData) - 1
+   if err := yaml.Unmarshal(c.filesData[last], &yml); err != nil {
+      return err
+   }
+   c.filesData = c.filesData[:last]
+
+   // TODO: check that this easy approach to merging doesn't become a problem with arrays (which I presume to be the
+   //       most likely source of probably undesirable behaviour)
+   maps.Copy(yml, c.yamlData)
+   c.yamlData = yml
+
+   return nil
 }
 
 
