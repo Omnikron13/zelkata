@@ -21,6 +21,20 @@ import (
 var defaultConfig []byte
 
 
+// TODO: probably flatten this out and not bother with an actual struct? Otherwise probably need to make it a singleton
+//       anyway to keep things DRY. (alternatively, a Config struct could be a full typed model of the config?)
+type Config struct {
+   // TODO: replace with a proper stack data structure
+   // filesData holds the configuration data from the YAML files, read into raw byte slices as essentially a 'snapshot'
+   // of the config file hierarchy on initialisation.
+   filesData [][]byte
+
+   // yamlData is a (currently) generic container for unmarshalled YAML data, which should be merged in order into it
+   // as the actual config values are needed.
+   yamlData map[string]any
+}
+
+
 // findYAMLFiles finds YAML files in the XDG configuration directories.
 func findYAMLFiles() (yamlFiles []string) {
    for _, dir := range append(xdg.ConfigDirs, xdg.ConfigHome) {
