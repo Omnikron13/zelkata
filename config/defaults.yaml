@@ -12,7 +12,7 @@ notes:
          name: MarkDown
          flavour: original
    filenames:
-      prefix: 
+      prefix:
          date: true
          time: true
       uuid:
