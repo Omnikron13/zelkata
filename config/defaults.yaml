@@ -5,12 +5,28 @@
 # Every effort is made to document and explain the purpose and options for each value in the comments throughout, but
 # please feel free to report any outright errors, or simply request clearer explanations, on the issue tracker on the
 # project's GitHub page: https://github.com/omnikron13/zelkata/issues
-#
+
+# DataDirectory is a pretty self-explanatory top-level option; where should Zelkata read and write its data to?
 data-directory: "$XDG_DATA_HOME/zelkata"
+
+# Notes is the first of the real core sections of the config file.
+#       It can be used to specify the nuts & bolts of note file, such as the file formats, file naming scheme, etc.
 notes:
+
+   # Metadata is the first of three subsections under Notes, dealing with details of the YAML frontmatter.
    metadata:
+
+      # ID is the only real hard required field in the frontmatter.
+      #    This section defines how it is generated, processed, and stored.
       id:
+
+         # Type specifies the type of ID to generate. It is _imperative_ that collisions are avoided in note IDs, so
+         #      the default is to simply use a UUID, as they are 'known good' for robustly ensuring uniqueness.
+         #      UUIDv4 is the current recommended version, though UUIDv7 is a reasonable choice, if you are not
+         #      concerned by the fact its standardisation is ongoing.
          type: UUIDv4
+
+         # Encode controls how the IO is stored on-disk, given the default form of a UUID is rather long,
          encode:
             format: base32
             charset: StdEncoding
