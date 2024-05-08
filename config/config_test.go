@@ -19,65 +19,64 @@ func Test_defaultConfig(t *testing.T) {
 
 func Test_unmarshalNext(t *testing.T) {
    // TODO: populate file(s) in the testdata directory and test the merging of multiple files
-   c := Config{filesData: [][]byte{defaultConfig}}
-   err := c.unmarshalNext()
+   filesData = [][]byte{defaultConfig}
+   err := unmarshalNext()
    assert.Nil(t, err)
    // Ensure nothing strange happens if called with no more data
-   err = c.unmarshalNext()
+   err = unmarshalNext()
    assert.Nil(t, err)
    // This is the most basic test possible, but it is at least a sanity check...
-   assert.NotEmpty(t, c.yamlData)
+   assert.NotEmpty(t, configValues)
    // TODO: try and implement a clean & maintainable way to much more robustly test this
-   assert.Equal(t, "$XDG_DATA_HOME/zelkata", c.yamlData["data-directory"])
+   assert.Equal(t, "$XDG_DATA_HOME/zelkata", configValues["data-directory"])
 }
 
 
 func Test_Get(t *testing.T) {
-   c := Config{filesData: [][]byte{defaultConfig}}
-   if err := c.unmarshalNext(); err != nil {
-      t.Skipf("Error initialising Config instance to test: %v", err)
+   filesData = [][]byte{defaultConfig}
+   if err := unmarshalNext(); err != nil {
+      t.Skipf("Error initialising config instance to test: %v", err)
    }
 
-   if c.yamlData == nil {
-      t.Skip("Config instance inexplicably has no data to test")
+   if configValues == nil {
+      t.Skip("config instance inexplicably has no data to test")
    }
 
    t.Run("flat", func(t *testing.T) {
-      v, err := Get[string](&c, "data-directory")
+      v, err := Get[string]( "data-directory")
       assert.Nil(t, err)
       assert.Equal(t, "$XDG_DATA_HOME/zelkata", v)
    })
 
    t.Run("nested", func(t *testing.T) {
-      v, err := Get[string](&c, "notes.metadata.id.type")
+      v, err := Get[string]( "notes.metadata.id.type")
       assert.Nil(t, err)
       assert.Equal(t, "UUIDv4", v)
    })
 
    t.Run("type mismatch", func(t *testing.T) {
-      v, err := Get[string](&c, "notes.metadata.id.encode.padding")
+      v, err := Get[string]("notes.metadata.id.encode.padding")
       assert.NotNil(t, err)
       assert.Equal(t, "", v)
       t.Logf("Error (expected): %v", err)
    })
 
    t.Run("non-existent key flat", func(t *testing.T) {
-      unobtanium, err := Get[string](&c, "unobtanium")
+      unobtanium, err := Get[string]("unobtanium")
       assert.NotNil(t, err)
       assert.Equal(t, "", unobtanium)
       t.Logf("Error (expected): %v", err)
    })
 
    t.Run("non-existent key nested", func(t *testing.T) {
-      eludium, err := Get[string](&c, "note.metadata.id.encode.eludium")
+      eludium, err := Get[string]("note.metadata.id.encode.eludium")
       assert.NotNil(t, err)
       assert.Equal(t, "", eludium)
       t.Logf("Error (expected): %v", err)
    })
 
    t.Run("trigger unmarshal", func(t *testing.T) {
-      c := Config{filesData: [][]byte{defaultConfig}}
-      v, err := Get[string](&c, "data-directory")
+      v, err := Get[string]("data-directory")
       assert.Nil(t, err)
       assert.Equal(t, "$XDG_DATA_HOME/zelkata", v)
    })

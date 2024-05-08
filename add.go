@@ -18,17 +18,7 @@ import (
 )
 
 
-var conf *config.Config
-
-
 func addCmd(ctx context.Context, cmd *cli.Command) error {
-   // Initialise the config hierarchy
-   var err error
-   conf, err = config.Init()
-   if err != nil {
-      panic(err)
-   }
-
    // TODO: default to a bubbletea(bubbles) TextArea, with a hotkey to launch a full editor?
    // This sets up launching an external editor to write the note body, which is temporarily stored in a state file,
    // which potentially also acts as a draft file if the user saves while editing but the add process is interrupted.
@@ -70,7 +60,7 @@ func addCmd(ctx context.Context, cmd *cli.Command) error {
 
    // TODO: add a paths module, I think, as we really don't want to be repeating this song and dance all over the place
    // Get the path to the notes directory.
-   path, err := config.Get[string](conf, "data-directory")
+   path, err := config.Get[string]("data-directory")
    if err != nil {
       panic(err)
    }

@@ -25,40 +25,34 @@ import (
 var defaultConfig []byte
 
 
-// TODO: probably flatten this out and not bother with an actual struct? Otherwise probably need to make it a singleton
-//       anyway to keep things DRY. (alternatively, a Config struct could be a full typed model of the config?)
-type Config struct {
-   // TODO: replace with a proper stack data structure
-   // filesData holds the configuration data from the YAML files, read into raw byte slices as essentially a 'snapshot'
-   // of the config file hierarchy on initialisation.
-   filesData [][]byte
+// TODO: replace with a proper stack data structure
+// filesData holds the configuration data from the YAML files, read into raw byte slices as essentially a 'snapshot'
+// of the config file hierarchy on initialisation.
+var filesData [][]byte
 
-   // yamlData is a (currently) generic container for unmarshalled YAML data, which should be merged in order into it
-   // as the actual config values are needed.
-   yamlData map[string]any
-}
+// configValues is a (currently) generic container for unmarshalled YAML data, which should be merged in order into it
+// as the actual config values are needed.
+var configValues = map[string]any{}
 
 
-// Init initialises the config by reading the config file hierarchy from all the applicable YAML files which can
+// init initialises the config by reading the config file hierarchy from all the applicable YAML files which can
 // be found. At the bottom of the hierarchy the embedded default config is inserted.
-func Init() (*Config, error) {
+func init() {
    // TODO: consider inverting the order of the filesData slice so the default config is at the end of the hierarchy,
    //       and the hierarchy is read from most important to least important.
-   filesData := [][]byte{defaultConfig}
+   filesData = [][]byte{defaultConfig}
 
    for _, yamlFile := range findYAMLFiles() {
       data, err := os.ReadFile(yamlFile)
       if err != nil {
-         return nil, err
+         panic(err)
       }
       filesData = append(filesData, data)
    }
-
-   return &Config{filesData: filesData}, nil
 }
 
 
-func Get[T any](c *Config, key string) (v T, err error) {
+func Get[T any](key string) (v T, err error) {
    defer func() {
       if r := recover(); r != nil {
          err = r.(error)
@@ -72,11 +66,11 @@ func Get[T any](c *Config, key string) (v T, err error) {
          if v, ok := (*m)[key].(T); ok {
             return v
          }
-         if len(c.filesData) == 0 {
+         if len(filesData) == 0 {
             // TODO: Define custom error types? Is this really worth it in Go?
             panic(errors.New("key not found"))
          }
-         if err := c.unmarshalNext(); err != nil {
+         if err := unmarshalNext(); err != nil {
             panic(err)
          }
          return walk(m, key)
@@ -88,7 +82,7 @@ func Get[T any](c *Config, key string) (v T, err error) {
       return walk(&n, key[i+1:])
    }
 
-   v = walk(&c.yamlData, key)
+   v = walk(&configValues, key)
 
    return
 }
@@ -96,8 +90,8 @@ func Get[T any](c *Config, key string) (v T, err error) {
 
 // unmarshalNext unmarshals the next YAML document from the byte slice and integrates it with the existing config data.
 // It operates top-down, effectively lazy-loading the config data.
-func (c *Config) unmarshalNext() error {
-   if len(c.filesData) == 0 {
+func unmarshalNext() error {
+   if len(filesData) == 0 {
       // TODO: check if the slice is wasting memory by not being truncated, and free it up if so?
       // Returning nil because it's irrelevant if there's no more data to unmarshal.
       return nil
@@ -107,16 +101,15 @@ func (c *Config) unmarshalNext() error {
    // for the time being...
    yml := map[string]any{}
 
-   last := len(c.filesData) - 1
-   if err := yaml.Unmarshal(c.filesData[last], &yml); err != nil {
+   last := len(filesData) - 1
+   if err := yaml.Unmarshal(filesData[last], &yml); err != nil {
       return err
    }
-   c.filesData = c.filesData[:last]
+   filesData = filesData[:last]
 
    // TODO: check that this easy approach to merging doesn't become a problem with arrays (which I presume to be the
    //       most likely source of probably undesirable behaviour)
-   maps.Copy(yml, c.yamlData)
-   c.yamlData = yml
+   maps.Copy(configValues, yml)
 
    return nil
 }
