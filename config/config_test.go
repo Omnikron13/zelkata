@@ -61,14 +61,14 @@ func Test_Get(t *testing.T) {
       t.Logf("Error (expected): %v", err)
    })
 
-   t.Run("non-existant key flat", func(t *testing.T) {
+   t.Run("non-existent key flat", func(t *testing.T) {
       unobtanium, err := Get[string](&c, "unobtanium")
       assert.NotNil(t, err)
       assert.Equal(t, "", unobtanium)
       t.Logf("Error (expected): %v", err)
    })
 
-   t.Run("non-existant key nested", func(t *testing.T) {
+   t.Run("non-existent key nested", func(t *testing.T) {
       eludium, err := Get[string](&c, "note.metadata.id.encode.eludium")
       assert.NotNil(t, err)
       assert.Equal(t, "", eludium)
