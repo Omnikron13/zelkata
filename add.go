@@ -9,7 +9,7 @@ import (
    "strings"
 
    "github.com/omnikron13/zelkata/note"
-   _"github.com/omnikron13/zelkata/config"
+   "github.com/omnikron13/zelkata/config"
 
    "github.com/urfave/cli/v3"
    tea "github.com/charmbracelet/bubbletea"
@@ -18,7 +18,17 @@ import (
 )
 
 
+var conf *config.Config
+
+
 func addCmd(ctx context.Context, cmd *cli.Command) error {
+   // Initialise the config hierarchy
+   var err error
+   conf, err = config.Init()
+   if err != nil {
+      panic(err)
+   }
+
    // TODO: default to a bubbletea(bubbles) TextArea, with a hotkey to launch a full editor?
    // This sets up launching an external editor to write the note body, which is temporarily stored in a state file,
    // which potentially also acts as a draft file if the user saves while editing but the add process is interrupted.
@@ -58,9 +68,20 @@ func addCmd(ctx context.Context, cmd *cli.Command) error {
    // Actually add the tags to the Note
    note.Tags = acm.tags
 
+   // TODO: add a paths module, I think, as we really don't want to be repeating this song and dance all over the place
    // Get the path to the notes directory.
-   // TODO: this should read from the config
-   path := filepath.Join(xdg.DataHome, "zelkata", "notes")
+   path, err := config.Get[string](conf, "data-directory")
+   if err != nil {
+      panic(err)
+   }
+   // filepath sadly has no convenience function for expanding environment variables...
+   path = os.ExpandEnv(path)
+   // Converting to an absolute path may not really be worth the time, but we don't want any confusing behaviour
+   // cropping up downt the line.
+   if path, err = filepath.Abs(filepath.Join(path, "notes")); err != nil {
+      panic(err)
+   }
+
    // Ensure the notes directory exists, creating it if necessary (including all directories along the way)
    if err := os.MkdirAll(path, 0700); err != nil {
       return err
