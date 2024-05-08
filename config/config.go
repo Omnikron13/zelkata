@@ -2,11 +2,13 @@ package config
 
 import (
    _ "embed"
+   "errors"
    "io/fs"
    "maps"
    "os"
    "path/filepath"
    "slices"
+   "strings"
 
    "github.com/adrg/xdg"
    "gopkg.in/yaml.v3"
@@ -53,6 +55,42 @@ func Init() (*Config, error) {
    }
 
    return &Config{filesData: filesData}, nil
+}
+
+
+func Get[T any](c *Config, key string) (v T, err error) {
+   defer func() {
+      if r := recover(); r != nil {
+         err = r.(error)
+      }
+   }()
+
+   var walk func(m *map[string]any, key string) T
+   walk = func(m *map[string]any, key string) T {
+      i := strings.Index(key, ".")
+      if i == -1 {
+         if v, ok := (*m)[key].(T); ok {
+            return v
+         }
+         if len(c.filesData) == 0 {
+            // TODO: Define custom error types? Is this really worth it in Go?
+            panic(errors.New("key not found"))
+         }
+         if err := c.unmarshalNext(); err != nil {
+            panic(err)
+         }
+         return walk(m, key)
+      }
+      n, ok := (*m)[key[:i]].(map[string]any)
+      if !ok {
+         panic(errors.New("Failed to get next nested map"))
+      }
+      return walk(&n, key[i+1:])
+   }
+
+   v = walk(&c.yamlData, key)
+
+   return
 }
 
 

@@ -32,6 +32,58 @@ func Test_unmarshalNext(t *testing.T) {
 }
 
 
+func Test_Get(t *testing.T) {
+   c := Config{filesData: [][]byte{defaultConfig}}
+   if err := c.unmarshalNext(); err != nil {
+      t.Skipf("Error initialising Config instance to test: %v", err)
+   }
+
+   if c.yamlData == nil {
+      t.Skip("Config instance inexplicably has no data to test")
+   }
+
+   t.Run("flat", func(t *testing.T) {
+      v, err := Get[string](&c, "data-directory")
+      assert.Nil(t, err)
+      assert.Equal(t, "$XDG_DATA_HOME/zelkata", v)
+   })
+
+   t.Run("nested", func(t *testing.T) {
+      v, err := Get[string](&c, "notes.metadata.id.type")
+      assert.Nil(t, err)
+      assert.Equal(t, "UUIDv4", v)
+   })
+
+   t.Run("type mismatch", func(t *testing.T) {
+      v, err := Get[string](&c, "notes.metadata.id.encode.padding")
+      assert.NotNil(t, err)
+      assert.Equal(t, "", v)
+      t.Logf("Error (expected): %v", err)
+   })
+
+   t.Run("non-existant key flat", func(t *testing.T) {
+      unobtanium, err := Get[string](&c, "unobtanium")
+      assert.NotNil(t, err)
+      assert.Equal(t, "", unobtanium)
+      t.Logf("Error (expected): %v", err)
+   })
+
+   t.Run("non-existant key nested", func(t *testing.T) {
+      eludium, err := Get[string](&c, "note.metadata.id.encode.eludium")
+      assert.NotNil(t, err)
+      assert.Equal(t, "", eludium)
+      t.Logf("Error (expected): %v", err)
+   })
+
+   t.Run("trigger unmarshal", func(t *testing.T) {
+      c := Config{filesData: [][]byte{defaultConfig}}
+      v, err := Get[string](&c, "data-directory")
+      assert.Nil(t, err)
+      assert.Equal(t, "$XDG_DATA_HOME/zelkata", v)
+   })
+}
+
+
 func Test_findYAMLFiles(t *testing.T) {
    testdata, _ := filepath.Abs("testdata")
    xdg.ConfigHome = filepath.Join(testdata, "xdg_config_home")
