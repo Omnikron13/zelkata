@@ -6,9 +6,10 @@ import (
    "strings"
    "time"
 
+   "github.com/omnikron13/zelkata/config"
+
    "github.com/google/uuid"
 )
-
 
 // Meta is the struct that holds various metadata about a note, which will be converted to the YAML front matter of the
 // note file. It is intended to only be used as a field in the Note struct, but is kept separate for organisational
@@ -80,8 +81,46 @@ func NewMeta() Meta {
 // base32UUID encodes the UUID of the Meta struct as a base32 string.
 // TODO: can probably generalise this if/when I add a config for the encoding, should just need a switch I believe.
 func (m *Meta) base32UUID() string {
+   var encoding base32.Encoding
+   charset, err := config.Get[string]("notes.metadata.id.encode.charset")
+   if err != nil {
+      panic(err)
+   }
+   switch charset {
+      case "StdEncoding":
+         encoding = *base32.StdEncoding
+      case "HexEncoding":
+         encoding = *base32.HexEncoding
+      default:
+         // base32 requires precisely 32 characters
+         if len(charset) != 32 {
+            panic(fmt.Errorf("invalid encoding charset length: %d", len(charset)))
+         }
+
+         for i, c := range charset {
+            // the newline/carriage return characters are not allowed in the charset
+            if c == '\n' || c == '\r' {
+               panic(fmt.Errorf("invalid encoding charset character: %c", c))
+            }
+            // the charset must not contain any duplicate characters
+            if strings.ContainsRune(charset[:i], c) {
+               panic(fmt.Errorf("duplicate encoding charset character: %c", c))
+            }
+         }
+         encoding = *base32.NewEncoding(charset)
+   }
+
+   padChar := base32.NoPadding
+   pad, err := config.Get[bool]("notes.metadata.id.encode.padding")
+   if err != nil {
+      panic(err)
+   }
+   if pad {
+      padChar = base32.StdPadding
+   }
+
    var b strings.Builder
-   encoder := base32.NewEncoder(base32.StdEncoding.WithPadding(base32.NoPadding), &b)
+   encoder := base32.NewEncoder(encoding.WithPadding(padChar), &b)
       defer encoder.Close()
    encoder.Write(m.ID[:])
    return b.String()
