@@ -9,12 +9,11 @@ import (
    "strings"
 
    "github.com/omnikron13/zelkata/note"
-   "github.com/omnikron13/zelkata/config"
+   "github.com/omnikron13/zelkata/paths"
 
-   "github.com/urfave/cli/v3"
-   tea "github.com/charmbracelet/bubbletea"
    "github.com/charmbracelet/bubbles/textinput"
-   "github.com/adrg/xdg"
+   tea "github.com/charmbracelet/bubbletea"
+   "github.com/urfave/cli/v3"
 )
 
 
@@ -22,11 +21,7 @@ func addCmd(ctx context.Context, cmd *cli.Command) error {
    // TODO: default to a bubbletea(bubbles) TextArea, with a hotkey to launch a full editor?
    // This sets up launching an external editor to write the note body, which is temporarily stored in a state file,
    // which potentially also acts as a draft file if the user saves while editing but the add process is interrupted.
-   stateDir := filepath.Join(xdg.StateHome, "zelkata")
-   if err := os.MkdirAll(stateDir, 0700); err != nil {
-      return err
-   }
-   newNoteFile := filepath.Join(stateDir, "new-note.md")
+   newNoteFile := filepath.Join(paths.State(), "new-note.md")
    editCmd := exec.Command(os.Getenv("EDITOR"), newNoteFile)
    editCmd.Stdin  = os.Stdin
    editCmd.Stdout = os.Stdout
@@ -58,28 +53,9 @@ func addCmd(ctx context.Context, cmd *cli.Command) error {
    // Actually add the tags to the Note
    note.Tags = acm.tags
 
-   // TODO: add a paths module, I think, as we really don't want to be repeating this song and dance all over the place
-   // Get the path to the notes directory.
-   path, err := config.Get[string]("data-directory")
-   if err != nil {
-      panic(err)
-   }
-   // filepath sadly has no convenience function for expanding environment variables...
-   path = os.ExpandEnv(path)
-   // Converting to an absolute path may not really be worth the time, but we don't want any confusing behaviour
-   // cropping up downt the line.
-   if path, err = filepath.Abs(filepath.Join(path, "notes")); err != nil {
-      panic(err)
-   }
-
-   // Ensure the notes directory exists, creating it if necessary (including all directories along the way)
-   if err := os.MkdirAll(path, 0700); err != nil {
-      return err
-   }
-
    // Generate a byte slice of the note file and write it to the notes directory
    b := note.GenFile()
-   if err := os.WriteFile(filepath.Join(path, note.GenFileName()), b, 0600); err != nil {
+   if err := os.WriteFile(filepath.Join(paths.Notes(), note.GenFileName()), b, 0600); err != nil {
       return err
    }
 
