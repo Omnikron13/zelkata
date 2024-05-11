@@ -35,6 +35,18 @@ type Tag struct {
 }
 
 
+// Add either adds a new note ID to an existing tag, or creates a new tag with the given name, and its first note ID.
+func Add(name, noteID string) error {
+   tag, err := LoadName(name)
+   if err != nil {
+      // Tag probably doesn't exist, so create it;
+      tag = &Tag{Name: name, Notes: []string{}}
+   }
+   tag.Notes = append(tag.Notes, noteID)
+   return tag.Save()
+}
+
+
 // LoadPath reads a tag file and returns a Tag struct
 func LoadPath(filePath string) (*Tag, error) {
    t := Tag{}
