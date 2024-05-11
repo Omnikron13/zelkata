@@ -10,6 +10,7 @@ import (
 
    "github.com/omnikron13/zelkata/note"
    "github.com/omnikron13/zelkata/paths"
+   "github.com/omnikron13/zelkata/tag"
 
    "github.com/charmbracelet/bubbles/textinput"
    tea "github.com/charmbracelet/bubbletea"
@@ -57,6 +58,14 @@ func addCmd(ctx context.Context, cmd *cli.Command) error {
    b := note.GenFile()
    if err := os.WriteFile(filepath.Join(paths.Notes(), note.GenFileName()), b, 0600); err != nil {
       return err
+   }
+
+   // Update the specified tags with the new note ID
+   id := note.EncodeID()
+   for _, t := range note.Tags {
+      if err := tag.Add(t, id); err != nil {
+         return err
+      }
    }
 
    // Return nil if everything went well
