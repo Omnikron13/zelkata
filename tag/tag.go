@@ -2,6 +2,7 @@ package tag
 
 import (
    "os"
+   "strings"
 
    "gopkg.in/yaml.v3"
 )
@@ -43,5 +44,11 @@ func LoadPath(filePath string) (*Tag, error) {
       return nil, err
    }
    return &t, nil
+}
+
+
+// normaliseName takes a tag name and returns a normalised (more path friendly, mostly) version of it.
+func normaliseName(name string) string {
+   return strings.ReplaceAll(strings.ToLower(name), " ", "-")
 }
 

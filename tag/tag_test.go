@@ -15,3 +15,9 @@ func Test_LoadPath(t *testing.T) {
    assert.Equal(t, Tag{Name: "Test Tag", Description: "An example tag for testing purposes.", Notes: []string{"QWERTYUIOP", "ASDFGHJKLZ"}}, *tag)
 }
 
+
+func Test_normaliseName(t *testing.T) {
+   assert.Equal(t, "test-tag-name", normaliseName("Test TAG name"))
+   assert.Equal(t, "already-normalised", normaliseName("already-normalised"))
+ }
+
