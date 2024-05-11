@@ -45,9 +45,13 @@ type Tag struct {
 
 // Add either adds a new note ID to an existing tag, or creates a new tag with the given name, and its first note ID.
 func Add(name, noteID string) error {
-   tag, err := LoadName(name)
+   tags, err := LoadAll()
    if err != nil {
-      // Tag probably doesn't exist, so create it;
+      return err
+   }
+   tag := tags.Get(name)
+   // Create the tag if it doesn't exist
+   if tag == nil {
       tag = &Tag{Name: name, Notes: []string{}}
    }
    tag.Notes = append(tag.Notes, noteID)
