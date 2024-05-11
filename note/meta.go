@@ -147,6 +147,6 @@ func (m *Meta) GenFileName() string {
    // TODO: move date & time prefixing to config
    // TODO: add config (&default?) for encoding the UUID to a more concise form
    // TODO: add config for file extension? Also probably depend on what the actual Note is told the format is.
-   return fmt.Sprintf("%s.%s.%s.md", m.Created.Format(time.DateOnly), m.Created.Format("15-04"), m.base32UUID())
+   return fmt.Sprintf("%s.%s.%s.md", m.Created.Format(time.DateOnly), m.Created.Format("15-04"), m.EncodeID())
 }
 
