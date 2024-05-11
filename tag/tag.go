@@ -5,6 +5,7 @@ import (
    "path/filepath"
    "strings"
 
+   "github.com/omnikron13/zelkata/config"
    "github.com/omnikron13/zelkata/paths"
 
    "gopkg.in/yaml.v3"
@@ -65,17 +66,25 @@ func LoadPath(filePath string) (*Tag, error) {
 // LoadName reads a tag file by name and returns a Tag struct.
 // This is a convenience function that calls LoadPath with the full path and normalised tag name.
 func LoadName(name string) (*Tag, error) {
-   return LoadPath(filepath.Join(paths.Tags(), normaliseName(name) + ".tag.yaml"))
+   ext, err := config.Get[string]("tags.extension")
+   if err != nil {
+      return nil, err
+   }
+   return LoadPath(filepath.Join(paths.Tags(), normaliseName(name) + ext))
 }
 
 
 // Save writes a Tag struct to a file in the tags directory.
 func (t *Tag) Save() error {
+   ext, err := config.Get[string]("tags.extension")
+   if err != nil {
+      return err
+   }
    b, err := yaml.Marshal(t)
    if err != nil {
       return err
    }
-   return os.WriteFile(filepath.Join(paths.Tags(), normaliseName(t.Name) + ".tag.yaml"), b, 0600)
+   return os.WriteFile(filepath.Join(paths.Tags(), normaliseName(t.Name) + ext), b, 0600)
 }
 
 

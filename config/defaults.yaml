@@ -48,3 +48,6 @@ notes:
             padding: false
       suffix:
          extension: md
+
+tags:
+  extension: .tag.yaml
