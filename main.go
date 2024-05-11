@@ -7,9 +7,6 @@ import (
    "context"
    "os"
 
-   _"github.com/omnikron13/zelkata/note"
-   _"github.com/omnikron13/zelkata/config"
-
    "github.com/urfave/cli/v3"
 )
 
