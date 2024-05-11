@@ -15,6 +15,7 @@ func Test_LoadPath(t *testing.T) {
    assert.Equal(t, Tag{
       Name: "Test Tag",
       Description: "An example tag for testing purposes.",
+      Icon: "󰓹",
       Notes: []string{
          "QWERTYUIOP",
          "ASDFGHJKLZ",

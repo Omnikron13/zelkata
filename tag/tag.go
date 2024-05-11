@@ -26,6 +26,9 @@ type Tag struct {
    // have the tag.
    Description string `yaml:"description,omitempty"`
 
+   // Icon is a string holding a unicode sequence for an icon to be used to represent the tag.
+   Icon string `yaml:"icon,omitempty"`
+
    // Parent ?
 
    // Children ?

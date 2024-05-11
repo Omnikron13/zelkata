@@ -1,6 +1,7 @@
 ---
 name: Test Tag
 description: An example tag for testing purposes.
+icon: 󰓹
 notes:
   - QWERTYUIOP
   - ASDFGHJKLZ
