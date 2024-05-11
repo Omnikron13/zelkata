@@ -2,7 +2,10 @@ package tag
 
 import (
    "os"
+   "path/filepath"
    "strings"
+
+   "github.com/omnikron13/zelkata/paths"
 
    "gopkg.in/yaml.v3"
 )
@@ -44,6 +47,13 @@ func LoadPath(filePath string) (*Tag, error) {
       return nil, err
    }
    return &t, nil
+}
+
+
+// LoadName reads a tag file by name and returns a Tag struct.
+// This is a convenience function that calls LoadPath with the full path and normalised tag name.
+func LoadName(name string) (*Tag, error) {
+   return LoadPath(filepath.Join(paths.Tags(), normaliseName(name) + ".tag.yaml"))
 }
 
 
