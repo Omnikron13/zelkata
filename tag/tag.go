@@ -57,6 +57,16 @@ func LoadName(name string) (*Tag, error) {
 }
 
 
+// Save writes a Tag struct to a file in the tags directory.
+func (t *Tag) Save() error {
+   b, err := yaml.Marshal(t)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(filepath.Join(paths.Tags(), normaliseName(t.Name) + ".tag.yaml"), b, 0600)
+}
+
+
 // normaliseName takes a tag name and returns a normalised (more path friendly, mostly) version of it.
 func normaliseName(name string) string {
    return strings.ReplaceAll(strings.ToLower(name), " ", "-")
