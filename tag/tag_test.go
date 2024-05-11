@@ -21,3 +21,6 @@ func Test_normaliseName(t *testing.T) {
    assert.Equal(t, "already-normalised", normaliseName("already-normalised"))
  }
 
+
+// TODO: mock file access and test; Add(), LoadName(), Save()
+
