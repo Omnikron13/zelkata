@@ -29,6 +29,10 @@ type Tag struct {
    // Icon is a string holding a unicode sequence for an icon to be used to represent the tag.
    Icon string `yaml:"icon,omitempty"`
 
+   // Aliases is a slice of strings that are alternative names for the tag. This allows a user to not be too concerned
+   // with the exact name of a tag when adding it to a note, or when searching for notes with a tag, etc.
+   Aliases []string `yaml:"aliases,omitempty"`
+
    // Parent ?
 
    // Children ?
