@@ -32,7 +32,7 @@ type Tag struct {
 }
 
 
-// Load reads a tag file and returns a Tag struct
+// LoadPath reads a tag file and returns a Tag struct
 func LoadPath(filePath string) (*Tag, error) {
    t := Tag{}
    b, err := os.ReadFile(filePath)
