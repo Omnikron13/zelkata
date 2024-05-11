@@ -127,6 +127,21 @@ func (m *Meta) base32UUID() string {
 }
 
 
+// EncodeID encodes the ID as specified in the config and return it as a string.
+func (m *Meta) EncodeID() string {
+   encode, err := config.Get[string]("notes.metadata.id.encode.format")
+   if err != nil {
+      panic(err)
+   }
+   switch encode {
+      case "base32":
+         return m.base32UUID()
+      default:
+         panic(fmt.Errorf("unsupported encoding: %s", encode))
+   }
+}
+
+
 // GenFileName generates a filename for a note based on the Meta data.
 func (m *Meta) GenFileName() string {
    // TODO: move date & time prefixing to config
