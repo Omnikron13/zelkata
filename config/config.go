@@ -59,6 +59,7 @@ func Get[T any](key string) (v T, err error) {
       }
    }()
 
+   // TODO: split out to top-level functions for better readability?
    var walk func(m *map[string]any, key string) T
    walk = func(m *map[string]any, key string) T {
       i := strings.Index(key, ".")
