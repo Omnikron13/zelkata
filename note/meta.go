@@ -21,7 +21,7 @@ type Meta struct {
    ID string `yaml:"id"`
 
    // Created is the date & time the note was originally created.
-   Created time.Time
+   Created time.Time `yaml:"created"`
 
    // Tags are how notes are (primarily) categorised. They are _technically_ optional, but in practice they should
    // always be used, as they are what creates the hyperlinked web of knowledge that Zelkata is based on.
@@ -30,7 +30,7 @@ type Meta struct {
    //
    // This simple string slice is very likely to be a temporary stepping stone and placeholder until the much more
    // complex and powerful tag system is implemented.
-   Tags []string
+   Tags []string `yaml:"tags"`
 
 
    // The following are the optional fields, so may need special handling when converting to/from YAML, etc.
