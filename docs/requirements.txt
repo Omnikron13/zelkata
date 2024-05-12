@@ -1,4 +1,4 @@
 mkdocs
 mkdocs-material
 mkdocs-material-extensions
-mkdocs-material-pymdownx-extras
+mkdocs-pymdownx-material-extras
