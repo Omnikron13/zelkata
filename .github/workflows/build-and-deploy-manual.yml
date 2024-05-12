@@ -1,0 +1,67 @@
+name: Build & deploy Manual to GitHub Pages
+on:
+  workflow_dispatch:
+
+  #push:
+  #  branches:
+  #    - main
+
+jobs:
+  ## Build job ##
+  build:
+    name: Build manual pages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v3
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github
+            docs
+
+      - name: Download & unpack Nerd Fonts
+        env:
+          font: Ubuntu
+          version: v3.2.1
+          destination: docs/assets/fonts/
+        run: |
+          wget "https://github.com/ryanoasis/nerd-fonts/releases/download/${version}/${font}.zip"
+          unzip -j "${font}.zip" -d "${destination}/${font}"
+
+      - name: Generate site files
+        run: mkdocs build
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+          with:
+            path: "site/"
+  
+  ## Deploy job ##
+  deploy:
+    name: Deploy manual pages
+    needs: build
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4          
+
+      #- name: Deploy pages
+      #  uses: mhausenblas/mkdocs-deploy-gh-pages@master
+      #  env:
+      #    PERSONAL_TOKEN: ${{ secrets.PERSONALTOKEN }}
+      #    CONFIG_FILE: mkdocs.yml
