@@ -1,0 +1,30 @@
+name: Publish manual via GitHub Pages
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Deploy manual to pages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Download & unpack Nerd Fonts
+        with:
+          font: Ubuntu
+          version: v3.2.1
+        run: |
+          wget "https://github.com/ryanoasis/nerd-fonts/releases/download/${version}/${font}.zip"
+          unzip -j "${font}.zip" -d "assets/fonts/${font}"
+
+      - name: Deploy pages
+        uses: mhausenblas/mkdocs-deploy-gh-pages@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONFIG_FILE: mkdocs.yml
+
