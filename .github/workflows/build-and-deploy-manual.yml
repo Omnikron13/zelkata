@@ -69,10 +69,5 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4          
+        uses: actions/deploy-pages@v4
 
-      #- name: Deploy pages
-      #  uses: mhausenblas/mkdocs-deploy-gh-pages@master
-      #  env:
-      #    PERSONAL_TOKEN: ${{ secrets.PERSONALTOKEN }}
-      #    CONFIG_FILE: mkdocs.yml
