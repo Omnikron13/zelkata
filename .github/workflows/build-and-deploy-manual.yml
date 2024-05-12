@@ -36,7 +36,7 @@ jobs:
           wget "https://github.com/ryanoasis/nerd-fonts/releases/download/${version}/${font}.tar.xz"
           mkdir -p "${destination}${font}"
           tar xf "${font}.tar.xz" --directory "${destination}${font}" --wildcards '*.ttf'
-          python docs/scripts/gen_nerdfont_css.py "${destination}${font}" docs/assets/stylesheets/ /Zelkata/assets/fonts/
+          python docs/scripts/gen_nerdfont_css.py "${destination}${font}" docs/assets/stylesheets/ /zelkata/assets/fonts/
 
       - name: Install python modules
         run: pip install -r docs/requirements.txt
