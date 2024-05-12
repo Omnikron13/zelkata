@@ -95,11 +95,9 @@ func encodeID(id []byte) string {
                }
                // charset must not contain newline/carriage return characters or duplicates
                for i, c := range charset {
-                  // the newline/carriage return characters are not allowed in the charset
                   if c == '\n' || c == '\r' {
                      panic(fmt.Errorf("invalid encoding charset character: %c", c))
                   }
-                  // the charset must not contain any duplicate characters
                   if strings.ContainsRune(charset[:i], c) {
                      panic(fmt.Errorf("duplicate encoding charset character: %c", c))
                   }
