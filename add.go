@@ -61,9 +61,8 @@ func addCmd(ctx context.Context, cmd *cli.Command) error {
    }
 
    // Update the specified tags with the new note ID
-   id := note.EncodeID()
    for _, t := range note.Tags {
-      if err := tag.Add(t, id); err != nil {
+      if err := tag.Add(t, note.ID); err != nil {
          return err
       }
    }

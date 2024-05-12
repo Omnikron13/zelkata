@@ -15,8 +15,9 @@ import (
 // note file. It is intended to only be used as a field in the Note struct, but is kept separate for organisational
 // purposes.
 type Meta struct {
-   // ID is simply a UUID generated to uniquely identify the note.
-   ID uuid.UUID
+   // ID is a unique identifier for the note. It is generated when the note is created, with the specific type and
+   // encoding details specified in the config.
+   ID string `yaml:"id"`
 
    // Created is the date & time the note was originally created.
    Created time.Time
@@ -61,92 +62,98 @@ type Meta struct {
 }
 
 
-// generateUUID generates a UUID and returns it as simply an array of 16-bytes (128-bits).
-// It is sticking with the UUID v4 format for now, though will probably be configurable in the future, and may also
-// start defaulting to v7, when it is satisfactorily finalised.
-func generateUUID() [16]byte {
-   return uuid.New()
+// NewMeta returns a new Meta struct with a new generated unique ID and the current date & time for Created.
+func NewMeta() (m Meta) {
+   m.ID = encodeID(generateID())
+   m.Created = time.Now()
+   return
 }
 
 
-// NewMeta returns a new Meta struct with a UUID and the current date and time.
-func NewMeta() Meta {
-   return Meta{
-      ID: generateUUID(),
-      Created: time.Now(),
-   }
-}
-
-
-// base32UUID encodes the UUID of the Meta struct as a base32 string.
-// TODO: can probably generalise this if/when I add a config for the encoding, should just need a switch I believe.
-func (m *Meta) base32UUID() string {
-   var encoding base32.Encoding
-   charset, err := config.Get[string]("notes.metadata.id.encode.charset")
+// encodeID encodes an ID as a string ad specified in the config.
+func encodeID(id []byte) string {
+   format, err := config.Get[string]("notes.metadata.id.encode.format")
    if err != nil {
-      panic(err)
+      panic("error getting config value: " + err.Error())
    }
-   switch charset {
-      case "StdEncoding":
-         encoding = *base32.StdEncoding
-      case "HexEncoding":
-         encoding = *base32.HexEncoding
-      default:
-         // base32 requires precisely 32 characters
-         if len(charset) != 32 {
-            panic(fmt.Errorf("invalid encoding charset length: %d", len(charset)))
-         }
-
-         for i, c := range charset {
-            // the newline/carriage return characters are not allowed in the charset
-            if c == '\n' || c == '\r' {
-               panic(fmt.Errorf("invalid encoding charset character: %c", c))
-            }
-            // the charset must not contain any duplicate characters
-            if strings.ContainsRune(charset[:i], c) {
-               panic(fmt.Errorf("duplicate encoding charset character: %c", c))
-            }
-         }
-         encoding = *base32.NewEncoding(charset)
-   }
-
-   padChar := base32.NoPadding
-   pad, err := config.Get[bool]("notes.metadata.id.encode.padding")
-   if err != nil {
-      panic(err)
-   }
-   if pad {
-      padChar = base32.StdPadding
-   }
-
-   var b strings.Builder
-   encoder := base32.NewEncoder(encoding.WithPadding(padChar), &b)
-      defer encoder.Close()
-   encoder.Write(m.ID[:])
-   return b.String()
-}
-
-
-// EncodeID encodes the ID as specified in the config and return it as a string.
-func (m *Meta) EncodeID() string {
-   encode, err := config.Get[string]("notes.metadata.id.encode.format")
-   if err != nil {
-      panic(err)
-   }
-   switch encode {
+   switch format {
       case "base32":
-         return m.base32UUID()
+         var encoding base32.Encoding
+         charset, err := config.Get[string]("notes.metadata.id.encode.charset")
+         if err != nil {
+            panic(err)
+         }
+         switch charset {
+            case "StdEncoding":
+               encoding = *base32.StdEncoding
+            case "HexEncoding":
+               encoding = *base32.HexEncoding
+            default:
+               // base32 requires precisely 32 characters
+               if len(charset) != 32 {
+                  panic(fmt.Errorf("invalid encoding charset length: %d", len(charset)))
+               }
+               // charset must not contain newline/carriage return characters or duplicates
+               for i, c := range charset {
+                  // the newline/carriage return characters are not allowed in the charset
+                  if c == '\n' || c == '\r' {
+                     panic(fmt.Errorf("invalid encoding charset character: %c", c))
+                  }
+                  // the charset must not contain any duplicate characters
+                  if strings.ContainsRune(charset[:i], c) {
+                     panic(fmt.Errorf("duplicate encoding charset character: %c", c))
+                  }
+               }
+               encoding = *base32.NewEncoding(charset)
+         }
+         padChar := base32.NoPadding
+         pad, err := config.Get[bool]("notes.metadata.id.encode.padding")
+         if err != nil {
+            panic("error getting config value: " + err.Error())
+         }
+         if pad {
+            padChar = base32.StdPadding
+         }
+         var b strings.Builder
+         encoder := base32.NewEncoder(encoding.WithPadding(padChar), &b)
+            defer encoder.Close()
+         if _, err := encoder.Write(id); err != nil {
+            panic("error encoding ID: " + err.Error())
+         }
+         return b.String()
       default:
-         panic(fmt.Errorf("unsupported encoding: %s", encode))
+         panic(fmt.Errorf("unsupported encoding: %s", format))
    }
+}
+
+
+// generateID generates an ID as specified in the config.
+func generateID() (id []byte) {
+   idType, err := config.Get[string]("notes.metadata.id.type")
+   if err != nil {
+      panic("error getting config value: " + err.Error())
+   }
+   switch idType {
+      case "UUIDv4":
+         uuid := uuid.New()
+         id = uuid[:]
+      case "UUIDv7":
+         uuid, err := uuid.NewV7()
+         if err != nil {
+            panic("error generating UUIDv7: " + err.Error())
+         }
+         id = uuid[:]
+      default:
+         panic(fmt.Errorf("unsupported ID type: %s", idType))
+   }
+   return
 }
 
 
 // GenFileName generates a filename for a note based on the Meta data.
 func (m *Meta) GenFileName() string {
    // TODO: move date & time prefixing to config
-   // TODO: add config (&default?) for encoding the UUID to a more concise form
    // TODO: add config for file extension? Also probably depend on what the actual Note is told the format is.
-   return fmt.Sprintf("%s.%s.%s.md", m.Created.Format(time.DateOnly), m.Created.Format("15-04"), m.EncodeID())
+   return fmt.Sprintf("%s.%s.%s.md", m.Created.Format(time.DateOnly), m.Created.Format("15-04"), m.ID)
 }
 
