@@ -21,24 +21,26 @@ jobs:
             .github
             docs
 
-      - name: Download & unpack Nerd Fonts
-        env:
-          font: Ubuntu
-          version: v3.2.1
-          destination: docs/assets/fonts/
-        run: |
-          wget "https://github.com/ryanoasis/nerd-fonts/releases/download/${version}/${font}.zip"
-          unzip -j "${font}.zip" -d "${destination}/${font}"
-
       - name: Setup Python
         uses: actions/setup-python@v5.1.0
         with:
           python-version: '3.12'
           cache: 'pip'
-      
+
+      - name: Download, unpack, and process Nerd Fonts
+        env:
+          font: Ubuntu
+          version: v3.2.1
+          destination: docs/assets/fonts/
+        run: |
+          wget "https://github.com/ryanoasis/nerd-fonts/releases/download/${version}/${font}.tar.xz"
+          mkdir -p "${destination}${font}"
+          tar xf "${font}.tar.xz" --directory "${destination}${font}" --wildcards '*.ttf'
+          python docs/scripts/gen_nerdfont_css.py "${destination}${font}" docs/assets/stylesheets/ /Zelkata/assets/fonts/
+
       - name: Install python modules
         run: pip install -r docs/requirements.txt
-            
+
       - name: Generate site files
         run: mkdocs build
 
