@@ -52,6 +52,7 @@ func init() {
 }
 
 
+// Get retrieves a value from the config hierarchy by key specified in dot notation; e.g. 'notes.metadata.id.type'.
 func Get[T any](key string) (v T, err error) {
    defer func() {
       if r := recover(); r != nil {
