@@ -18,9 +18,10 @@ jobs:
         env:
           font: Ubuntu
           version: v3.2.1
+          destination: docs/assets/fonts/
         run: |
           wget "https://github.com/ryanoasis/nerd-fonts/releases/download/${version}/${font}.zip"
-          unzip -j "${font}.zip" -d "assets/fonts/${font}"
+          unzip -j "${font}.zip" -d "${destination}/${font}"
 
       - name: Deploy pages
         uses: mhausenblas/mkdocs-deploy-gh-pages@master
