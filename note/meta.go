@@ -74,14 +74,14 @@ func NewMeta() (m Meta) {
 func encodeID(id []byte) string {
    format, err := config.Get[string]("notes.metadata.id.encode.format")
    if err != nil {
-      panic("error getting config value: " + err.Error())
+      panic("error getting config value notes.metadata.id.encode.format: " + err.Error())
    }
    switch format {
       case "base32":
          var encoding base32.Encoding
          charset, err := config.Get[string]("notes.metadata.id.encode.charset")
          if err != nil {
-            panic(err)
+            panic("error getting config value notes.metadata.id.encode.charset: " + err.Error())
          }
          switch charset {
             case "StdEncoding":
@@ -109,7 +109,7 @@ func encodeID(id []byte) string {
          padChar := base32.NoPadding
          pad, err := config.Get[bool]("notes.metadata.id.encode.padding")
          if err != nil {
-            panic("error getting config value: " + err.Error())
+            panic("error getting config value notes.metadata.id.encode.padding: " + err.Error())
          }
          if pad {
             padChar = base32.StdPadding
@@ -131,7 +131,7 @@ func encodeID(id []byte) string {
 func generateID() (id []byte) {
    idType, err := config.Get[string]("notes.metadata.id.type")
    if err != nil {
-      panic("error getting config value: " + err.Error())
+      panic("error getting config value notes.metadata.id.type: " + err.Error())
    }
    switch idType {
       case "UUIDv4":
