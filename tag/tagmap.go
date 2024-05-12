@@ -106,3 +106,17 @@ func (m *TagMap) Reindex() error {
    return nil
 }
 
+
+// Save writes all (non-alias) Tag structs in the TagMap to files in the tags directory.
+func (m *TagMap) Save() error {
+   for name, tag := range *m {
+      if name != normaliseName(tag.Name) {
+         continue
+      }
+      if err := tag.Save(); err != nil {
+         return err
+      }
+   }
+   return nil
+}
+
