@@ -76,10 +76,16 @@ func Get[T any](key string) (v T, err error) {
          return walk(m, key)
       }
       n, ok := (*m)[key[:i]].(map[string]any)
-      if !ok {
-         panic(errors.New("Failed to get next nested map"))
+      if ok {
+         return walk(&n, key[i+1:])
       }
-      return walk(&n, key[i+1:])
+      if len(filesData) == 0 {
+         panic(errors.New("Failed to get next nested map: " + key))
+      }
+      if err := unmarshalNext(); err != nil {
+         panic(err)
+      }
+      return walk(m, key)
    }
 
    v = walk(&configValues, key)
