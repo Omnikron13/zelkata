@@ -10,8 +10,8 @@ first steps to reaching a point where it's working well for you, please don't he
 
  - [The GitHub issue tracker](https://github.com/omnikron13/Zelkata/issues/) for the project explaining your issues.
 
-??? note
-    Further (less formal) areas to discus issues, ideas, problems, etc. will be made available in time
+???+ note
+     Further (less formal) areas to discus issues, ideas, problems, etc. will be made available in time
 
 
 ## Overview
