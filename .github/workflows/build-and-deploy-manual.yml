@@ -30,6 +30,15 @@ jobs:
           wget "https://github.com/ryanoasis/nerd-fonts/releases/download/${version}/${font}.zip"
           unzip -j "${font}.zip" -d "${destination}/${font}"
 
+      - name: Setup Python
+        uses: actions/setup-python@v5.1.0
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+      
+      - name: Install python modules
+        run: pip install -r docs/requirements.txt
+            
       - name: Generate site files
         run: mkdocs build
 
