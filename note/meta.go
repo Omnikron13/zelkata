@@ -2,6 +2,7 @@ package note
 
 import (
    "encoding/base32"
+   "encoding/base64"
    "fmt"
    "strings"
    "time"
@@ -114,6 +115,48 @@ func encodeID(id []byte) string {
          }
          var b strings.Builder
          encoder := base32.NewEncoder(encoding.WithPadding(padChar), &b)
+            defer encoder.Close()
+         if _, err := encoder.Write(id); err != nil {
+            panic("error encoding ID: " + err.Error())
+         }
+         return b.String()
+      case "base64":
+         var encoding base64.Encoding
+         charset, err := config.Get[string]("notes.metadata.id.encode.charset")
+         if err != nil {
+            panic("error getting config value notes.metadata.id.encode.charset: " + err.Error())
+         }
+         switch charset {
+            case "StdEncoding":
+               encoding = *base64.StdEncoding
+            case "URLEncoding":
+               encoding = *base64.URLEncoding
+            default:
+               // base64 requires precisely 64 characters
+               if len(charset) != 64 {
+                  panic(fmt.Errorf("invalid encoding charset length: %d", len(charset)))
+               }
+               // charset must not contain newline/carriage return characters or duplicates
+               for i, c := range charset {
+                  if c == '\n' || c == '\r' {
+                     panic(fmt.Errorf("invalid encoding charset character: %c", c))
+                  }
+                  if strings.ContainsRune(charset[:i], c) {
+                     panic(fmt.Errorf("duplicate encoding charset character: %c", c))
+                  }
+               }
+               encoding = *base64.NewEncoding(charset)
+         }
+         padChar := base64.NoPadding
+         pad, err := config.Get[bool]("notes.metadata.id.encode.padding")
+         if err != nil {
+            panic("error getting config value notes.metadata.id.encode.padding: " + err.Error())
+         }
+         if pad {
+            padChar = base64.StdPadding
+         }
+         var b strings.Builder
+         encoder := base64.NewEncoder(encoding.WithPadding(padChar), &b)
             defer encoder.Close()
          if _, err := encoder.Write(id); err != nil {
             panic("error encoding ID: " + err.Error())
