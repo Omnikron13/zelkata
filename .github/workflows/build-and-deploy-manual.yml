@@ -27,6 +27,7 @@ jobs:
         with:
           sparse-checkout: |
             docs/scripts/gen_nerdfont_css.py
+            docs/assets/fonts/
 
       - name: Setup Python
         if: steps.cache.outputs.cache-hit != 'true'
