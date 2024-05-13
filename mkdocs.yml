@@ -29,8 +29,8 @@ theme:
 # Pulling in a patched Nerd Font for the icons, at least for now; I think you may be able to just map the symbols?
 extra_css:
    - assets/stylesheets/catppuccin-macchiato.css
-     #- assets/fonts/UbuntuNerdFont/UbuntuNerdFont.css
-   - assets/fonts/CascadiaMonoNerdFont/CascadiaMonoNerdFont.css
+   - assets/fonts/UbuntuNerdFont/UbuntuNerdFont.css
+     #- assets/fonts/CascadiaMonoNerdFont/CascadiaMonoNerdFont.css
 
 # TODO: properly review what we may need
 markdown_extensions:

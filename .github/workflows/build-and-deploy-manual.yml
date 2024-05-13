@@ -7,8 +7,8 @@ on:
   #    - main
 
 env:
-  #font: Ubuntu
-  font: CascadiaMono
+  font: Ubuntu
+  #font: CascadiaMono
   version: v3.2.1
 
 jobs:
