@@ -61,6 +61,11 @@ with open(os.path.join(fontDir, cssFile), 'w') as cssFile:
          weightRegex = r'(?P<weight>Thin|(?:Extra|Ultra|Semi)?Light|Normal|Regular|Medium|(?:Semi|Demi|Extra|Ultra)?Bold|(?:Extra|Ultra)?Black|Heavy)'
          match = re.match(fr"^(?P<name>.+NerdFont)(?P<spacing>Mono|Propo)?-{weightRegex}?(?P<stretch>Condensed)?(?P<style>Italic)?\.ttf$", f)
 
+         # Fail completely if a font filename can't be processed. Perhaps a bit excessive...
+         if match is None:
+            print(f"Failed to match/extract font file properties for: {f}")
+            sys.exit(1)
+
          spacing = ''
          if match.group('spacing') is not None:
             spacing = f' {match.group('spacing')}'
