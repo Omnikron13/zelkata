@@ -30,7 +30,7 @@ theme:
 extra_css:
    - assets/stylesheets/catppuccin-macchiato.css
      #- assets/fonts/UbuntuNerdFont/UbuntuNerdFont.css
-   - assets/fonts/*/*.css
+   - assets/fonts/CascadiaMonoNerdFont/CascadiaMonoNerdFont.css
 
 # TODO: properly review what we may need
 markdown_extensions:
