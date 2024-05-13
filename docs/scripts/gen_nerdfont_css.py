@@ -58,8 +58,8 @@ with open(os.path.join(fontDir, cssFile), 'w') as cssFile:
    cssFile.write(f'/* Generated from {fontName}-{version} by gen_nerdfont_css.py */\n\n')
    for f in os.listdir(fontDir):
       if f.endswith('.ttf'):
-         weightRegex = r'(?P<weight>Thin|(?:Extra|Ultra)?Light|Normal|Regular|Medium|(?:Semi|Demi|Extra|Ultra)?Bold|Black|Heavy)'
-         match = re.match(fr"^{fontName}(?P<spacing>Mono|Propo)?-{weightRegex}?(?P<stretch>Condensed)?(?P<style>Italic)?\.ttf$", f)
+         weightRegex = r'(?P<weight>Thin|(?:Extra|Ultra|Semi)?Light|Normal|Regular|Medium|(?:Semi|Demi|Extra|Ultra)?Bold|(?:Extra|Ultra)?Black|Heavy)'
+         match = re.match(fr"^(?P<name>.+NerdFont)(?P<spacing>Mono|Propo)?-{weightRegex}?(?P<stretch>Condensed)?(?P<style>Italic)?\.ttf$", f)
 
          spacing = ''
          if match.group('spacing') is not None:
@@ -69,9 +69,11 @@ with open(os.path.join(fontDir, cssFile), 'w') as cssFile:
          if match.group('weight') is not None:
             weight = {
                'Thin': 100,
+               'Hairline': 100,
                'ExtraLight': 200,
                'UltraLight': 200,
                'Light': 300,
+               'SemiLight': 350,
                'Normal': 400,
                'Regular': 400,
                'Medium': 500,
@@ -82,6 +84,8 @@ with open(os.path.join(fontDir, cssFile), 'w') as cssFile:
                'UltraBold': 800,
                'Black': 900,
                'Heavy': 900,
+               'ExtraBlack': 950,
+               'UltraBlack': 950,
             }[match.group('weight')]
 
          stretch = 'normal'
