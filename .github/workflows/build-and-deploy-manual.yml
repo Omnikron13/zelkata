@@ -52,10 +52,6 @@ jobs:
       font: Ubuntu
       version: v3.2.1
     steps:
-      - uses: actions/cache/restore@v4
-        with:
-          path: "docs/assets/fonts/${{env.font}}NerdFont"
-          key: "${{env.font}}-${{env.version}}"
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Checkout main
@@ -64,6 +60,11 @@ jobs:
           sparse-checkout: |
             .github
             docs
+
+      - uses: actions/cache/restore@v4
+        with:
+          path: "docs/assets/fonts/${{env.font}}NerdFont"
+          key: "${{env.font}}-${{env.version}}"
 
       - name: Setup Python
         uses: actions/setup-python@v5.1.0
