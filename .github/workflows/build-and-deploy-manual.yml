@@ -48,7 +48,14 @@ jobs:
     name: Build manual pages
     needs: get_fonts
     runs-on: ubuntu-latest
+    env:
+      font: Ubuntu
+      version: v3.2.1
     steps:
+      - uses: actions/cache/restore@v4
+        with:
+          path: "docs/assets/fonts/${{env.font}}NerdFont"
+          key: "${{env.font}}-${{env.version}}"
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Checkout main
