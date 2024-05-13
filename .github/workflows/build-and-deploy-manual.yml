@@ -40,7 +40,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         id: process_fonts
         run: |
-          mv $(python docs/scripts/gen_nerdfont_css.py "${font}" "${version}") "docs/assets/fonts/${font}NerdFont"
+          mv $(python docs/scripts/gen_nerdfont_css.py "${font}" "${version}") "docs/assets/fonts/"
 
 
   ## Build job ##
