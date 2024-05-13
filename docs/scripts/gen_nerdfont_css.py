@@ -105,5 +105,7 @@ with open(os.path.join(fontDir, cssFile), 'w') as cssFile:
    cssFile.write(f'  --md-code-font: "{fontName}" "{fontName} Mono";\n')
    cssFile.write(f'}}\n\n')
 
+
+# Finally, output the path to the font directory
 print(fontDir)
 
