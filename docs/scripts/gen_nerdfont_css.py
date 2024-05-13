@@ -47,17 +47,16 @@ with open(os.path.join(fontDir, cssFile), 'w') as cssFile:
          if match.group('style') is not None:
              style = match.group('style')
 
-         cssFile.write('\n@font-face {\n')
-         cssFile.write('  font-family: "' + fontName + spacing + '";\n')
-         cssFile.write('  src:\n   url("'  + f + '") format("truetype");\n')
-         cssFile.write('  font-weight: ' + str(weight) + ';\n')
-         cssFile.write('  font-style: ' + style + ';\n')
-         cssFile.write('  font-stretch: ' + stretch + ';\n')
-         cssFile.write('}\n')
-         cssFile.write('\n')
+         cssFile.write(f'@font-face {{\n')
+         cssFile.write(f'  font-family: "{fontName}{spacing}";\n')
+         cssFile.write(f'  src:\n   url("{f}") format("truetype");\n')
+         cssFile.write(f'  font-weight: {str(weight)};\n')
+         cssFile.write(f'  font-style: {style};\n')
+         cssFile.write(f'  font-stretch: {stretch};\n')
+         cssFile.write(f'}}\n\n')
 
-   cssFile.write('\n:root {\n')
-   cssFile.write('  --md-text-font: "' + fontName + ' Propo";\n')
+   cssFile.write(f'\n:root {{\n')
+   cssFile.write(f'  --md-text-font: "{fontName} Propo";\n')
    cssFile.write(f'  --md-code-font: "{fontName}" "{fontName} Mono";\n')
-   cssFile.write('}\n')
+   cssFile.write(f'}}\n\n')
 
