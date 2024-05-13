@@ -3,25 +3,18 @@ import sys
 import re
 
 
-# TODO: use 'argparse' to parse command line arguments for better... everything
-print(sys.argv)
-
+# TODO: use 'argparse' to parse command line arguments for better... everything?
 fontDir = sys.argv[1]
 fontBaseName = os.path.basename(fontDir)
 fontName = fontBaseName + "NerdFont"
 
-ccsDir = sys.argv[2]
-cssFile = fontName + '.css'
-cssPath = os.path.join(ccsDir, cssFile)
+cssFile = f'{fontName}.css'
 
-fontAbsDir = sys.argv[3]
-
-with open(cssPath, 'w') as cssFile:
+with open(os.path.join(fontDir, cssFile), 'w') as cssFile:
    for f in os.listdir(fontDir):
       if f.endswith('.ttf'):
-         match = re.match(r'^.+?(?P<spacing>Mono|Propo)?-(?P<weight>Thin|(?:Extra|Ultra)?Light|Normal|Regular|Medium|(?:Semi|Demi|Extra|Ultra)?Bold|Black|Heavy)?(?P<stretch>Condensed)?(?P<style>Italic)?\.ttf$', f)
-         match = re.match(r'^.+?(?P<spacing>Mono|Propo)?-(?P<weight>Thin|(?:Extra|Ultra)?Light|Normal|Regular|Medium|(?:Semi|Demi|Extra|Ultra)?Bold|Black|Heavy)?(?P<stretch>Condensed)?(?P<style>Italic)?.+?$', f)
-         #print(match)
+         weightRegex = r'(?P<weight>Thin|(?:Extra|Ultra)?Light|Normal|Regular|Medium|(?:Semi|Demi|Extra|Ultra)?Bold|Black|Heavy)'
+         match = re.match(fr"^{fontName}(?P<spacing>Mono|Propo)?-{weightRegex}?(?P<stretch>Condensed)?(?P<style>Italic)?\.ttf$", f)
 
          spacing = ''
          if match.group('spacing') is not None:
@@ -54,13 +47,9 @@ with open(cssPath, 'w') as cssFile:
          if match.group('style') is not None:
              style = match.group('style')
 
-         print(spacing, weight, stretch, style)
-
-         #fontName = f.split('.')[0]
          cssFile.write('\n@font-face {\n')
          cssFile.write('  font-family: "' + fontName + spacing + '";\n')
-         # TODO: reowr this to be a lot less fragile
-         cssFile.write('  src:\n   url("'  + fontAbsDir + fontBaseName + '/' + f + '") format("truetype");\n')
+         cssFile.write('  src:\n   url("'  + f + '") format("truetype");\n')
          cssFile.write('  font-weight: ' + str(weight) + ';\n')
          cssFile.write('  font-style: ' + style + ';\n')
          cssFile.write('  font-stretch: ' + stretch + ';\n')
@@ -69,6 +58,6 @@ with open(cssPath, 'w') as cssFile:
 
    cssFile.write('\n:root {\n')
    cssFile.write('  --md-text-font: "' + fontName + ' Propo";\n')
-   cssFile.write('  --md-code-font: "' + fontName + '";\n')
+   cssFile.write(f'  --md-code-font: "{fontName}" "{fontName} Mono";\n')
    cssFile.write('}\n')
 
