@@ -63,7 +63,7 @@ with open(os.path.join(fontDir, cssFile), 'w') as cssFile:
 
          spacing = ''
          if match.group('spacing') is not None:
-             spacing = ' ' + match.group('spacing')
+            spacing = f' {match.group('spacing')}'
 
          weight = 400
          if match.group('weight') is not None:
