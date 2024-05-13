@@ -7,9 +7,45 @@ on:
   #    - main
 
 jobs:
+  ## Fetch/process/cache fonts ##
+  get_fonts:
+    name: Fetch & Process NerdFonts
+    runs-on: ubuntu-latest
+    env:
+      font: Ubuntu
+      version: v3.2.1
+    steps:
+      - uses: actions/cache@v4
+        id: cache
+        with:
+          path: "docs/assets/fonts/${font}NerdFont"
+          key: "${font}-${version}"
+
+      - name: Checkout processing script
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            docs/scripts/gen_nerdfont_css.py
+
+      - name: Setup Python
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/setup-python@v5.1.0
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Download, unpack, and process NerdFonts
+        if: steps.cache.outputs.cache-hit != 'true'
+        id: process_fonts
+        run: |
+          mv $(python docs/scripts/gen_nerdfont_css.py "${font}" "${version}") "docs/assets/fonts/${font}NerdFont"
+
+
   ## Build job ##
   build:
     name: Build manual pages
+    needs: get_fonts
     runs-on: ubuntu-latest
     steps:
       - name: Configure GitHub Pages
@@ -26,17 +62,6 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip'
-
-      - name: Download, unpack, and process Nerd Fonts
-        env:
-          font: Ubuntu
-          version: v3.2.1
-          destination: docs/assets/fonts/
-        run: |
-          wget "https://github.com/ryanoasis/nerd-fonts/releases/download/${version}/${font}.tar.xz"
-          mkdir -p "${destination}${font}"
-          tar xf "${font}.tar.xz" --directory "${destination}${font}" --wildcards '*.ttf'
-          python docs/scripts/gen_nerdfont_css.py "${destination}${font}" docs/assets/stylesheets/ /zelkata/assets/fonts/
 
       - name: Install python modules
         run: pip install -r docs/requirements.txt
