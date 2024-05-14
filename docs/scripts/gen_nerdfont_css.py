@@ -152,6 +152,11 @@ with open(os.path.join(fontDir, cssFile), 'w') as cssFile:
    cssFile.write(f'  --md-code-font: "{fontName}" "{fontName} Mono";\n')
    cssFile.write(f'}}\n\n')
 
+# Move the output(S) if --output was specified
+if args.output is not None:
+   shutil.move(fontDir, args.output)
+   # change fontDir to the new location so, if we're not being quiet, the correct path will be passed out
+   fontDir = os.path.join(args.output, fontName)
 
 # Output path to the directory containing our font files and CSS, if we aren't being quiet
 if not args.quiet:
