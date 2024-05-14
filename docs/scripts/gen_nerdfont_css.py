@@ -1,11 +1,12 @@
 import argparse
 import os
 import re
+import shutil
 import sys
+import tarfile
 import tempfile
 import urllib.request
 from urllib.error import HTTPError
-import tarfile
 
 
 # NerdFont release URL
