@@ -78,7 +78,7 @@ args = argParser.parse_args()
 
 # Process the implications listed in the help text
 if args.mkdocs and args.output is None:
-   args.output = 'docs/assets/fonts/'
+   args.output = 'docs/assets/fonts'
 if args.quiet:
    args.clean = True
 if args.clean and args.output is None:
