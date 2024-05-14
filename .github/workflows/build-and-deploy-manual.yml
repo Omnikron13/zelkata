@@ -7,7 +7,7 @@ on:
   #    - main
 
 env:
-  font: Ubuntu
+  font: SpaceMono
   version: v3.2.1
 
 jobs:
@@ -19,7 +19,9 @@ jobs:
       - uses: actions/cache@v4
         id: cache
         with:
-          path: "docs/assets/fonts/${{env.font}}NerdFont"
+          path: |
+            docs/assets/fonts/${{env.font}}NerdFont
+            docs/assets/fonts/default-font.css
           key: "${{env.font}}-${{env.version}}"
 
       - name: Checkout processing script
