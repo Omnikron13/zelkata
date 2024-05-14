@@ -6,10 +6,23 @@
 # Couple of variants for the header I quite like
 site_name: '⧼Zelkata Manual⧽'
 #site_name: '⦗Zelkata Manual⦘'
+site_description: User manual for the Zelkata system.
 
 site_url: https://zelkata.omnikron13.uk
 site_author: Joey Sabey
 copyright: Copyright &copy; 2024 Joey Sabey
+
+# Link back to the repo that'll lurk in the top right corner
+repo_url: https://github.com/omnikron13/zelkata/
+repo_name: Zelkata Github repo
+
+# Don't copy files used for building/generating the manual into the site
+exclude_docs: |
+  *.py
+
+# Only include drafts in serve, not in actual builds
+draft_docs: |
+  .draft.md
 
 # Main navigation
 nav:
