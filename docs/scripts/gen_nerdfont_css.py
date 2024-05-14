@@ -26,18 +26,50 @@ FONT_EXTENSION = 'ttf'
 
 # Parse our command line arguments like a real live boy
 argParser = argparse.ArgumentParser(
-   prog="nerdfontweb.py",
-   description="Fetch & process patched Nerd Fonts, generating required CSS to use them as web fonts",
-   epilog="Originally part of Zelkata: https://github.com/omnikron13/zelkata",
+   prog = 'nerdfontweb.py',
+   description = 'Fetch & process patched Nerd Fonts, generating required CSS to use them as web fonts',
+   epilog = 'Originally part of Zelkata: https://github.com/omnikron13/zelkata',
 )
-argParser.add_argument('archive', metavar='name', help="name of the font (or at least the archive) to fetch, sans 'NerdFont'")
-argParser.add_argument('-v', '--version', default=VERSION, help="fully qualified release version (including 'v' prefix) to fetch, if the default is out-of-date")
-argParser.add_argument('-o', '--output', default=None, help='directory path to move output files/directories to (implies --clean)')
-argParser.add_argument('-n', '--name', default=None, help='(base) name of font, if it differs from that of the archive file')
-argParser.add_argument('-q', '--quiet', action='store_true', help='supress output of temporary output directory path (implies --clean)')
-argParser.add_argument('-c', '--clean', action='store_true', help='delete temporary working dir when done (implies --quiet if --output not specified)')
-argParser.add_argument('--gen-default', action='store_true', help='generate additional `default-font.css` file including the primary CSS file & setting the processed font as the default')
-argParser.add_argument('--mkdocs', action='store_true', help='set default value for --output suitable for MkDocs, and set MkDocs specific variables in `default-font.css` if generated (implies --output)')
+argParser.add_argument(
+   'archive',
+   metavar = 'name',
+   help = "name of the font (or at least the archive) to fetch, sans 'NerdFont'",
+)
+argParser.add_argument(
+   '-v', '--version',
+   default = VERSION,
+   help = "fully qualified release version (including 'v' prefix) to fetch, if the default is out-of-date",
+)
+argParser.add_argument(
+   '-o', '--output',
+   default = None,
+   help = 'directory path to move output files/directories to (implies --clean)'
+)
+argParser.add_argument(
+   '-n', '--name',
+   default = None,
+   help = '(base) name of font, if it differs from that of the archive file'
+)
+argParser.add_argument(
+   '-q', '--quiet',
+   action = 'store_true',
+   help = 'supress output of temporary output directory path (implies --clean)'
+)
+argParser.add_argument(
+   '-c', '--clean',
+   action = 'store_true',
+   help = 'delete temporary working dir when done (implies --quiet if --output not specified)'
+)
+argParser.add_argument(
+   '--gen-default',
+   action = 'store_true',
+   help = 'generate additional `default-font.css` file including the primary CSS file & setting the processed font as the default'
+)
+argParser.add_argument(
+   '--mkdocs',
+   action = 'store_true',
+   help = 'set default value for --output suitable for MkDocs, and set MkDocs specific variables in `default-font.css` if generated (implies --output)'
+)
 # TODO: control behaviour on failure to parse font file name
 # TODO: alternate weight conversion table/system?
 
