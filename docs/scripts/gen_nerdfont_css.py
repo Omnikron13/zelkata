@@ -1,3 +1,4 @@
+import argparse
 import os
 import re
 import sys
@@ -22,15 +23,47 @@ ARCHIVE_TYPE = '.tar.xz'
 # I believe all the 'official' potched font files are TTF files
 FONT_EXTENSION = 'ttf'
 
+# Parse our command line arguments like a real live boy
+argParser = argparse.ArgumentParser(
+   prog="nerdfontweb.py",
+   description="Fetch & process patched Nerd Fonts, generating required CSS to use them as web fonts",
+   epilog="Originally part of Zelkata: https://github.com/omnikron13/zelkata",
+)
+argParser.add_argument('archive', metavar='name', help="name of the font (or at least the archive) to fetch, sans 'NerdFont'")
+argParser.add_argument('-v', '--version', default=VERSION, help="fully qualified release version (including 'v' prefix) to fetch, if the default is out-of-date")
+argParser.add_argument('-o', '--output', default=None, help='directory path to move output files/directories to (implies --clean)')
+argParser.add_argument('-n', '--name', default=None, help='(base) name of font, if it differs from that of the archive file')
+argParser.add_argument('-q', '--quiet', action='store_true', help='supress output of temporary output directory path (implies --clean)')
+argParser.add_argument('-c', '--clean', action='store_true', help='delete temporary working dir when done (implies --quiet)')
+argParser.add_argument('--gen-default', action='store_true', help='generate additional `default-font.css` file including the primary CSS file & setting the processed font as the default')
+argParser.add_argument('--mkdocs', action='store_true', help='set default value for --output suitable for MkDocs, and set MkDocs specific variables in `default-font.css` if generated (implies --output)')
+# TODO: control behaviour on failure to parse font file name
+# TODO: alternate weight conversion table/system?
+
+args = argParser.parse_args()
+#print(args)
+
+# Process the implications listed in the help text
+if args.mkdocs and args.output is None:
+   args.output = 'docs/assets/fonts/'
+if args.quiet:
+   args.clean = True
+if args.clean:
+   args.quiet = True
+if args.output is not None:
+   args.clean = True
+
 # Best practice to get ourself a safe temporary directory to work in...
 tmpDir = tempfile.mkdtemp()
 
-# TODO: use 'argparse' to parse command line arguments for better... everything?
-fontBaseName = sys.argv[1]
-archiveName = f'{fontBaseName}{ARCHIVE_TYPE}'
+# Full filename for the archive to fetch
+archiveName = f'{args.archive}{ARCHIVE_TYPE}'
+
+# Name of font sans 'NerdFont' suffix
+fontBaseName = args.archive if args.name is None else args.name
 
 # Override default version if argument passed
-version = sys.argv[2] if len(sys.argv) > 2 else VERSION
+version = args.version if args.version is not None else VERSION
 
 # Full download URL for the specified font/version
 url = f'{BASE_URL}{version}/{archiveName}'
@@ -119,6 +152,7 @@ with open(os.path.join(fontDir, cssFile), 'w') as cssFile:
    cssFile.write(f'}}\n\n')
 
 
-# Finally, output the path to the font directory
-print(fontDir)
+if not args.quiet:
+   # Finally, output the path to the font directory
+   print(fontDir)
 
