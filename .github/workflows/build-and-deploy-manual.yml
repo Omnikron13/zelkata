@@ -7,7 +7,7 @@ on:
   #    - main
 
 env:
-  font: Arimo
+  font: UbuntuSans
   version: v3.2.1
 
 jobs:
@@ -41,7 +41,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         id: process_fonts
         run: |
-          mv $(python docs/scripts/gen_nerdfont_css.py "${font}" "${version}") "docs/assets/fonts/"
+           python nerdfontweb.py --version ${{env.version}} --gen-default --mkdocs ${{env.font}}
 
 
   ## Build job ##
