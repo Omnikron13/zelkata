@@ -21,7 +21,7 @@ VERSION = 'v3.2.1'
 # right now, but available options may change in future.
 ARCHIVE_TYPE = '.tar.xz'
 
-# I believe all the 'official' potched font files are TTF files
+# I believe all the 'official' patched font files are TTF files
 FONT_EXTENSION = 'ttf'
 
 # Parse our command line arguments like a real live boy
