@@ -67,6 +67,7 @@ with open(os.path.join(fontDir, cssFile), 'w') as cssFile:
          # Fail completely if a font filename can't be processed. Perhaps a bit excessive...
          if match is None:
             print(f"Failed to match/extract font file properties for: {f}")
+            # TODO: control this behaviour with a cmd line flag
             sys.exit(1)
 
          spacing = ''
