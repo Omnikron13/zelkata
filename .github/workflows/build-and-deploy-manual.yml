@@ -20,8 +20,8 @@ jobs:
         id: cache
         with:
           path: |
-            "docs/assets/fonts/${{env.font}}NerdFont"
-            "docs/assets/fonts/default-font.css"
+            docs/assets/fonts/${{env.font}}NerdFont
+            docs/assets/fonts/default-font.css
           key: "${{env.font}}-${{env.version}}"
 
       - name: Checkout processing script
@@ -44,9 +44,6 @@ jobs:
         id: process_fonts
         run: |
            python nerdfontweb.py --version ${{env.version}} --gen-default --mkdocs ${{env.font}}
-           ls
-           ls docs
-           ls docs/assets
            ls docs/assets/fonts
 
 
@@ -68,8 +65,8 @@ jobs:
       - uses: actions/cache/restore@v4
         with:
           path: |
-            "docs/assets/fonts/${{env.font}}NerdFont"
-            "docs/assets/fonts/default-font.css"
+            docs/assets/fonts/${{env.font}}NerdFont
+            docs/assets/fonts/default-font.css
           key: "${{env.font}}-${{env.version}}"
           fail-on-cache-miss: true
 
