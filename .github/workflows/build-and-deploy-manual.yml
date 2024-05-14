@@ -23,7 +23,6 @@ jobs:
             "docs/assets/fonts/${{env.font}}NerdFont"
             "docs/assets/fonts/default-font.css"
           key: "${{env.font}}-${{env.version}}"
-          fail-on-cache-miss: true
 
       - name: Checkout processing script
         if: steps.cache.outputs.cache-hit != 'true'
@@ -72,6 +71,7 @@ jobs:
             "docs/assets/fonts/${{env.font}}NerdFont"
             "docs/assets/fonts/default-font.css"
           key: "${{env.font}}-${{env.version}}"
+          fail-on-cache-miss: true
 
       - name: Setup Python
         uses: actions/setup-python@v5.1.0
