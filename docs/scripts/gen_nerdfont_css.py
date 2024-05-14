@@ -35,7 +35,7 @@ argParser.add_argument('-v', '--version', default=VERSION, help="fully qualified
 argParser.add_argument('-o', '--output', default=None, help='directory path to move output files/directories to (implies --clean)')
 argParser.add_argument('-n', '--name', default=None, help='(base) name of font, if it differs from that of the archive file')
 argParser.add_argument('-q', '--quiet', action='store_true', help='supress output of temporary output directory path (implies --clean)')
-argParser.add_argument('-c', '--clean', action='store_true', help='delete temporary working dir when done (implies --quiet)')
+argParser.add_argument('-c', '--clean', action='store_true', help='delete temporary working dir when done (implies --quiet if --output not specified)')
 argParser.add_argument('--gen-default', action='store_true', help='generate additional `default-font.css` file including the primary CSS file & setting the processed font as the default')
 argParser.add_argument('--mkdocs', action='store_true', help='set default value for --output suitable for MkDocs, and set MkDocs specific variables in `default-font.css` if generated (implies --output)')
 # TODO: control behaviour on failure to parse font file name
@@ -49,7 +49,7 @@ if args.mkdocs and args.output is None:
    args.output = 'docs/assets/fonts/'
 if args.quiet:
    args.clean = True
-if args.clean:
+if args.clean and args.output is None:
    args.quiet = True
 if args.output is not None:
    args.clean = True
