@@ -2,9 +2,9 @@ name: Build & deploy Manual to GitHub Pages
 on:
   workflow_dispatch:
 
-  #push:
-  #  branches:
-  #    - main
+  push:
+    branches:
+      - main
 
 env:
   font: SpaceMono
