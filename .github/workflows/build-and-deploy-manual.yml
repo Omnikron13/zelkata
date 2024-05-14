@@ -20,9 +20,10 @@ jobs:
         id: cache
         with:
           path: |
-            docs/assets/fonts/${{env.font}}NerdFont
-            docs/assets/fonts/default-font.css
+            "docs/assets/fonts/${{env.font}}NerdFont"
+            "docs/assets/fonts/default-font.css"
           key: "${{env.font}}-${{env.version}}"
+          fail-on-cache-miss: true
 
       - name: Checkout processing script
         if: steps.cache.outputs.cache-hit != 'true'
