@@ -157,3 +157,7 @@ with open(os.path.join(fontDir, cssFile), 'w') as cssFile:
 if not args.quiet:
    print(fontDir)
 
+# Yeet the working dir if we are meant to clean up after ourself
+if args.clean:
+   shutil.rmtree(tmpDir)
+
