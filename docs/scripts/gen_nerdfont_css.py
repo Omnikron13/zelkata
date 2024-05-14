@@ -19,6 +19,9 @@ VERSION = 'v3.2.1'
 # right now, but available options may change in future.
 ARCHIVE_TYPE = '.tar.xz'
 
+# I believe all the 'official' potched font files are TTF files
+FONT_EXTENSION = 'ttf'
+
 # Best practice to get ourself a safe temporary directory to work in...
 tmpDir = tempfile.mkdtemp()
 
@@ -47,7 +50,7 @@ fontDir = os.path.join(tmpDir, fontName)
 
 # Pull just the actual font files from the archive
 with tarfile.open(archivePath, 'r:xz') as tar:
-   tar.extractall(fontDir, members=[m for m in tar.getmembers() if m.isfile() and m.name.endswith('.ttf')])
+   tar.extractall(fontDir, members=[m for m in tar.getmembers() if m.isfile() and m.name.endswith(f'.{FONT_EXTENSION}')])
 
 # We'll just name the CSS file the same as the font name, and store it in the font dir with the font files
 cssFile = f'{fontName}.css'
@@ -59,7 +62,7 @@ with open(os.path.join(fontDir, cssFile), 'w') as cssFile:
    for f in os.listdir(fontDir):
       if f.endswith('.ttf'):
          weightRegex = r'(?P<weight>Thin|(?:Extra|Ultra|Semi)?Light|Normal|Regular|Medium|(?:Semi|Demi|Extra|Ultra)?Bold|(?:Extra|Ultra)?Black|Heavy)'
-         match = re.match(fr"^(?P<name>.+NerdFont)(?P<spacing>Mono|Propo)?-{weightRegex}?(?P<stretch>Condensed)?(?P<style>Italic)?\.ttf$", f)
+         match = re.match(fr"^(?P<name>.+NerdFont)(?P<spacing>Mono|Propo)?-{weightRegex}?(?P<stretch>Condensed)?(?P<style>Italic)?\.{FONT_EXTENSION}$", f)
 
          # Fail completely if a font filename can't be processed. Perhaps a bit excessive...
          if match is None:
