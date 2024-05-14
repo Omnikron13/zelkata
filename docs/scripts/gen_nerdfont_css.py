@@ -119,11 +119,12 @@ with tarfile.open(archivePath, 'r:xz') as tar:
    tar.extractall(fontDir, members=[m for m in tar.getmembers() if m.isfile() and m.name.endswith(f'.{FONT_EXTENSION}')])
 
 # We'll just name the CSS file the same as the font name, and store it in the font dir with the font files
-cssFile = f'{fontName}.css'
-cssPath = os.path.join(fontDir, cssFile)
+cssName = f'{fontName}.css'
+cssPath = os.path.join(fontDir, cssName)
+
 
 # Generate @font-face entries for each file/variant provided in the given font
-with open(os.path.join(fontDir, cssFile), 'w') as cssFile:
+with open(cssPath, 'w') as cssFile:
    cssFile.write(f'/* Generated from {fontName}-{version} by gen_nerdfont_css.py */\n\n')
    for f in os.listdir(fontDir):
       if f.endswith('.ttf'):
@@ -179,20 +180,39 @@ with open(os.path.join(fontDir, cssFile), 'w') as cssFile:
          cssFile.write(f'  font-stretch: {stretch};\n')
          cssFile.write(f'}}\n\n')
 
-   cssFile.write(f'\n:root {{\n')
-   cssFile.write(f'  --md-text-font: "{fontName} Propo";\n')
-   cssFile.write(f'  --md-code-font: "{fontName}" "{fontName} Mono";\n')
-   cssFile.write(f'}}\n\n')
+
+# If --gen-default was specified we need to generate a short CSS file with a fixed/known path to include the
+# @font-face CSS file from, to try and keep changing font DRY
+if args.gen_default:
+   defaultFontFile = 'default-font.css'
+   defaultFontPath = os.path.join(tmpDir, defaultFontFile)
+
+   with open(defaultFontPath, 'w') as defaultFontFile:
+      defaultFontFile.write(f'@import "{fontName}/{cssName}";\n')
+
+      defaultFontFile.write(f'\n:root {{\n')
+      defaultFontFile.write(f'   font-family: "{fontName} Propo" "{fontName}" "{fontName} Mono";')
+
+      if args.mkdocs:
+         defaultFontFile.write(f'  --md-text-font: "{fontName} Propo";\n')
+         defaultFontFile.write(f'  --md-code-font: "{fontName}" "{fontName} Mono";\n')
+
+      defaultFontFile.write(f'}}\n\n')
+
 
 # Move the output(S) if --output was specified
 if args.output is not None:
    shutil.move(fontDir, args.output)
    # change fontDir to the new location so, if we're not being quiet, the correct path will be passed out
    fontDir = os.path.join(args.output, fontName)
+   if args.gen_default:
+      shutil.move(defaultFontPath, args.output)
+
 
 # Output path to the directory containing our font files and CSS, if we aren't being quiet
 if not args.quiet:
    print(fontDir)
+
 
 # Yeet the working dir if we are meant to clean up after ourself
 if args.clean:
