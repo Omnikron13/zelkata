@@ -67,6 +67,9 @@ jobs:
 
       - uses: actions/cache/restore@v4
         with:
+          path: |
+            docs/assets/fonts/${{env.font}}NerdFont
+            docs/assets/fonts/default-font.css
           key: "${{env.font}}-${{env.version}}"
 
       - name: Setup Python
