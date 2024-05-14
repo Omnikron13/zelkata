@@ -43,8 +43,11 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         id: process_fonts
         run: |
+           ls --recursive
+           echo "----------------------------------"
            python nerdfontweb.py --version ${{env.version}} --gen-default --mkdocs ${{env.font}}
-           ls docs/assets/fonts
+           echo "----------------------------------"
+           ls --recursive
 
 
   ## Build job ##
