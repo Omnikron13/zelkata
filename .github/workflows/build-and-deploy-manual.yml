@@ -7,7 +7,7 @@ on:
   #    - main
 
 env:
-  font: Arimo
+  font: UbuntuSans
   version: v3.2.1
 
 jobs:
