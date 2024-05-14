@@ -7,7 +7,7 @@ on:
   #    - main
 
 env:
-  font: UbuntuSans
+  font: Ubuntu
   version: v3.2.1
 
 jobs:
@@ -42,6 +42,10 @@ jobs:
         id: process_fonts
         run: |
            python nerdfontweb.py --version ${{env.version}} --gen-default --mkdocs ${{env.font}}
+           ls
+           ls docs
+           ls docs/assets
+           ls docs/assets/fonts
 
 
   ## Build job ##
