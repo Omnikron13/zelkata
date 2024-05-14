@@ -153,7 +153,7 @@ with open(os.path.join(fontDir, cssFile), 'w') as cssFile:
    cssFile.write(f'}}\n\n')
 
 
+# Output path to the directory containing our font files and CSS, if we aren't being quiet
 if not args.quiet:
-   # Finally, output the path to the font directory
    print(fontDir)
 
