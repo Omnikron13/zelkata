@@ -3,7 +3,7 @@
 
 window.addEventListener('DOMContentLoaded', () => {
    const accentify = [
-     ...document.querySelectorAll('h1, h2, .md-nav--secondary .md-ellipsis'),
+     ...document.querySelectorAll('h1, h2, a, em, .md-ellipsis'),
    ]
 
    const nerdRanges = [
