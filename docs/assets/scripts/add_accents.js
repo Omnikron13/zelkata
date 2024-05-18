@@ -22,8 +22,8 @@ window.addEventListener('DOMContentLoaded', () => {
       {name: 'Material Design Icons', ranges: [{first: 0xf0001, last: 0xf1af0}]},
    ]
 
-   accentify.forEach((el) => {
-      const text = el.innerText
+   accentify.forEach((elem) => {
+      const text = elem.innerText
       const firstChar = text.codePointAt(0)
       if (nerdRanges.map(r => r.ranges).flat().some(r => firstChar >= r.first && firstChar <= r.last)) {
          const glyph = String.fromCodePoint(firstChar)
@@ -31,7 +31,7 @@ window.addEventListener('DOMContentLoaded', () => {
          const accentSpan = document.createElement('span')
          accentSpan.classList.add('accent', 'nerd-font')
          accentSpan.innerText = glyph
-         el.replaceChildren(accentSpan, tail)
+         elem.replaceChildren(accentSpan, tail)
       }
    })
 })
