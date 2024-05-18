@@ -1,0 +1,110 @@
+/*
+ * Catppuccin Macchiato color scheme draft.
+ * There are seemingly interesting differences in design between the two color scheme formats, so a fair amoutn of
+ * tweaking and testing seems to be required to produce pleasant results.
+
+[data-md-color-scheme="catppuccin-macchiato"]
+  /* catppuccin-Macchiato palette
+  --catppuccin-rosewater:#f4dbd6
+  --catppuccin-flamingo:#f0c6c6
+  --catppuccin-pink:#f5bde6
+  --catppuccin-mauve:#c6a0f6
+  --catppuccin-red:#ed8796
+  --catppuccin-maroon:#ee99a0
+  --catppuccin-peach:#f5a97f
+  --catppuccin-yellow:#eed49f
+  --catppuccin-green:#a6da95
+  --catppuccin-teal:#8bd5ca
+  --catppuccin-sky:#91d7e3
+  --catppuccin-sapphire:#7dc4e4
+  --catppuccin-blue:#8aadf4
+  --catppuccin-lavender:#b7bdf8
+  --catppuccin-text:#cad3f5
+  --catppuccin-subtext-1:#b8c0e0
+  --catppuccin-subtext-0:#a5adcb
+  --catppuccin-overlay-2:#939ab7
+  --catppuccin-overlay-1:#8087a2
+  --catppuccin-overlay-0:#6e738d
+  --catppuccin-surface-2:#5b6078
+  --catppuccin-surface-1:#494d64
+  --catppuccin-surface-0:#363a4f
+  --catppuccin-base:#24273a
+  --catppuccin-mantle:#1e2030
+  --catppuccin-crust:#181926
+
+  /* Default color shades
+  --md-default-fg-color:var(--catppuccin-text)
+  --md-default-fg-color--light:var(--catppuccin-teal)
+  --md-default-fg-color--lighter:var(--catppuccin-peach)
+  --md-default-fg-color--lightest:var(--catppuccin-maroon)
+  --md-default-bg-color:var(--catppuccin-base)
+  --md-default-bg-color--light:var(--catppuccin-surface-0)
+  --md-default-bg-color--lighter:var(--catppuccin-surface-1)
+  --md-default-bg-color--lightest:var(--catppuccin-surface-2)
+
+  /* --md-primary-fg-color: var(--catppuccin-blue);
+  --md-primary-fg-color:var(--catppuccin-surface-2)
+  --md-accent-fg-color:var(--catppuccin-mauve)
+
+  /*
+   * Main text/typesetting colours
+  --md-typeset-color:var(--md-default-fg-color)
+
+  /* Links
+  --md-typeset-a-color:var(--catppuccin-blue)
+
+  /* Typeset `del` and `ins` color shades
+  /*
+   *--md-typeset-del-color:              hsla(6, 90%, 60%, 0.15);
+   *--md-typeset-ins-color:              hsla(150, 90%, 44%, 0.15);
+  /* Typeset `kbd` color shades
+  /*
+   *--md-typeset-kbd-color:              hsla(0, 0%, 98%, 1);
+   *--md-typeset-kbd-accent-color:       hsla(0, 100%, 100%, 1);
+   *--md-typeset-kbd-border-color:       hsla(0, 0%, 72%, 1);
+  /* Typeset `mark` color shades
+  /*
+   *--md-typeset-mark-color:             hsla(#{hex2hsl($clr-yellow-a200)}, 0.5);
+  /* Typeset `table` color shades
+  /*
+   *--md-typeset-table-color:            hsla(0, 0%, 0%, 0.12);
+   *--md-typeset-table-color--light:     hsla(0, 0%, 0%, 0.035);
+
+  /* Admonition color shades
+  --md-admonition-fg-color:var(--catppuccin-blue)
+  --md-admonition-bg-color:var(--catppuccin-surface-0)
+
+  /* Warning color shades
+  --md-warning-fg-color:var(--catppuccin-red)
+  --md-warning-bg-color:hsla(60, 100%, 80%, 1)
+
+  /* Footer color shades
+  --md-footer-fg-color:var(--catppuccin-subtext-0)
+  --md-footer-fg-color--light:var(--catppuccin-subtext-1)
+  --md-footer-fg-color--lighter:var(--catppuccin-text)
+  --md-footer-bg-color:var(--catppuccin-mantle)
+  --md-footer-bg-color--dark:var(--catppuccin-crust)
+
+  /*
+   * Syntax highlighting color shades
+  /* Code color shades
+  --md-code-fg-color:var(--catppuccin-subtext-1)
+  --md-code-bg-color:var(--catppuccin-surface-0)
+
+  /* Code highlighting color shades
+  /*
+   *--md-code-hl-color:                  hsla(#{hex2hsl($clr-blue-a200)}, 1);
+   *--md-code-hl-color--light:           hsla(#{hex2hsl($clr-blue-a200)}, 0.1);
+  /* Code highlighting syntax color shades
+  --md-code-hl-number-color:var(--catppuccin-peach)
+  --md-code-hl-special-color:hsla(340, 83%, 47%, 1)
+  --md-code-hl-function-color:var(--catppuccin-mauve)
+  --md-code-hl-constant-color:hsla(250, 63%, 60%, 1)
+  --md-code-hl-keyword-color:hsla(219, 54%, 51%, 1)
+  --md-code-hl-string-color:hsla(150, 63%, 30%, 1)
+  --md-code-hl-name-color:var(--md-code-fg-color)
+  --md-code-hl-operator-color:var(--md-default-fg-color--light)
+  --md-code-hl-punctuation-color:var(--md-default-fg-color--light)
+  --md-code-hl-comment-color:var(--catppuccin-lavender)
+  --md-code-hl-generic-color:var(--md-default-fg-color--light)
+  --md-code-hl-variable-color:var(--md-default-fg-color--light)
