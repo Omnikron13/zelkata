@@ -20,8 +20,13 @@ type Meta struct {
    // encoding details specified in the config.
    ID string `yaml:"id"`
 
+   // createdTime is a cludge to (temporarily) avoid the the utter pain in the arse unmarshalling without setting up a
+   // custom unmarshaler. It shouldn't actually be needed for loaded notes, as it is only used to generate the Created
+   // field, and to generate the original filename, which presumably doesn't need regenerating for loaded notes.
+   createdTime time.Time
+
    // Created is the date & time the note was originally created.
-   Created time.Time `yaml:"created"`
+   Created string `yaml:"created"`
 
    // Tags are how notes are (primarily) categorised. They are _technically_ optional, but in practice they should
    // always be used, as they are what creates the hyperlinked web of knowledge that Zelkata is based on.
@@ -66,7 +71,9 @@ type Meta struct {
 // NewMeta returns a new Meta struct with a new generated unique ID and the current date & time for Created.
 func NewMeta() (m Meta) {
    m.ID = encodeID(generateID())
-   m.Created = time.Now()
+   m.createdTime = time.Now().UTC()
+   // TODO: add config for date & time format
+   m.Created = m.createdTime.Format(time.RFC3339)
    return
 }
 
@@ -195,6 +202,6 @@ func generateID() (id []byte) {
 func (m *Meta) GenFileName() string {
    // TODO: move date & time prefixing to config
    // TODO: add config for file extension? Also probably depend on what the actual Note is told the format is.
-   return fmt.Sprintf("%s.%s.%s.md", m.Created.Format(time.DateOnly), m.Created.Format("15-04"), m.ID)
+   return fmt.Sprintf("%s.%s.%s.md", m.createdTime.Format(time.DateOnly), m.createdTime.Format("15-04"), m.ID)
 }
 
