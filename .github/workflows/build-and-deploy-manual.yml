@@ -102,6 +102,11 @@ jobs:
         with:
           name: compiled-css
 
+      - name: check files
+        run: |
+          ls -R
+          ls -la docs/assets/stylesheets/
+
       - name: Setup Python
         uses: actions/setup-python@v5.1.0
         with:
