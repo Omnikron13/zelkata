@@ -4,6 +4,7 @@ package note
 import (
    _"io"
    "bytes"
+   "os"
 
    "gopkg.in/yaml.v3"
 )
@@ -57,5 +58,26 @@ func (n *Note) GenFile() []byte {
    b.WriteString("...\n\n")
    b.WriteString(n.Body)
    return b.Bytes()
+}
+
+
+// ReadFile reads a note file from disk and returns a Note struct.
+func ReadFile(path string) (n Note, err error) {
+   b, err := os.ReadFile(path)
+   if err != nil {
+      return
+   }
+   return readBytes(b)
+}
+
+
+// readBytes reads a byte slice representing the on-disk representation of the note into the Note struct.
+func readBytes(b []byte) (n Note, err error) {
+   metaEnd := bytes.Index(b, []byte("\n...\n\n"))
+   if err = yaml.Unmarshal(b[:metaEnd], &n.Meta); err != nil {
+      return
+   }
+   n.Body = string(b[metaEnd+6:])
+   return
 }
 
