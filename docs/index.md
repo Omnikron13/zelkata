@@ -11,8 +11,8 @@ the
 [ GitHub issue tracker](https://github.com/omnikron13/Zelkata/issues/)
 for the project explaining your issues.
 
-???+ note
-     Further (less formal) areas to discus issues, ideas, problems, etc. will be made available in time
+!!! note
+    Further (less formal) areas to discus issues, ideas, problems, etc. will be made available in time
 
 
 ## 󰭶 Overview
