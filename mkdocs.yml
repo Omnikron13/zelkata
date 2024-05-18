@@ -43,7 +43,7 @@ theme:
 
 # Pulling in a patched Nerd Font for the icons, at least for now; I think you may be able to just map the symbols?
 extra_css:
-   - assets/stylesheets/catppuccin-macchiato.css
+   - assets/stylesheets/catppuccin-macchiato.compiled.css
    - assets/fonts/default-font.css
 
 # TODO: properly review what we may need
