@@ -18,7 +18,9 @@ repo_name: Zelkata Github repo
 
 # Don't copy files used for building/generating the manual into the site
 exclude_docs: |
-  *.py
+  scripts/
+  *.sass
+  *.scss
 
 # Only include drafts in serve, not in actual builds
 draft_docs: |
