@@ -101,6 +101,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: compiled-css
+          path: docs/assets/stylesheets/
 
       - name: check files
         run: |
