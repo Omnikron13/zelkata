@@ -23,6 +23,9 @@ window.addEventListener('DOMContentLoaded', () => {
    ]
 
    accentify.forEach((elem) => {
+      if (elem.children.length > 0) {
+         return
+      }
       const text = elem.innerText
       const firstChar = text.codePointAt(0)
       if (nerdRanges.map(r => r.ranges).flat().some(r => firstChar >= r.first && firstChar <= r.last)) {
