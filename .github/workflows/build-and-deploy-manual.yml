@@ -45,11 +45,40 @@ jobs:
         run: |
           python nerdfontweb.py --version ${{env.version}} --gen-default --mkdocs ${{env.font}}
 
+  ## Compile SASS ##
+  compile_sass:
+    name: Compile SASS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout SASS files
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            docs/assets/stylesheets/
+
+      - name: Install sassc
+        run: sudo apt-get install -y sassc
+
+      - name: Compile SASS
+        run: |
+          for file in docs/assets/stylesheets/*.sass; do
+            sassc --sass $file ${file%.sass}.compiled.css
+          done
+
+      - name: Upload compiled CSS
+        uses: actions/upload-artifact@v2
+        with:
+          name: compiled-css
+          path: docs/assets/stylesheets/*.compiled.css
+          retention-days: 1
+
 
   ## Build job ##
   build:
     name: Build manual pages
-    needs: get_fonts
+    needs:
+      - get_fonts
+      - compile_sass
     runs-on: ubuntu-latest
     steps:
       - name: Configure GitHub Pages
@@ -68,6 +97,10 @@ jobs:
             docs/assets/fonts/default-font.css
           key: "${{env.font}}-${{env.version}}"
           fail-on-cache-miss: true
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: compiled-css
 
       - name: Setup Python
         uses: actions/setup-python@v5.1.0
