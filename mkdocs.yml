@@ -28,8 +28,8 @@ draft_docs: |
 
 # Main navigation
 nav:
-   - Introduction: index.md
-   - Specifications: specifications/index.md
+   - 󰭷 Introduction: index.md
+   - 󱚊 Specifications: specifications/index.md
 
 # Leverage the impressive feature set of the material theme (though the actual theming needs some work...)
 theme:
