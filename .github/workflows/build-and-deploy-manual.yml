@@ -66,7 +66,7 @@ jobs:
           done
 
       - name: Upload compiled CSS
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: compiled-css
           path: docs/assets/stylesheets/*.compiled.css
