@@ -2,7 +2,6 @@
 package note
 
 import (
-   _"io"
    "bytes"
    "os"
 
