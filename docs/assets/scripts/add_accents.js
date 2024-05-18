@@ -1,6 +1,16 @@
 // Description: This script adds the classes 'accent' and 'nerd-font' to the first character of the selected elements,
 //              if said character is part of the NerdFont glyph set.
 
+// Replace a space following the NerdFont 'icon' with e.g. a thinner one, which tends to look nicer.
+// Some options, in descending order or width, include:
+//    Medium Space    - \u205f
+//    Thin Space      - \u2009
+//    Narrow no-break - \u202f (same width as thin space)
+//    'six-per-em'    - \u2006
+//    Hair Space      - \u200a
+// (to not replace, honestly just replace the space with a space...)
+const trailingSpace = '\u202f'
+
 window.addEventListener('DOMContentLoaded', () => {
    const accentify = [
      ...document.querySelectorAll('h1, h2, a, em, .md-ellipsis'),
@@ -30,7 +40,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const firstChar = text.codePointAt(0)
       if (nerdRanges.map(r => r.ranges).flat().some(r => firstChar >= r.first && firstChar <= r.last)) {
          const glyph = String.fromCodePoint(firstChar)
-         const tail = text.substring(glyph.length)
+         const tail = text.substring(glyph.length).replace(/^ /, trailingSpace)
          const accentSpan = document.createElement('span')
          accentSpan.classList.add('accent', 'nerd-font')
          accentSpan.innerText = glyph
