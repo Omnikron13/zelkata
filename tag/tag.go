@@ -89,6 +89,26 @@ func LoadName(name string) (*Tag, error) {
 }
 
 
+// MarshalYAML implements the yaml.Marshaler interface for the Tag struct.
+func (t Tag) MarshalYAML() (interface{}, error) {
+   data := map[string]any{
+      "name": t.Name,
+      "notes": t.Notes,
+   }
+   if len(t.Aliases) > 0 { data["aliases"] = t.Aliases }
+   if t.Description != "" { data["description"] = t.Description }
+   if t.Icon!= "" { data["icon"] = t.Icon }
+   if len(t.Parents) > 0 {
+      parents := make([]string, 0, len(t.Parents))
+      for k := range t.Parents {
+         parents = append(parents, k)
+      }
+      data["parents"] = parents
+   }
+   return interface{}(data), nil
+}
+
+
 // Save writes a Tag struct to a file in the tags directory.
 func (t *Tag) Save() error {
    ext, err := config.Get[string]("tags.extension")

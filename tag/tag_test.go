@@ -5,6 +5,7 @@ import (
    "testing"
 
    "github.com/stretchr/testify/assert"
+   "gopkg.in/yaml.v3"
 )
 
 
@@ -28,6 +29,41 @@ func Test_normaliseName(t *testing.T) {
    assert.Equal(t, "test-tag-name", normaliseName("Test TAG name"))
    assert.Equal(t, "already-normalised", normaliseName("already-normalised"))
  }
+
+
+func Test_MarshalYAML(t *testing.T) {
+   t.Run("simple tag", func(t *testing.T) {
+      tag := Tag{
+         Name: "Test Tag",
+      }
+      data, err := yaml.Marshal(tag)
+      assert.Nil(t, err)
+      assert.Equal(t, "name: Test Tag\nnotes: []\n", string(data))
+   })
+
+   t.Run("complex tag", func(t *testing.T) {
+      tag := Tag{
+         Name: "Test Tag",
+         Description: "An example tag for testing purposes.",
+         Icon: "󰓹",
+         Aliases: []string{
+            "TestTag",
+            "Test",
+         },
+         Notes: []string{
+            "QWERTYUIOP",
+            "ASDFGHJKLZ",
+         },
+         Parents: map[string]string {
+            "Parent 1": "parent-1",
+            "Parent Number Two": "parent-number-two",
+         },
+      }
+      data, err := yaml.Marshal(tag)
+      assert.Nil(t, err)
+      assert.Equal(t, "aliases:\n    - TestTag\n    - Test\ndescription: An example tag for testing purposes.\nicon: \"\\U000F04F9\"\nname: Test Tag\nnotes:\n    - QWERTYUIOP\n    - ASDFGHJKLZ\nparents:\n    - Parent 1\n    - Parent Number Two\n", string(data))
+   })
+}
 
 
 // TODO: mock file access and test; Add(), LoadName(), Save()
