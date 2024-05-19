@@ -128,6 +128,12 @@ func (t Tag) MarshalYAML() (interface{}, error) {
 }
 
 
+// normalisedName returns the normalised name of a tag.
+func (t *Tag) normalisedName() string {
+   return normaliseName(t.Name)
+}
+
+
 // UnmarshalYAML implements the yaml.Unmarshaler interface for the Tag struct.
 func (t *Tag) UnmarshalYAML(value *yaml.Node) error {
    data := map[string]any{}
