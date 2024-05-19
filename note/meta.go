@@ -189,9 +189,35 @@ func generateID() (id []byte) {
 
 // GenFileName generates a filename for a note based on the Meta data.
 func (m *Meta) GenFileName() string {
-   // TODO: move date & time prefixing to config
-   // TODO: add config for file extension? Also probably depend on what the actual Note is told the format is.
-   return fmt.Sprintf("%s.%s.%s.md", m.Created.Format(time.DateOnly), m.Created.Format("15-04"), m.ID)
+   // TODO: perhaps 'fail' silently on errors, treating a lack config value as a 'no'? with the default config, it
+   //       should be impossible to get an error unless something has gone very wrong. better may be to add a function
+   //       to the config package like `MustGet()` or `GetOrPanic()` to make access cleaner.
+   sb := strings.Builder{}
+
+   if prefixDate, err := config.Get[bool]("notes.filenames.prefix.date"); err != nil {
+      panic("error getting config value notes.filenames.prefix.date: " + err.Error())
+   } else if prefixDate {
+      sb.WriteString(m.Created.Format(time.DateOnly))
+      sb.WriteString(".")
+   }
+
+   if prefixTime, err := config.Get[bool]("notes.filenames.prefix.time"); err != nil {
+      panic("error getting config value notes.filenames.prefix.time: " + err.Error())
+   } else if prefixTime{
+      sb.WriteString(m.Created.Format("15-04"))
+      sb.WriteString(".")
+   }
+
+   sb.WriteString(m.ID)
+
+   if suffixExtension, err := config.Get[string]("notes.filenames.suffix.extension"); err != nil {
+      panic("error getting config value notes.filenames.suffix.extension: " + err.Error())
+   } else {
+      sb.WriteString(".")
+      sb.WriteString(suffixExtension)
+   }
+
+   return sb.String()
 }
 
 

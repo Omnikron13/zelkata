@@ -8,6 +8,15 @@ import (
    "gopkg.in/yaml.v3"
 )
 
+func Test_GenFileName(t *testing.T) {
+   now, err := time.Parse(time.DateTime, "2024-05-13 01:02:03")
+   if err != nil { t.Fatalf("Failed to parse time: %s", err) }
+
+   meta := Meta{ID: "0Q1W2E3R4T5Y6U7I8O9P", Created: now}
+   filename := meta.GenFileName()
+   assert.Equal(t, "2024-05-13.01-02.0Q1W2E3R4T5Y6U7I8O9P.md", filename)
+}
+
 func Test_MarshalYAML(t *testing.T) {
    var err error
    t.Run("simple meta", func(t *testing.T) {
