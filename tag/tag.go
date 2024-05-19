@@ -1,6 +1,7 @@
 package tag
 
 import (
+   "fmt"
    "os"
    "path/filepath"
    "strings"
@@ -106,6 +107,43 @@ func (t Tag) MarshalYAML() (interface{}, error) {
       data["parents"] = parents
    }
    return interface{}(data), nil
+}
+
+
+// UnmarshalYAML implements the yaml.Unmarshaler interface for the Tag struct.
+func (t *Tag) UnmarshalYAML(value *yaml.Node) error {
+   data := map[string]any{}
+   if err := value.Decode(&data); err != nil {
+      return err
+   }
+   t.Name = data["name"].(string)
+   if t.Name== "" {
+      t = nil
+      return fmt.Errorf("Missing tag name.")
+   }
+   t.Notes = []string{}
+   for _, n := range data["notes"].([]any){
+      t.Notes = append(t.Notes, n.(string))
+   }
+   if aliases, ok := data["aliases"]; ok {
+      t.Aliases = []string{}
+      for _, a := range aliases.([]any) {
+         t.Aliases = append(t.Aliases, a.(string))
+      }
+   }
+   if description, ok := data["description"]; ok {
+      t.Description = description.(string)
+   }
+   if icon, ok := data["icon"]; ok {
+      t.Icon = icon.(string)
+   }
+   if parents, ok := data["parents"]; ok {
+      t.Parents = map[string]string{}
+      for _, p := range parents.([]any) {
+         t.Parents[p.(string)] = normaliseName(p.(string))
+      }
+   }
+   return nil
 }
 
 
