@@ -39,11 +39,6 @@ type Meta struct {
    // as clean as possible..
 
 
-   // Modified is the date & time the note was last modified. It is optional as a lot of notes will likely never be
-   // modified, and if Zelkata is set up to use Git (or other possible VCS) then changes will be tracked there.
-   // Assuming it does actually get used, it maybe should be replaced with a slice?
-   Modified *string
-
    // Refs are a secondary layer of of hyperlinking that can be necessary in some cases. They are entirely optional for
    // most notes, but can be crucial for some. They can be URLs pointing to related information or resources. They
    // could also be some form of URN identifying a book,research paper, etc. They could even simply be path pointing
@@ -211,9 +206,6 @@ func (m *Meta) MarshalYAML() (any, error) {
    } else {
       data["created"] = created
    }
-   if m.Modified != nil {
-      data["modified"] = m.Modified
-   }
    if m.Refs != nil {
       data["refs"] = m.Refs
    }
@@ -299,10 +291,6 @@ func (m *Meta) UnmarshalYAML(value *yaml.Node) (err error) {
    m.Tags = make([]string, 0, len(tags))
    for _, t := range tags {
       m.Tags = append(m.Tags, t.(string))
-   }
-   if s, ok := data["modified"]; ok {
-      modified := s.(string)
-      m.Modified = &modified
    }
 
    if r, ok := data["refs"]; ok {

@@ -24,13 +24,11 @@ func Test_MarshalYAML(t *testing.T) {
    })
 
    t.Run("complex meta", func(t *testing.T) {
-      modified := "2024-05-13T01:02:03Z"
       title := "Test Note"
       format := "AsciiDoc"
       meta := Meta {
          ID: "123456789",
          Tags: []string{"Foo", "Bar"},
-         Modified: &modified,
          Refs: &map[string]string{
             "Website": "https://example.com",
             "Book": "ISBN 1234567890",
@@ -43,7 +41,7 @@ func Test_MarshalYAML(t *testing.T) {
 
       data, err := yaml.Marshal(&meta)
       assert.Nil(t, err)
-      assert.Equal(t, "created: \"2024-05-13 01:02:03\"\nformat: AsciiDoc\nid: \"123456789\"\nmodified: \"2024-05-13T01:02:03Z\"\nrefs:\n    Book: ISBN 1234567890\n    Website: https://example.com\ntags:\n    - Foo\n    - Bar\ntitle: Test Note\n", string(data))
+      assert.Equal(t, "created: \"2024-05-13 01:02:03\"\nformat: AsciiDoc\nid: \"123456789\"\nrefs:\n    Book: ISBN 1234567890\n    Website: https://example.com\ntags:\n    - Foo\n    - Bar\ntitle: Test Note\n", string(data))
    })
 }
 
@@ -76,17 +74,15 @@ func Test_UnmarshalYAML(t *testing.T) {
    })
 
    t.Run("complex meta", func(t *testing.T) {
-      data := "created: 2024-05-13T01:02:03Z\nformat: AsciiDoc\nid: \"123456789\"\nmodified: 2024-05-13T01:02:03Z\nrefs:\n    Book: ISBN 1234567890\n    Website: https://example.com\ntags:\n    - Foo\n    - Bar\ntitle: Test Note\n"
+      data := "created: 2024-05-13T01:02:03Z\nformat: AsciiDoc\nid: \"123456789\"\nrefs:\n    Book: ISBN 1234567890\n    Website: https://example.com\ntags:\n    - Foo\n    - Bar\ntitle: Test Note\n"
       meta := Meta{}
       err := yaml.Unmarshal([]byte(data), &meta)
       assert.Nil(t, err)
-      modified := "2024-05-13 01:02:03"
       title := "Test Note"
       format := "AsciiDoc"
       expected := Meta{
          ID: "123456789",
          Tags: []string{"Foo", "Bar"},
-         Modified: &modified,
          Refs: &map[string]string{
             "Website": "https://example.com",
             "Book": "ISBN 1234567890",
