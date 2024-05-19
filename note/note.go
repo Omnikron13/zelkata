@@ -45,8 +45,8 @@ func New(body string) Note {
 }
 
 
-// GenFile generates a byte slice representing the on-disk representation of the note.
-func (n *Note) GenFile() []byte {
+// genFile generates a byte slice representing the on-disk representation of the note.
+func (n *Note) genFile() []byte {
    var b bytes.Buffer
    b.WriteString("---\n")
    yml, err := yaml.Marshal(n.Meta)

@@ -54,9 +54,8 @@ func addCmd(ctx context.Context, cmd *cli.Command) error {
    // Actually add the tags to the Note
    note.Tags = acm.tags
 
-   // Generate a byte slice of the note file and write it to the notes directory
-   b := note.GenFile()
-   if err := os.WriteFile(filepath.Join(paths.Notes(), note.GenFileName()), b, 0600); err != nil {
+   // Save the note to the configured notes dir with the configured filename
+   if err := note.Save(); err != nil {
       return err
    }
 
