@@ -2,6 +2,7 @@ package note
 
 import (
    "testing"
+   "time"
 
    "github.com/stretchr/testify/assert"
    "gopkg.in/yaml.v3"
@@ -39,6 +40,17 @@ func Test_MarshalYAML(t *testing.T) {
       assert.Nil(t, err)
       assert.Equal(t, "created: 2024-05-13T01:02:03Z00:00\nformat: AsciiDoc\nid: \"123456789\"\nmodified: 2024-05-13T01:02:03Z00:00\nrefs:\n    Book: ISBN 1234567890\n    Website: https://example.com\ntags:\n    - Foo\n    - Bar\ntitle: Test Note\n", string(data))
    })
+}
+
+func Test_marshalTime(t *testing.T) {
+   now, err := time.Parse(time.DateTime, "2024-05-19 13:20:44")
+   if err != nil {
+      t.Fatalf("Failed to parse epoch time: %s", err)
+   }
+   data, err := marshalTime(now)
+   assert.Nil(t, err)
+   assert.Equal(t, "2024-05-19 13:20:44", string(data))
+   // TODO: add extra test cases after implementing config.Set()
 }
 
 func Test_UnmarshalYAML(t *testing.T) {
