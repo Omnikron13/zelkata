@@ -8,9 +8,11 @@ import (
    "strings"
 
    "github.com/omnikron13/zelkata/config"
+   "github.com/omnikron13/zelkata/note"
    "github.com/omnikron13/zelkata/paths"
 
    "gopkg.in/yaml.v3"
+   "k8s.io/apimachinery/pkg/util/sets"
 )
 
 
@@ -53,9 +55,9 @@ type Tag struct {
    // They key is the related tags name, and the value in this instance is a short description of the relationship.
    Relations map[string]string
 
-   // Notes is a slice of the UUIDs of notes that have this tag. The canonical connection between note and tag is
+   // Notes is a set of the UUIDs of notes that have this tag. The canonical connection between note and tag is
    // actually the note file, but it is obviously useful to be able to perform the reverse lookup.
-   Notes []string
+   Notes sets.Set[string]
 }
 
 
@@ -68,10 +70,17 @@ func Add(name, noteID string) error {
    tag := tags.Get(name)
    // Create the tag if it doesn't exist
    if tag == nil {
-      tag = &Tag{Name: name, Notes: []string{}}
+      tag = &Tag{Name: name, Notes: sets.New[string]()}
    }
-   tag.Notes = append(tag.Notes, noteID)
+   tag.Notes.Insert(noteID)
    return tag.Save()
+}
+
+
+// AddNote adds a note ID to the tag.
+// n is a Note struct to take the ID from.
+func (t *Tag) AddNote(n *note.Note) {
+   t.Notes.Insert(n.ID)
 }
 
 
@@ -121,7 +130,7 @@ func LoadPath(filePath string) (t *Tag, err error) {
 func (t Tag) MarshalYAML() (interface{}, error) {
    data := map[string]any{
       "name": t.Name,
-      "notes": t.Notes,
+      "notes": sets.List(t.Notes),
    }
    if t.Virtual { data["virtual"] = t.Virtual }
    if len(t.Aliases) > 0 { data["aliases"] = t.Aliases }
@@ -191,9 +200,9 @@ func (t *Tag) UnmarshalYAML(value *yaml.Node) error {
       t = nil
       return fmt.Errorf("Missing tag name.")
    }
-   t.Notes = []string{}
+   t.Notes = sets.New[string]()
    for _, n := range data["notes"].([]any){
-      t.Notes = append(t.Notes, n.(string))
+      t.Notes.Insert(n.(string))
    }
    if _, ok := data["virtual"]; ok {
       t.Virtual = true
