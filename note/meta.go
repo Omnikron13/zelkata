@@ -230,6 +230,58 @@ func (m *Meta) MarshalYAML() (interface{}, error) {
 }
 
 
+// marshalTime is a helper function to marshal a time.Time into a string according to the config.
+func marshalTime(t time.Time) (string, error) {
+   format, err := config.Get[string]("notes.metadata.date.format")
+   if err != nil {
+      return "", err
+   }
+
+   switch format {
+      case "Layout":
+         return t.Format(time.Layout), nil
+      case "ANSIC":
+         return t.Format(time.ANSIC), nil
+      case "UnixDate":
+         return t.Format(time.UnixDate), nil
+      case "RubyDate":
+         return t.Format(time.RubyDate), nil
+      case "RFC822":
+         return t.Format(time.RFC822), nil
+      case "RFC822Z":
+         return t.Format(time.RFC822Z), nil
+      case "RFC850":
+         return t.Format(time.RFC850), nil
+      case "RFC1123":
+         return t.Format(time.RFC1123), nil
+      case "RFC1123Z":
+         return t.Format(time.RFC1123Z), nil
+      case "RFC3339":
+         return t.Format(time.RFC3339), nil
+      case "RFC3339Nano":
+         return t.Format(time.RFC3339Nano), nil
+      case "Kitchen":
+         return t.Format(time.Kitchen), nil
+      case "Stamp":
+         return t.Format(time.Stamp), nil
+      case "StampMilli":
+         return t.Format(time.StampMilli), nil
+      case "StampMicro":
+         return t.Format(time.StampMicro), nil
+      case "StampNano":
+         return t.Format(time.StampNano), nil
+      case "DateTime":
+         return t.Format(time.DateTime), nil
+      case "DateOnly":
+         return t.Format(time.DateOnly), nil
+      case "TimeOnly":
+         return t.Format(time.TimeOnly), nil
+      default:
+         return t.Format(format), nil
+   }
+}
+
+
 // UnmarshalYAML implements the yaml.Unmarshaler interface for the Meta struct.
 func (m *Meta) UnmarshalYAML(value *yaml.Node) error {
    data := map[string]any{}
