@@ -71,7 +71,7 @@ func addCmd(ctx context.Context, cmd *cli.Command) error {
 }
 
 
-// Bubbletea code for adding the tags to a Note
+// BubbleTea code for adding the tags to a Note
 type addCmdModel struct {
    tags []string
    input textinput.Model
