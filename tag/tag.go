@@ -85,6 +85,17 @@ func (t *Tag) genFileName() (name string, err error) {
 }
 
 
+// LoadName reads a tag file by name and returns a Tag struct.
+// This is a convenience function that calls LoadPath with the full path and normalised tag name.
+func LoadName(name string) (*Tag, error) {
+   ext, err := config.Get[string]("tags.extension")
+   if err != nil {
+      return nil, err
+   }
+   return LoadPath(filepath.Join(paths.Tags(), normaliseName(name) + ext))
+}
+
+
 // LoadPath reads a tag file and returns a Tag struct
 func LoadPath(filePath string) (*Tag, error) {
    t := Tag{}
@@ -97,17 +108,6 @@ func LoadPath(filePath string) (*Tag, error) {
       return nil, err
    }
    return &t, nil
-}
-
-
-// LoadName reads a tag file by name and returns a Tag struct.
-// This is a convenience function that calls LoadPath with the full path and normalised tag name.
-func LoadName(name string) (*Tag, error) {
-   ext, err := config.Get[string]("tags.extension")
-   if err != nil {
-      return nil, err
-   }
-   return LoadPath(filepath.Join(paths.Tags(), normaliseName(name) + ext))
 }
 
 
@@ -142,6 +142,35 @@ func (t Tag) MarshalYAML() (interface{}, error) {
 // normalisedName returns the normalised name of a tag.
 func (t *Tag) normalisedName() string {
    return normaliseName(t.Name)
+}
+
+
+// normaliseName takes a tag name and returns a normalised (more path friendly, mostly) version of it.
+func normaliseName(name string) string {
+   // TODO: config allowed characters and strip others? would need to e.g. add a hash to the end of the name to ensure
+   // uniqueness in the case of a collision (64bit xxhash base32 encoded = 15 chars, truncated to 32/16 bits = 8/5)
+   return strings.ReplaceAll(strings.ToLower(name), " ", "-")
+}
+
+
+// Save writes a Tag struct to a file in the tags directory.
+func (t *Tag) Save() error {
+   name, err := t.genFileName()
+   if err != nil {
+      return err
+   }
+   path := filepath.Join(paths.Tags(), name)
+   return t.saveAs(path)
+}
+
+
+// saveAs writes a Tag struct to an arbitrary file path.
+func (t *Tag) saveAs(filePath string) error {
+   b, err := yaml.Marshal(t)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(filePath, b, 0600)
 }
 
 
@@ -189,34 +218,5 @@ func (t *Tag) UnmarshalYAML(value *yaml.Node) error {
       }
    }
    return nil
-}
-
-
-// Save writes a Tag struct to a file in the tags directory.
-func (t *Tag) Save() error {
-   name, err := t.genFileName()
-   if err != nil {
-      return err
-   }
-   path := filepath.Join(paths.Tags(), name)
-   return t.saveAs(path)
-}
-
-
-// saveAs writes a Tag struct to an arbitrary file path.
-func (t *Tag) saveAs(filePath string) error {
-   b, err := yaml.Marshal(t)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(filePath, b, 0600)
-}
-
-
-// normaliseName takes a tag name and returns a normalised (more path friendly, mostly) version of it.
-func normaliseName(name string) string {
-   // TODO: config allowed characters and strip others? would need to e.g. add a hash to the end of the name to ensure
-   // uniqueness in the case of a collision (64bit xxhash base32 encoded = 15 chars, truncated to 32/16 bits = 8/5)
-   return strings.ReplaceAll(strings.ToLower(name), " ", "-")
 }
 
