@@ -1,6 +1,7 @@
 package tag
 
 import (
+   ."cmp"
    "fmt"
    "os"
    "path/filepath"
@@ -93,6 +94,17 @@ func LoadName(name string) (*Tag, error) {
       return nil, err
    }
    return LoadPath(filepath.Join(paths.Tags(), normaliseName(name) + ext))
+}
+
+
+// LoadOrCreate reads a tag file by name and returns a Tag struct, or creates a new Tag struct with the given name if
+// the tag doesn't already exist. This mirrors how a user would generally treat tags when adding them to their new note
+// before saving it; near-zero friction when making notes is paramount.
+func LoadOrCreate(name string) (t *Tag, err error) {
+   var tags TagMap
+   if tags, err = LoadAll(); err != nil { return } else
+      { t = Or(tags.Get(name), &Tag{Name: name}) }
+   return
 }
 
 
