@@ -42,10 +42,11 @@ type Tag struct {
    Aliases []string
 
 
-   // TODO: define an actual TagSet type for this kind of functionality?
-   // Parents maps 'canonical' (human readable) tag names to their normalised (path friendly) form. It is implemented as
-   // a map rather than a simple slice to essentially act as a set, with the normalised forms being just a convenience.
-   Parents map[string]string
+   // Parents is a set of Tags that can be considered to be directly 'above' this tag in a perceptual hierarchy. It is
+   // probably best to lean on the broad side when considering what conceptually constitutes a 'parent'. For example,
+   // 'mathematics' could be considered a parent of 'algebra', 'geometry', etc. but also 'physics', 'engineering', even
+   // 'music'.
+   Parents sets.Set[string]
 
    // Children ?
 
@@ -220,9 +221,9 @@ func (t *Tag) UnmarshalYAML(value *yaml.Node) error {
       t.Icon = icon.(string)
    }
    if parents, ok := data["parents"]; ok {
-      t.Parents = map[string]string{}
+      t.Parents = sets.New[string]()
       for _, p := range parents.([]any) {
-         t.Parents[p.(string)] = normaliseName(p.(string))
+         t.Parents.Insert(p.(string))
       }
    }
    if relations, ok := data["relations"]; ok {
