@@ -74,6 +74,17 @@ func Add(name, noteID string) error {
 }
 
 
+// genFileName generates a filename for a tag file based on the tag name.
+func (t *Tag) genFileName() (name string, err error) {
+   ext, err := config.Get[string]("tags.extension")
+   if err != nil {
+      return
+   }
+   name = t.normalisedName() + ext
+   return
+}
+
+
 // LoadPath reads a tag file and returns a Tag struct
 func LoadPath(filePath string) (*Tag, error) {
    t := Tag{}
