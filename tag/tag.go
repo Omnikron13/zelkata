@@ -42,6 +42,12 @@ type Tag struct {
 
    // Children ?
 
+   // Relations is a set of Tags that have a less direct or hierarchical relationship to this tag. This could be things
+   // culturally or personally associated with the tag, or things which share aspects in common (and may indeed be
+   // related like cousins if the Tag graph is filled out enough) but have no direct vertical relationship.
+   // They key is the related tags name, and the value in this instance is a short description of the relationship.
+   Relations map[string]string
+
    // Notes is a slice of the UUIDs of notes that have this tag. The canonical connection between note and tag is
    // actually the note file, but it is obviously useful to be able to perform the reverse lookup.
    Notes []string `yaml:"notes"`
@@ -106,6 +112,13 @@ func (t Tag) MarshalYAML() (interface{}, error) {
       }
       data["parents"] = parents
    }
+   if len(t.Relations) > 0 {
+      relations := make([]struct{Name, Description string}, 0 , len(t.Relations))
+      for k, v := range t.Relations {
+         relations = append(relations, struct {Name, Description string}{Name:k, Description:v})
+      }
+      data["relations"] = relations
+   }
    return interface{}(data), nil
 }
 
@@ -141,6 +154,13 @@ func (t *Tag) UnmarshalYAML(value *yaml.Node) error {
       t.Parents = map[string]string{}
       for _, p := range parents.([]any) {
          t.Parents[p.(string)] = normaliseName(p.(string))
+      }
+   }
+   if relations, ok := data["relations"]; ok {
+      t.Relations = map[string]string{}
+      for _, r := range relations.([]any) {
+         m := r.(map[string]any)
+         t.Relations[m["name"].(string)] = m["description"].(string)
       }
    }
    return nil
