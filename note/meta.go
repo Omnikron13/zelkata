@@ -21,13 +21,8 @@ type Meta struct {
    // encoding details specified in the config.
    ID string
 
-   // createdTime is a cludge to (temporarily) avoid the the utter pain in the arse unmarshalling without setting up a
-   // custom unmarshaler. It shouldn't actually be needed for loaded notes, as it is only used to generate the Created
-   // field, and to generate the original filename, which presumably doesn't need regenerating for loaded notes.
-   createdTime time.Time
-
    // Created is the date & time the note was originally created.
-   Created string
+   Created time.Time
 
    // Tags are how notes are (primarily) categorised. They are _technically_ optional, but in practice they should
    // always be used, as they are what creates the hyperlinked web of knowledge that Zelkata is based on.
@@ -72,9 +67,7 @@ type Meta struct {
 // NewMeta returns a new Meta struct with a new generated unique ID and the current date & time for Created.
 func NewMeta() (m Meta) {
    m.ID = encodeID(generateID())
-   m.createdTime = time.Now().UTC()
-   // TODO: add config for date & time format
-   m.Created = m.createdTime.Format(time.RFC3339)
+   m.Created = time.Now().UTC()
    return
 }
 
@@ -203,7 +196,7 @@ func generateID() (id []byte) {
 func (m *Meta) GenFileName() string {
    // TODO: move date & time prefixing to config
    // TODO: add config for file extension? Also probably depend on what the actual Note is told the format is.
-   return fmt.Sprintf("%s.%s.%s.md", m.createdTime.Format(time.DateOnly), m.createdTime.Format("15-04"), m.ID)
+   return fmt.Sprintf("%s.%s.%s.md", m.Created.Format(time.DateOnly), m.Created.Format("15-04"), m.ID)
 }
 
 
@@ -211,8 +204,12 @@ func (m *Meta) GenFileName() string {
 func (m *Meta) MarshalYAML() (interface{}, error) {
    data := map[string]any{
       "id": m.ID,
-      "created": m.Created,
       "tags": m.Tags,
+   }
+   if created, err := marshalTime(m.Created); err != nil {
+      return nil, err
+   } else {
+      data["created"] = created
    }
    if m.Modified != nil {
       data["modified"] = m.Modified
@@ -293,7 +290,9 @@ func (m *Meta) UnmarshalYAML(value *yaml.Node) error {
       m = nil
       return fmt.Errorf("Missing note ID.")
    }
-   m.Created = data["created"].(string)
+
+   m.Created = data["created"].(time.Time)
+
    tags := data["tags"].([]any)
    m.Tags = make([]string, 0, len(tags))
    for _, t := range tags {
