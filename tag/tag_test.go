@@ -29,11 +29,7 @@ func Test_LoadPath(t *testing.T) {
 func Test_normaliseName(t *testing.T) {
    assert.Equal(t, "test-tag-name", normaliseName("Test TAG name"))
    assert.Equal(t, "already-normalised", normaliseName("already-normalised"))
-   tags, _ := LoadAll()
-   for name, _ := range tags {
-      t.Logf("tag: %v", name)
-   }
- }
+}
 
 
 func Test_MarshalYAML(t *testing.T) {
