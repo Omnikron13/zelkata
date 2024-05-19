@@ -18,27 +18,27 @@ import (
 type Tag struct {
    // Name is the canonical name of the tag. In practice tags are case-insensitive, but this is how the tag will
    // _output_ regardless of how it was input.
-   Name string `yaml:"name"`
+   Name string
 
    // Description is a short human-readable description of the tag. As tags are generally created on the fly, they
    // generally don't start out with a description. Adding well thought out descriptions to tags is one of the small
    // admin tasks a user can do to improve the effectiveness of their Zelkata system. In theory there are a lot of ways
    // the vocabulary used in a description could be cross referenced with that of other tags, and of notes which don't
    // have the tag.
-   Description string `yaml:"description,omitempty"`
+   Description string
 
    // Icon is a string holding a unicode sequence for an icon to be used to represent the tag.
-   Icon string `yaml:"icon,omitempty"`
+   Icon string
 
    // Aliases is a slice of strings that are alternative names for the tag. This allows a user to not be too concerned
    // with the exact name of a tag when adding it to a note, or when searching for notes with a tag, etc.
-   Aliases []string `yaml:"aliases,omitempty"`
+   Aliases []string
 
 
    // TODO: define an actual TagSet type for this kind of functionality?
    // Parents maps 'canonical' (human readable) tag names to their normalised (path friendly) form. It is implemented as
    // a map rather than a simple slice to essentially act as a set, with the normalised forms being just a convenience.
-   Parents map[string]string `yaml:"parents,omitempty"`
+   Parents map[string]string
 
    // Children ?
 
@@ -50,7 +50,7 @@ type Tag struct {
 
    // Notes is a slice of the UUIDs of notes that have this tag. The canonical connection between note and tag is
    // actually the note file, but it is obviously useful to be able to perform the reverse lookup.
-   Notes []string `yaml:"notes"`
+   Notes []string
 }
 
 
