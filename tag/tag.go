@@ -109,17 +109,11 @@ func LoadOrCreate(name string) (t *Tag, err error) {
 
 
 // LoadPath reads a tag file and returns a Tag struct
-func LoadPath(filePath string) (*Tag, error) {
-   t := Tag{}
-   b, err := os.ReadFile(filePath)
-   if err != nil {
-      return nil, err
-   }
-   err = yaml.Unmarshal(b, &t)
-   if err != nil {
-      return nil, err
-   }
-   return &t, nil
+func LoadPath(filePath string) (t *Tag, err error) {
+   var b []byte
+   if b, err = os.ReadFile(filePath); err != nil { return } else
+      { err = yaml.Unmarshal(b, &t) }
+   return
 }
 
 
