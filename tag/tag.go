@@ -33,7 +33,11 @@ type Tag struct {
    // with the exact name of a tag when adding it to a note, or when searching for notes with a tag, etc.
    Aliases []string `yaml:"aliases,omitempty"`
 
-   // Parent ?
+
+   // TODO: define an actual TagSet type for this kind of functionality?
+   // Parents maps 'canonical' (human readable) tag names to their normalised (path friendly) form. It is implemented as
+   // a map rather than a simple slice to essentially act as a set, with the normalised forms being just a convenience.
+   Parents map[string]string `yaml:"parents,omitempty"`
 
    // Children ?
 
