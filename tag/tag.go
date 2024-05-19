@@ -27,6 +27,10 @@ type Tag struct {
    // have the tag.
    Description string
 
+   // Virtual indicates whether the tag is able to be directly assigned to notes. This  can be used for more abstract
+   // concepts up the tag hierarchy, or for tags automatically applied under certain conditions.
+   Virtual bool
+
    // Icon is a string holding a unicode sequence for an icon to be used to represent the tag.
    Icon string
 
@@ -102,6 +106,7 @@ func (t Tag) MarshalYAML() (interface{}, error) {
       "name": t.Name,
       "notes": t.Notes,
    }
+   if t.Virtual { data["virtual"] = t.Virtual }
    if len(t.Aliases) > 0 { data["aliases"] = t.Aliases }
    if t.Description != "" { data["description"] = t.Description }
    if t.Icon!= "" { data["icon"] = t.Icon }
@@ -137,6 +142,9 @@ func (t *Tag) UnmarshalYAML(value *yaml.Node) error {
    t.Notes = []string{}
    for _, n := range data["notes"].([]any){
       t.Notes = append(t.Notes, n.(string))
+   }
+   if _, ok := data["virtual"]; ok {
+      t.Virtual = true
    }
    if aliases, ok := data["aliases"]; ok {
       t.Aliases = []string{}

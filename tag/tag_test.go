@@ -45,6 +45,7 @@ func Test_MarshalYAML(t *testing.T) {
       tag := Tag{
          Name: "Test Tag",
          Description: "An example tag for testing purposes.",
+         Virtual: true,
          Icon: "󰓹",
          Aliases: []string{
             "TestTag",
@@ -65,7 +66,7 @@ func Test_MarshalYAML(t *testing.T) {
       }
       data, err := yaml.Marshal(tag)
       assert.Nil(t, err)
-      assert.Equal(t, "aliases:\n    - TestTag\n    - Test\ndescription: An example tag for testing purposes.\nicon: \"\\U000F04F9\"\nname: Test Tag\nnotes:\n    - QWERTYUIOP\n    - ASDFGHJKLZ\nparents:\n    - Parent 1\n    - Parent Number Two\nrelations:\n    - name: Relation 1\n      description: similar subject\n    - name: Relation Number Two\n      description: first encountered in the same book\n", string(data))
+      assert.Equal(t, "aliases:\n    - TestTag\n    - Test\ndescription: An example tag for testing purposes.\nicon: \"\\U000F04F9\"\nname: Test Tag\nnotes:\n    - QWERTYUIOP\n    - ASDFGHJKLZ\nparents:\n    - Parent 1\n    - Parent Number Two\nrelations:\n    - name: Relation 1\n      description: similar subject\n    - name: Relation Number Two\n      description: first encountered in the same book\nvirtual: true\n", string(data))
    })
 }
 
@@ -82,13 +83,14 @@ func Test_UnmarshalYAML(t *testing.T) {
    })
 
    t.Run("complex tag", func(t *testing.T) {
-      data := "aliases:\n    - TestTag\n    - Test\ndescription: An example tag for testing purposes.\nicon: \"\\U000F04F9\"\nname: Test Tag\nnotes:\n    - QWERTYUIOP\n    - ASDFGHJKLZ\nparents:\n    - Parent 1\n    - Parent Number Two\nrelations:\n    - name: Relation 1\n      description: similar subject\n    - name: Relation Number Two\n      description: first encountered in the same book\n"
+      data := "aliases:\n    - TestTag\n    - Test\ndescription: An example tag for testing purposes.\nicon: \"\\U000F04F9\"\nname: Test Tag\nnotes:\n    - QWERTYUIOP\n    - ASDFGHJKLZ\nparents:\n    - Parent 1\n    - Parent Number Two\nrelations:\n    - name: Relation 1\n      description: similar subject\n    - name: Relation Number Two\n      description: first encountered in the same book\nvirtual: true\n"
       tag := Tag{}
       err := yaml.Unmarshal([]byte(data), &tag)
       assert.Nil(t, err)
       expected := Tag{
          Name: "Test Tag",
          Description: "An example tag for testing purposes.",
+         Virtual: true,
          Icon: "󰓹",
          Aliases: []string{
             "TestTag",
