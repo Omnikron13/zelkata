@@ -194,11 +194,11 @@ func (t *Tag) UnmarshalYAML(value *yaml.Node) error {
 
 // Save writes a Tag struct to a file in the tags directory.
 func (t *Tag) Save() error {
-   ext, err := config.Get[string]("tags.extension")
+   name, err := t.genFileName()
    if err != nil {
       return err
    }
-   path := filepath.Join(paths.Tags(), normaliseName(t.Name) + ext)
+   path := filepath.Join(paths.Tags(), name)
    return t.saveAs(path)
 }
 
