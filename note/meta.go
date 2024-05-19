@@ -247,17 +247,24 @@ func (m *Meta) UnmarshalYAML(value *yaml.Node) error {
    for _, t := range tags {
       m.Tags = append(m.Tags, t.(string))
    }
-   if modified, ok := data["modified"]; ok {
-      m.Modified = modified.(*string)
+   if s, ok := data["modified"]; ok {
+      modified := s.(string)
+      m.Modified = &modified
    }
-   if refs, ok := data["refs"]; ok {
-      m.Refs = refs.(*map[string]string)
+   if r, ok := data["refs"]; ok {
+      refs := make(map[string]string, len(r.(map[string]any)))
+      m.Refs = &refs
+      for k, v := range r.(map[string]any) {
+         (*m.Refs)[k] = v.(string)
+      }
    }
    if format, ok := data["format"]; ok {
-      m.Format = format.(*string)
+      f := format.(string)
+      m.Format = &f
    }
    if title, ok := data["title"]; ok {
-      m.Title = title.(*string)
+      t := title.(string)
+      m.Title = &t
    }
    return nil
 }
