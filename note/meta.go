@@ -201,7 +201,7 @@ func (m *Meta) GenFileName() string {
 
 
 // MarshalYAML implements the yaml.Marshaler interface for the Meta struct.
-func (m *Meta) MarshalYAML() (interface{}, error) {
+func (m *Meta) MarshalYAML() (any, error) {
    data := map[string]any{
       "id": m.ID,
       "tags": m.Tags,
@@ -280,15 +280,17 @@ func marshalTime(t time.Time) (string, error) {
 
 
 // UnmarshalYAML implements the yaml.Unmarshaler interface for the Meta struct.
-func (m *Meta) UnmarshalYAML(value *yaml.Node) error {
+func (m *Meta) UnmarshalYAML(value *yaml.Node) (err error) {
    data := map[string]any{}
-   if err := value.Decode(&data); err != nil {
-      return err
-   }
+
+   err = value.Decode(&data)
+   if err != nil { return }
+
    m.ID = data["id"].(string)
    if m.ID == "" {
       m = nil
-      return fmt.Errorf("Missing note ID.")
+      err = fmt.Errorf("Missing note ID.")
+      return
    }
 
    m.Created = data["created"].(time.Time)
@@ -302,6 +304,7 @@ func (m *Meta) UnmarshalYAML(value *yaml.Node) error {
       modified := s.(string)
       m.Modified = &modified
    }
+
    if r, ok := data["refs"]; ok {
       refs := make(map[string]string, len(r.(map[string]any)))
       m.Refs = &refs
@@ -309,10 +312,12 @@ func (m *Meta) UnmarshalYAML(value *yaml.Node) error {
          (*m.Refs)[k] = v.(string)
       }
    }
+
    if format, ok := data["format"]; ok {
       f := format.(string)
       m.Format = &f
    }
+
    if title, ok := data["title"]; ok {
       t := title.(string)
       m.Title = &t
