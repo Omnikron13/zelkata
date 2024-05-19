@@ -10,6 +10,7 @@ import (
    "github.com/omnikron13/zelkata/config"
 
    "github.com/google/uuid"
+   "gopkg.in/yaml.v3"
 )
 
 // Meta is the struct that holds various metadata about a note, which will be converted to the YAML front matter of the
@@ -18,7 +19,7 @@ import (
 type Meta struct {
    // ID is a unique identifier for the note. It is generated when the note is created, with the specific type and
    // encoding details specified in the config.
-   ID string `yaml:"id"`
+   ID string
 
    // createdTime is a cludge to (temporarily) avoid the the utter pain in the arse unmarshalling without setting up a
    // custom unmarshaler. It shouldn't actually be needed for loaded notes, as it is only used to generate the Created
@@ -26,7 +27,7 @@ type Meta struct {
    createdTime time.Time
 
    // Created is the date & time the note was originally created.
-   Created string `yaml:"created"`
+   Created string
 
    // Tags are how notes are (primarily) categorised. They are _technically_ optional, but in practice they should
    // always be used, as they are what creates the hyperlinked web of knowledge that Zelkata is based on.
@@ -35,7 +36,7 @@ type Meta struct {
    //
    // This simple string slice is very likely to be a temporary stepping stone and placeholder until the much more
    // complex and powerful tag system is implemented.
-   Tags []string `yaml:"tags"`
+   Tags []string
 
 
    // The following are the optional fields, so may need special handling when converting to/from YAML, etc.
@@ -46,7 +47,7 @@ type Meta struct {
    // Modified is the date & time the note was last modified. It is optional as a lot of notes will likely never be
    // modified, and if Zelkata is set up to use Git (or other possible VCS) then changes will be tracked there.
    // Assuming it does actually get used, it maybe should be replaced with a slice?
-   Modified *string `yaml:"modified,omitempty"`
+   Modified *string
 
    // Refs are a secondary layer of of hyperlinking that can be necessary in some cases. They are entirely optional for
    // most notes, but can be crucial for some. They can be URLs pointing to related information or resources. They
@@ -55,16 +56,16 @@ type Meta struct {
    //
    // This basic key:value map is very likely to just serve as a placeholder until a more robust and powerful system
    // is implemented.
-   Refs *map[string]string `yaml:"refs,omitempty"`
+   Refs *map[string]string
 
    // Format can be used to store the format of the note, e.g. MarkDown, AsciiDoc, etc. if it can't be inferred from
    // the note itself, user configuration, or file extension hints.
-   Format *string `yaml:"format,omitempty"`
+   Format *string
 
    // Title could very well be nil, as the note itself is likely to be in a markup format allowing a title there.
    // The fact this is an option raises a point of caution in that duplication (or worse inconsistency) could arise.
    // Plain text notes (etc?) _might_ want an explicit title though?
-   Title *string `yaml:"title,omitempty"`
+   Title *string
 }
 
 
@@ -203,5 +204,61 @@ func (m *Meta) GenFileName() string {
    // TODO: move date & time prefixing to config
    // TODO: add config for file extension? Also probably depend on what the actual Note is told the format is.
    return fmt.Sprintf("%s.%s.%s.md", m.createdTime.Format(time.DateOnly), m.createdTime.Format("15-04"), m.ID)
+}
+
+
+// MarshalYAML implements the yaml.Marshaler interface for the Meta struct.
+func (m *Meta) MarshalYAML() (interface{}, error) {
+   data := map[string]any{
+      "id": m.ID,
+      "created": m.Created,
+      "tags": m.Tags,
+   }
+   if m.Modified != nil {
+      data["modified"] = m.Modified
+   }
+   if m.Refs != nil {
+      data["refs"] = m.Refs
+   }
+   if m.Format != nil {
+      data["format"] = m.Format
+   }
+   if m.Title != nil {
+      data["title"] = m.Title
+   }
+   return data, nil
+}
+
+
+// UnmarshalYAML implements the yaml.Unmarshaler interface for the Meta struct.
+func (m *Meta) UnmarshalYAML(value *yaml.Node) error {
+   data := map[string]any{}
+   if err := value.Decode(&data); err != nil {
+      return err
+   }
+   m.ID = data["id"].(string)
+   if m.ID == "" {
+      m = nil
+      return fmt.Errorf("Missing note ID.")
+   }
+   m.Created = data["created"].(string)
+   tags := data["tags"].([]any)
+   m.Tags = make([]string, 0, len(tags))
+   for _, t := range tags {
+      m.Tags = append(m.Tags, t.(string))
+   }
+   if modified, ok := data["modified"]; ok {
+      m.Modified = modified.(*string)
+   }
+   if refs, ok := data["refs"]; ok {
+      m.Refs = refs.(*map[string]string)
+   }
+   if format, ok := data["format"]; ok {
+      m.Format = format.(*string)
+   }
+   if title, ok := data["title"]; ok {
+      m.Title = title.(*string)
+   }
+   return nil
 }
 
