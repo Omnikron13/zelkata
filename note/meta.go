@@ -11,6 +11,7 @@ import (
 
    "github.com/google/uuid"
    "gopkg.in/yaml.v3"
+   "k8s.io/apimachinery/pkg/util/sets"
 )
 
 // Meta is the struct that holds various metadata about a note, which will be converted to the YAML front matter of the
@@ -29,9 +30,9 @@ type Meta struct {
    // Notes that have no tags should have a 'virtual tag' of 'untagged' or similar applied to them, and the user 
    // warned that they are of little use until linked into the overall system.
    //
-   // This simple string slice is very likely to be a temporary stepping stone and placeholder until the much more
-   // complex and powerful tag system is implemented.
-   Tags []string
+   // This string s3t should perhaps be replaced by a set of actual Tag objects? Though those canonically live in the
+   // TagMap, with pointers chucked out, so the strings are directly keys tbh.
+   Tags sets.Set[string]
 
 
    // The following are the optional fields, so may need special handling when converting to/from YAML, etc.
@@ -225,7 +226,7 @@ func (m *Meta) GenFileName() string {
 func (m *Meta) MarshalYAML() (any, error) {
    data := map[string]any{
       "id": m.ID,
-      "tags": m.Tags,
+      "tags": sets.List(m.Tags),
    }
    if created, err := marshalTime(m.Created); err != nil {
       return nil, err
@@ -314,9 +315,9 @@ func (m *Meta) UnmarshalYAML(value *yaml.Node) (err error) {
    m.Created = data["created"].(time.Time)
 
    tags := data["tags"].([]any)
-   m.Tags = make([]string, 0, len(tags))
+   m.Tags = sets.New[string]()
    for _, t := range tags {
-      m.Tags = append(m.Tags, t.(string))
+      m.Tags.Insert(t.(string))
    }
 
    if r, ok := data["refs"]; ok {

@@ -82,7 +82,7 @@ func (m *TagMap) Reindex() error {
       if  err != nil {
          return err
       }
-      for _, t := range note.Tags {
+      for t := range note.Tags {
          tag := m.Get(t)
          if tag == nil {
             tag = &Tag{Name: t, Notes: sets.New[string]()}
