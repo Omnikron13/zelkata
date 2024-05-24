@@ -34,7 +34,7 @@ jobs:
       - name: Set matrix
         id: nf-gen-matrix
         run: |
-          ARCHIVE_ARRAY=(${nf-archives//,/ })
+          ARCHIVE_ARRAY=(${{ ${{ env.nf-archives }}//,/ }})
           # DEBUG PRINT SPLIT ARRAY
           echo $ARCHIVE_ARRAY
 
