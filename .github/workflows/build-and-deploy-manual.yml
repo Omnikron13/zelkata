@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        archive: ${{ fromJSON(needs.nf-generate-matrix.outputs.matrix) }}
+        archive: ${{ fromJSON(needs.nf-generate-matrix.outputs.archive-matrix) }}
     steps:
       - name: debug output matrix.archive
         run: |
