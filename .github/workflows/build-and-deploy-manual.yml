@@ -77,9 +77,8 @@ jobs:
         with:
           font-path: data/fonts/${{ env.nf-archives }}NerdFont
           path: |
-            # docs/assets/fonts/${{env.font}}NerdFont
             "data/assets/fonts/${{ matrix.archives }}NerdFont"
-            ${{ matrix.archive == env.nf-default && docs/assets/fonts/default-font.css || '/dev/null' }}
+            ${{ matrix.archive == env.nf-default && 'docs/assets/fonts/default-font.css' || '/dev/null' }}
           key: "${{ env.nf-archives }}-${{ env.version }}"
 
       - name: Checkout processing script
