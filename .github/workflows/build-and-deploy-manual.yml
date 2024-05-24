@@ -105,7 +105,7 @@ jobs:
           #env:
             #  ${{ if eq(archive, env.nf-default) }}:font: default
         run: |
-          default="${{ env.nf-archive == matrix.archive && --gen-default || '' }}"
+          default="${{ env.nf-archive == matrix.archive && '--gen-default' || '' }}"
           python nerdfontweb.py --version ${{ env.nf-version}} ${default} --mkdocs ${{ matrix.archive }}
           # DEBUG PRINT
           echo " -- Downloaded and processed NerdFonts:"
