@@ -34,14 +34,17 @@ jobs:
       - name: Set matrix
         id: nf-gen-matrix
         run: |
+          ARCHIVES_ARRAY="${{ env.nf-archives }}//,/ }}"
           # DEBUG PRINT SPLIT ARRAY
-          echo $ARCHIVE_ARRAY
+          echo " -- ARCHIVES_ARRAY:"
+          echo $ARCHIVES_ARRAY
 
-          VERSIONS_JSON=$(printf '%s\n' "${VERSIONS_ARRAY[@]}" | jq -R . | jq -s .)
+          ARCHIVES_JSON=$(printf '%s\n' "${ARCHIVES_ARRAY[@]}" | jq -R . | jq -s .)
           # DEBUG PRINT JSON FORM
-          echo $VERSIONS_JSON
+          echo " -- ARCHIVES_JSON:" 
+          echo $ARCHIVES_JSON
 
-          echo "::set-output name=archive-matrix::${VERSIONS_JSON}"
+          echo "::set-output name=archive-matrix::${ACHIVES_JSON}"
 
           #echo "::set-output name=matrix::$(echo ${{env.nf-archive}} | tr ',' '\n' | xargs -I % echo %-${{env.nf-version}})"
 
@@ -70,7 +73,7 @@ jobs:
           name: nf-web
           path: docs/assets/fonts/
 
-      - name: debug output download-artoifact
+      - name: debug output download-artifact
         run: |
           echo " -- Downloaded artifact contents:"
           ls -R
