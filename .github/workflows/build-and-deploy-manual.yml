@@ -14,17 +14,6 @@ env:
 
 jobs:
 
-  ## Clear artifact as necessary 
-  # TODO: move into end of build job?
-  nf-clear-artifact:
-    name: Clear NerdFonts artifact
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clear artifact
-        run: echo "Clearing nf-web artifact in case it exists from previous run"
-      - uses: geekyeggo/delete-artifact@v5
-        with:
-          name: nf-web
 
   # Generate NerdFont fonts matrix ##
   nf-gen-matrix:
@@ -245,4 +234,21 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4.0.5
+
+  ## Clear artifact as necessary 
+  nf-clear-artifact:
+    name: Clear NerdFonts artifact
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+    - name: Clear Fonts artifact
+      run: echo "Clearing nf-web artifact in case it exists from previous run"
+    - uses: geekyeggo/delete-artifact@v5
+      with:
+        name: nf-web
+    - name: Clear CSS artifact
+      run: echo "Clearing compiled-css artifact in case it exists from previous run"
+    - uses: geekyeggo/delete-artifact@v5
+      with:
+        name: compiled-css
 
