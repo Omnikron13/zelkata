@@ -8,7 +8,7 @@ on:
 
 env:
   #nf-archives: SpaceMono,UbuntuSans
-  nf-archives: "['UbuntuSans', 'SpaceMono']"
+  nf-archives: '["UbuntuSans", "SpaceMono"]'
   nf-version: v3.2.1
   nf-default: UbuntuSans
 
@@ -36,7 +36,10 @@ jobs:
       - name: Set matrix
         id: nf-gen-matrix
         run: |
-           echo matrix=${{ env.nf-archives }} >> $GITHUB_OUTPUT
+           echo " -- Generating NerdFont matrix"
+           # FOO = ${{ fromJSON(env.nf-archives) }}
+           # echo matrix=${{ env.nf-archives }} >> $GITHUB_OUTPUT
+           echo matrix=${{ toJSON('["SpaceMono", "UbuntuSans"]') }} >> $GITHUB_OUTPUT
   #        #"IFS=',' read -r -a ARCHIVES_ARRAY <<< ${{ env.nf-archives }}"
   #        #ARCHIVES_ARRAY="${{ env.nf-archives }}//,/ }}"
   #        # DEBUG PRINT SPLIT ARRAY
