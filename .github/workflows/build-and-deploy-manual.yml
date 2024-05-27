@@ -34,10 +34,13 @@ jobs:
       - name: Set matrix
         id: nf-gen-matrix
         run: |
-          "IFS=',' read -r -a ARCHIVES_ARRAY <<< ${{ env.nf-archives }}"
+          #"IFS=',' read -r -a ARCHIVES_ARRAY <<< ${{ env.nf-archives }}"
           #ARCHIVES_ARRAY="${{ env.nf-archives }}//,/ }}"
           # DEBUG PRINT SPLIT ARRAY
           echo " -- ARCHIVES_ARRAY:"
+          #echo ${ARCHIVES_ARRAY[0]}
+          #echo ${ARCHIVES_ARRAY[1]}
+          ARCHIVES_ARRAY=(${{ env.nf-archives }}//,/ })
           echo ${ARCHIVES_ARRAY[0]}
           echo ${ARCHIVES_ARRAY[1]}
 
