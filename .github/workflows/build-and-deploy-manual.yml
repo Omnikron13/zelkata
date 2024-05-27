@@ -31,7 +31,7 @@ jobs:
     name: Generate NerdFont matrix
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.nf-gen-matrix.outputs.archive-matrix }}
+      matrix: ${{ steps.nf-gen-matrix.outputs.matrix }}
     steps:
       - name: Set matrix
         id: nf-gen-matrix
