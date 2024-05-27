@@ -26,16 +26,17 @@ jobs:
         with:
           name: nf-web
 
-  ## Generate NerdFont fonts matrix ##
-  #nf-generate-matrix:
-  #  name: Generate NerdFont matrix
-  #  runs-on: ubuntu-latest
-  #  outputs:
-  #    matrix: ${{ steps.nf-gen-matrix.outputs.archive-matrix }}
-  #  steps:
-  #    - name: Set matrix
-  #      id: nf-gen-matrix
-  #      run: |
+  # Generate NerdFont fonts matrix ##
+  nf-generate-matrix:
+    name: Generate NerdFont matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.nf-gen-matrix.outputs.archive-matrix }}
+    steps:
+      - name: Set matrix
+        id: nf-gen-matrix
+        run: |
+           echo matrix=${{ env.nf-archive }} >> $GITHUB_OUTPUT
   #        #"IFS=',' read -r -a ARCHIVES_ARRAY <<< ${{ env.nf-archives }}"
   #        #ARCHIVES_ARRAY="${{ env.nf-archives }}//,/ }}"
   #        # DEBUG PRINT SPLIT ARRAY
@@ -45,6 +46,7 @@ jobs:
   #        ARCHIVES_ARRAY=(${{ env.nf-archives }}//,/ })
   #        echo ${ARCHIVES_ARRAY[0]}
   #        echo ${ARCHIVES_ARRAY[1]}
+  #        ARCHIVE_ARRAY = fromJSON(${{ env.nf-archive }})
 
   #        #ARCHIVES_JSON=$(printf '%s\n' "${ARCHIVES_ARRAY[@]}" | jq -R . | jq -s .)
   #        ARCHIVES_JSON=$ARCHIVES_ARRAY | jq -R . | jq -s .)
@@ -52,7 +54,6 @@ jobs:
   #        echo " -- ARCHIVES_JSON:" 
   #        echo $ARCHIVES_JSON
 
-  #        echo matrix=$ARCHIVES_JSON >> $GITHUB_OUTPUT
 
   #        #echo "::set-output name=archive-matrix::${ACHIVES_JSON}"
 
@@ -64,13 +65,13 @@ jobs:
 
     needs:
      - nf-clear-artifact
-    # - nf-generate-matrix
+     - nf-generate-matrix
 
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        archive: ${{ fromJSON(${{ env.nf-archive }}) }}
+        archive: ${{ needs.nf-generate-matrix.outputs.matrix }}
 
     steps:
       - name: debug output matrix.archive
