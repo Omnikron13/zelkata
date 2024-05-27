@@ -71,7 +71,7 @@ jobs:
 
     strategy:
       matrix:
-        archive: ${{ needs.nf-generate-matrix.outputs.matrix }}
+        archive: ${{ fromJSON(needs.nf-generate-matrix.outputs.matrix) }}
 
     steps:
       - name: debug output matrix.archive
