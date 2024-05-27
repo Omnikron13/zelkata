@@ -27,7 +27,7 @@ jobs:
           name: nf-web
 
   # Generate NerdFont fonts matrix ##
-  nf-generate-matrix:
+  nf-gen-matrix:
     name: Generate NerdFont matrix
     runs-on: ubuntu-latest
     outputs:
@@ -65,13 +65,13 @@ jobs:
 
     needs:
      - nf-clear-artifact
-     - nf-generate-matrix
+     - nf-gen-matrix
 
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        archive: ${{ fromJSON(needs.nf-generate-matrix.outputs.matrix) }}
+        archive: ${{ fromJSON(needs.nf-gen-matrix.outputs.matrix) }}
 
     steps:
       - name: debug output matrix.archive
