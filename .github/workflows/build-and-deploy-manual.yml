@@ -7,11 +7,13 @@ on:
       - main
 
 env:
-  nf-archives: SpaceMono,UbuntuSans
+  #nf-archives: SpaceMono,UbuntuSans
+  nf-archives: '["UbuntuSans", "SpaceMono"]'
   nf-version: v3.2.1
   nf-default: UbuntuSans
 
 jobs:
+
   ## Clear artifact as necessary 
   # TODO: move into end of build job?
   nf-clear-artifact:
@@ -25,36 +27,36 @@ jobs:
           name: nf-web
 
   ## Generate NerdFont fonts matrix ##
-  nf-generate-matrix:
-    name: Generate NerdFont matrix
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.nf-gen-matrix.outputs.archive-matrix }}
-    steps:
-      - name: Set matrix
-        id: nf-gen-matrix
-        run: |
-          #"IFS=',' read -r -a ARCHIVES_ARRAY <<< ${{ env.nf-archives }}"
-          #ARCHIVES_ARRAY="${{ env.nf-archives }}//,/ }}"
-          # DEBUG PRINT SPLIT ARRAY
-          echo " -- ARCHIVES_ARRAY:"
-          #echo ${ARCHIVES_ARRAY[0]}
-          #echo ${ARCHIVES_ARRAY[1]}
-          ARCHIVES_ARRAY=(${{ env.nf-archives }}//,/ })
-          echo ${ARCHIVES_ARRAY[0]}
-          echo ${ARCHIVES_ARRAY[1]}
+  #nf-generate-matrix:
+  #  name: Generate NerdFont matrix
+  #  runs-on: ubuntu-latest
+  #  outputs:
+  #    matrix: ${{ steps.nf-gen-matrix.outputs.archive-matrix }}
+  #  steps:
+  #    - name: Set matrix
+  #      id: nf-gen-matrix
+  #      run: |
+  #        #"IFS=',' read -r -a ARCHIVES_ARRAY <<< ${{ env.nf-archives }}"
+  #        #ARCHIVES_ARRAY="${{ env.nf-archives }}//,/ }}"
+  #        # DEBUG PRINT SPLIT ARRAY
+  #        echo " -- ARCHIVES_ARRAY:"
+  #        #echo ${ARCHIVES_ARRAY[0]}
+  #        #echo ${ARCHIVES_ARRAY[1]}
+  #        ARCHIVES_ARRAY=(${{ env.nf-archives }}//,/ })
+  #        echo ${ARCHIVES_ARRAY[0]}
+  #        echo ${ARCHIVES_ARRAY[1]}
 
-          #ARCHIVES_JSON=$(printf '%s\n' "${ARCHIVES_ARRAY[@]}" | jq -R . | jq -s .)
-          ARCHIVES_JSON=$ARCHIVES_ARRAY | jq -R . | jq -s .)
-          # DEBUG PRINT JSON FORM
-          echo " -- ARCHIVES_JSON:" 
-          echo $ARCHIVES_JSON
+  #        #ARCHIVES_JSON=$(printf '%s\n' "${ARCHIVES_ARRAY[@]}" | jq -R . | jq -s .)
+  #        ARCHIVES_JSON=$ARCHIVES_ARRAY | jq -R . | jq -s .)
+  #        # DEBUG PRINT JSON FORM
+  #        echo " -- ARCHIVES_JSON:" 
+  #        echo $ARCHIVES_JSON
 
-          echo matrix=$ARCHIVES_JSON >> $GITHUB_OUTPUT
+  #        echo matrix=$ARCHIVES_JSON >> $GITHUB_OUTPUT
 
-          #echo "::set-output name=archive-matrix::${ACHIVES_JSON}"
+  #        #echo "::set-output name=archive-matrix::${ACHIVES_JSON}"
 
-          #echo "::set-output name=matrix::$(echo ${{env.nf-archive}} | tr ',' '\n' | xargs -I % echo %-${{env.nf-version}})"
+  #        #echo "::set-output name=matrix::$(echo ${{env.nf-archive}} | tr ',' '\n' | xargs -I % echo %-${{env.nf-version}})"
 
   ## Fetch/process/cache fonts ##
   get_fonts:
@@ -62,13 +64,13 @@ jobs:
 
     needs:
      - nf-clear-artifact
-     - nf-generate-matrix
+    # - nf-generate-matrix
 
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        archive: ${{ fromJSON(needs.nf-generate-matrix.outputs.matrix) }}
+        archive: ${{ fromJSON(env.nf-archive) }}
 
     steps:
       - name: debug output matrix.archive
