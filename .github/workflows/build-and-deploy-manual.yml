@@ -63,6 +63,7 @@ jobs:
     strategy:
       matrix:
         archive: ${{ fromJSON(needs.nf-gen-matrix.outputs.matrix) }}
+      max-parallel: 1
 
     steps:
       - name: debug output matrix.archive
@@ -106,17 +107,17 @@ jobs:
           python-version: '3.12'
           cache: 'pip'
 
-      - name: Lock
-        run: |
-          if ${{ env.lock == 'False' }}; then
-            echo "lock=True" >> $GITHUB_ENV
-          else
-            wait 30
-          fi
-          if ${{ env.lock == 'true' }}; then
-            wait 30
-          fi
-          echo "lock=True" >> $GITHUB_ENV
+          #- name: Lock
+          #  run: |
+          #    if ${{ env.lock == 'False' }}; then
+          #      echo "lock=True" >> $GITHUB_ENV
+          #    else
+          #      wait 30
+          #    fi
+          #    if ${{ env.lock == 'true' }}; then
+          #      wait 30
+          #    fi
+          #    echo "lock=True" >> $GITHUB_ENV
 
       - name: Download, unpack, and process NerdFonts
         if: steps.cache.outputs.cache-hit != 'true'
@@ -139,8 +140,8 @@ jobs:
           path: docs/assets/fonts/
           retention-days: 1
 
-      - name: unlock
-        run: echo "lock=False" >> $GITHUB_ENV
+          #- name: unlock
+          #  run: echo "lock=False" >> $GITHUB_ENV
 
 
 
