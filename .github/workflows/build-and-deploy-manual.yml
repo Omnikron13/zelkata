@@ -104,6 +104,18 @@ jobs:
           python-version: '3.12'
           cache: 'pip'
 
+      - name: Lock
+        run: |
+          if ${{ env.lock == 'False' }}; then
+            echo "lock=True" >> $GITHUB_ENV
+          else
+            wait 30
+          fi
+          if ${{ env.lock == 'true' }}; then
+            wait 30
+          fi
+          echo "lock=True" >> $GITHUB_ENV
+
       - name: Download, unpack, and process NerdFonts
         if: steps.cache.outputs.cache-hit != 'true'
         id: process_fonts
@@ -124,6 +136,9 @@ jobs:
           name: nf-web
           path: docs/assets/fonts/
           retention-days: 1
+
+      - name: unlock
+        run: echo "lock=False" >> $GITHUB_ENV
 
 
 
