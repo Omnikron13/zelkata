@@ -74,6 +74,8 @@ jobs:
         with:
           name: nf-web
           path: docs/assets/fonts/
+          create-path: true
+          continue-on-error: true
 
       - name: debug output download-artifact
         run: |
