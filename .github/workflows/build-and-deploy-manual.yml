@@ -67,6 +67,7 @@ jobs:
       with:
         name: nf-web
         path: docs/assets/fonts/
+        create-path: true
         retention-days: 1
 
   ## Fetch/process/cache fonts ##
@@ -94,7 +95,6 @@ jobs:
         with:
           name: nf-web
           path: docs/assets/fonts/
-          create-path: true
           continue-on-error: true
 
       - name: debug output download-artifact
