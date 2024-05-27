@@ -36,7 +36,7 @@ jobs:
       - name: Set matrix
         id: nf-gen-matrix
         run: |
-           echo matrix=${{ env.nf-archive }} >> $GITHUB_OUTPUT
+           echo matrix=${{ env.nf-archives }} >> $GITHUB_OUTPUT
   #        #"IFS=',' read -r -a ARCHIVES_ARRAY <<< ${{ env.nf-archives }}"
   #        #ARCHIVES_ARRAY="${{ env.nf-archives }}//,/ }}"
   #        # DEBUG PRINT SPLIT ARRAY
