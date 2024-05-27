@@ -51,12 +51,27 @@ jobs:
 
   #        #echo "::set-output name=matrix::$(echo ${{env.nf-archive}} | tr ',' '\n' | xargs -I % echo %-${{env.nf-version}})"
 
+  ## Ensure the nf-web artifact exists or the font jobs fail ##
+  nf-create-artifact:
+    name: Create NerdFonts artifact
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create Fonts artifact
+      run: echo "Creating nf-web artifact"
+    - uses: actions/upload-artifact@v4
+      id: nf-create-artifact
+      with:
+        name: nf-web
+        path: docs/assets/fonts/
+        retention-days: 1
+
   ## Fetch/process/cache fonts ##
   get_fonts:
     name: Fetch & Process NerdFonts
 
     needs:
      - nf-gen-matrix
+     - nf-create-artifact
 
     runs-on: ubuntu-latest
 
