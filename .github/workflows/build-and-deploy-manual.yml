@@ -55,6 +55,8 @@ jobs:
   nf-create-artifact:
     name: Create NerdFonts artifact
     runs-on: ubuntu-latest
+    needs:
+      - nf-gen-matrix
     steps:
     - name: Create Fonts artifact
       run: echo "Creating nf-web artifact"
