@@ -64,12 +64,13 @@ jobs:
     - name: Add placeholder so artifact exists
       run: |
         cd $path
+        touch tmp
         echo "tmp" > tmp
     - uses: actions/upload-artifact@v4
       id: nf-create-artifact
       with:
         name: nf-web
-        path: docs/assets/fonts/
+        path: docs/assets/fonts/tmp
         create-path: true
         retention-days: 1
 
