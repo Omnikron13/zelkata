@@ -112,8 +112,7 @@ jobs:
             #  ${{ if eq(archive, env.nf-default) }}:font: default
         run: |
           default="${{ env.nf-archive == matrix.archive && '--gen-default' || '' }}"
-          pwd
-          python ../docs/scripts/nerdfontweb.py --version ${{ env.nf-version}} ${default} --mkdocs ${{ matrix.archive }}
+          python ${GITHUB_PATH}/docs/scripts/nerdfontweb.py --version ${{ env.nf-version}} ${default} --mkdocs ${{ matrix.archive }}
 
       - uses: actions/upload-artifact@v4
         with:
