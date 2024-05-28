@@ -119,6 +119,7 @@ jobs:
         with:
           name: nf-web
           path: docs/assets/fonts/
+          overwrite: true
           retention-days: 1
 
 
