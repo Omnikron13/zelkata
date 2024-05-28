@@ -81,11 +81,11 @@ jobs:
       - uses: actions/cache@v4
         id: cache
         with:
-          font-path: data/fonts/${{ env.nf-archives }}NerdFont
+          font-path: data/fonts/${{ matrix.archive }}NerdFont
           path: |
             "data/assets/fonts/${{ matrix.archive }}NerdFont"
             ${{ matrix.archive == env.nf-default && 'docs/assets/fonts/default-font.css' || '/dev/null' }}
-          key: "${{ env.nf-archives }}-${{ env.version }}"
+          key: "${{ matrix.archive }}-${{ env.version }}"
 
       - name: Checkout processing script
         if: steps.cache.outputs.cache-hit != 'true'
