@@ -31,11 +31,11 @@ nav:
    - 󰭷 Introduction: index.md
    - 󱚊 Specifications: specifications/index.md
 
-plugins:
-  #- search:
-  #  enabled: true
-  - minify:
-    minify_html: true
+#plugins:
+#  - search:
+#    enabled: true
+#  - minify:
+#    minify_html: true
     #minify_js: true
     #minify_css: true
     #htmlmin_opts:
