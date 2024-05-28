@@ -70,7 +70,7 @@ jobs:
       id: nf-create-artifact
       with:
         name: nf-web
-        path: docs/assets/fonts/tmp
+        path: docs/assets/fonts/
         retention-days: 1
 
   ## Fetch/process/cache fonts ##
