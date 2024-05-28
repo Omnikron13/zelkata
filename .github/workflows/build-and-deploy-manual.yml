@@ -39,10 +39,10 @@ jobs:
       run: echo "Creating nf-web artifact"
     - name: Add placeholder so artifact exists
       run: |
-        ls -R /
-        cd docs/assets/fonts/
-        pwd
-        cat /dev/null > .exists
+        find / -wholename "asserts/fonts" 2>/dev/null
+        #cd docs/assets/fonts/
+        #pwd
+        #cat /dev/null > .exists
     - uses: actions/upload-artifact@v4
       id: nf-create-artifact
       with:
