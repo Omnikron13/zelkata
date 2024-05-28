@@ -188,14 +188,6 @@ jobs:
       - name: Generate site files
         run: mkdocs build
 
-      - name: HTML/CSS/JS Minifier
-        uses: docker://devatherock/minify-js:3.1.0
-        with:
-          directory: 'site/'
-          add_suffix: false
-          exclusions: |
-            *.js
-
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3.0.1
         with:
