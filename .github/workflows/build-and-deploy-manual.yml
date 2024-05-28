@@ -63,7 +63,7 @@ jobs:
       run: echo "Creating nf-web artifact"
     - name: Add placeholder so artifact exists
       run: |
-        echo "tmp" > docs/assets/fonts/tmp
+        echo "tmp" > ${{ path }}/docs/assets/fonts/tmp
     - uses: actions/upload-artifact@v4
       id: nf-create-artifact
       with:
