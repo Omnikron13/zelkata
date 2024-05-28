@@ -25,31 +25,7 @@ jobs:
       - name: Set matrix
         id: nf-gen-matrix
         run: |
-           echo " -- Generating NerdFont matrix"
-           # FOO = ${{ fromJSON(env.nf-archives) }}
-           # echo matrix=${{ env.nf-archives }} >> $GITHUB_OUTPUT
            echo matrix=${{ toJSON('["SpaceMono", "UbuntuSans"]') }} >> $GITHUB_OUTPUT
-  #        #"IFS=',' read -r -a ARCHIVES_ARRAY <<< ${{ env.nf-archives }}"
-  #        #ARCHIVES_ARRAY="${{ env.nf-archives }}//,/ }}"
-  #        # DEBUG PRINT SPLIT ARRAY
-  #        echo " -- ARCHIVES_ARRAY:"
-  #        #echo ${ARCHIVES_ARRAY[0]}
-  #        #echo ${ARCHIVES_ARRAY[1]}
-  #        ARCHIVES_ARRAY=(${{ env.nf-archives }}//,/ })
-  #        echo ${ARCHIVES_ARRAY[0]}
-  #        echo ${ARCHIVES_ARRAY[1]}
-  #        ARCHIVE_ARRAY = fromJSON(${{ env.nf-archive }})
-
-  #        #ARCHIVES_JSON=$(printf '%s\n' "${ARCHIVES_ARRAY[@]}" | jq -R . | jq -s .)
-  #        ARCHIVES_JSON=$ARCHIVES_ARRAY | jq -R . | jq -s .)
-  #        # DEBUG PRINT JSON FORM
-  #        echo " -- ARCHIVES_JSON:" 
-  #        echo $ARCHIVES_JSON
-
-
-  #        #echo "::set-output name=archive-matrix::${ACHIVES_JSON}"
-
-  #        #echo "::set-output name=matrix::$(echo ${{env.nf-archive}} | tr ',' '\n' | xargs -I % echo %-${{env.nf-version}})"
 
   ## Ensure the nf-web artifact exists or the font jobs fail ##
   nf-create-artifact:
@@ -64,9 +40,8 @@ jobs:
     - name: Add placeholder so artifact exists
       run: |
         cd $path
-        touch tmp
-        echo "tmp" > tmp
-        mkdir .exists
+        cat /dev/null > .exists
+        #mkdir .exists
     - uses: actions/upload-artifact@v4
       id: nf-create-artifact
       with:
