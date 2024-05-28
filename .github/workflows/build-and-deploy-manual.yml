@@ -193,6 +193,8 @@ jobs:
         with:
           directory: 'site/'
           add_suffix: false
+          exclusions: |
+            *.js
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3.0.1
