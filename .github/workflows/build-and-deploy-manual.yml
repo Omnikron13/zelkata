@@ -66,6 +66,7 @@ jobs:
         cd $path
         touch tmp
         echo "tmp" > tmp
+        mkdir .exists
     - uses: actions/upload-artifact@v4
       id: nf-create-artifact
       with:
