@@ -86,7 +86,7 @@ jobs:
           path: |
             "data/assets/fonts/${{ matrix.archive }}NerdFont"
             ${{ matrix.archive == env.nf-default && 'docs/assets/fonts/default-font.css' || '/dev/null' }}
-          key: "${{ matrix.archive }}-${{ env.version }}"
+          key: "${{ matrix.archive }}-${{ env.nf-version }}"
 
       - name: Checkout processing script
         if: steps.cache.outputs.cache-hit != 'true'
@@ -173,18 +173,13 @@ jobs:
       #    path: |
       #      docs/assets/fonts/${{env.font}}NerdFont
       #      docs/assets/fonts/default-font.css
-      #    key: "${{env.font}}-${{env.version}}"
+      #    key: "${{ env.font }}-${{ env.version }}"
       #    fail-on-cache-miss: true
 
       - uses: actions/download-artifact@v4
         with:
           name: nf-web
           path: docs/assets/fonts/
-
-      - name: debug output download-artifact for build
-        run: |
-          echo " -- Downloaded artifact contents:"
-          ls -R
 
       - uses: actions/download-artifact@v4
         with:
