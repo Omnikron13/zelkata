@@ -7,7 +7,6 @@ on:
       - main
 
 env:
-  #nf-archives: SpaceMono,UbuntuSans
   nf-archives: '["UbuntuSans", "SpaceMono"]'
   nf-version: v3.2.1
   nf-default: UbuntuSans
@@ -79,17 +78,12 @@ jobs:
           path: docs/assets/fonts/
           continue-on-error: true
 
-      - name: debug output download-artifact
-        run: |
-          echo " -- Downloaded artifact contents:"
-          ls -R
-
       - uses: actions/cache@v4
         id: cache
         with:
           font-path: data/fonts/${{ env.nf-archives }}NerdFont
           path: |
-            "data/assets/fonts/${{ matrix.archives }}NerdFont"
+            "data/assets/fonts/${{ matrix.archive }}NerdFont"
             ${{ matrix.archive == env.nf-default && 'docs/assets/fonts/default-font.css' || '/dev/null' }}
           key: "${{ env.nf-archives }}-${{ env.version }}"
 
@@ -108,18 +102,6 @@ jobs:
           python-version: '3.12'
           cache: 'pip'
 
-          #- name: Lock
-          #  run: |
-          #    if ${{ env.lock == 'False' }}; then
-          #      echo "lock=True" >> $GITHUB_ENV
-          #    else
-          #      wait 30
-          #    fi
-          #    if ${{ env.lock == 'true' }}; then
-          #      wait 30
-          #    fi
-          #    echo "lock=True" >> $GITHUB_ENV
-
       - name: Download, unpack, and process NerdFonts
         if: steps.cache.outputs.cache-hit != 'true'
         id: process_fonts
@@ -131,19 +113,12 @@ jobs:
         run: |
           default="${{ env.nf-archive == matrix.archive && '--gen-default' || '' }}"
           python nerdfontweb.py --version ${{ env.nf-version}} ${default} --mkdocs ${{ matrix.archive }}
-          # DEBUG PRINT
-          echo " -- Downloaded and processed NerdFonts:"
-          ls -R
 
       - uses: actions/upload-artifact@v4
         with:
           name: nf-web
           path: docs/assets/fonts/
           retention-days: 1
-
-          #- name: unlock
-          #  run: echo "lock=False" >> $GITHUB_ENV
-
 
 
   ## Compile SASS ##
