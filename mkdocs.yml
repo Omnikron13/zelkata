@@ -60,15 +60,15 @@ plugins:
   - search
   - minify:
     minify_html: true
-    minify_js: true
-    minify_css: true
-    htmlmin_opts:
-        remove_comments: true
-    cache_safe: true
-    js_files:
-        - assets/**/*.js
-    #    - assets/javascript/*.ts
-    #    - assets/javascript/*.tsx
-    css_files:
-        - assets/**/*.css
+    #minify_js: true
+    #minify_css: true
+    #htmlmin_opts:
+    #    remove_comments: true
+    #cache_safe: true
+    #js_files:
+    #    - assets/**/*.js
+    ##    - assets/javascript/*.ts
+    ##    - assets/javascript/*.tsx
+    #css_files:
+    #    - assets/**/*.css
 

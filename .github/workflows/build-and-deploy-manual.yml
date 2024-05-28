@@ -82,7 +82,6 @@ jobs:
       - uses: actions/cache@v4
         id: cache
         with:
-          font-path: data/fonts/${{ matrix.archive }}NerdFont
           path: |
             "data/assets/fonts/${{ matrix.archive }}NerdFont"
             ${{ matrix.archive == env.nf-default && 'docs/assets/fonts/default-font.css' || '/dev/null' }}
