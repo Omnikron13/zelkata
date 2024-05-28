@@ -64,7 +64,7 @@ jobs:
     - name: Add placeholder so artifact exists
       run: |
         echo "tmp" > tmp
-        mv tmp "${GITHUB_PATH}/docs/assets/fonts/"
+        mv tmp "${GITHUB_PATH}/docs/assets/fonts/tmp"
     - uses: actions/upload-artifact@v4
       id: nf-create-artifact
       with:
