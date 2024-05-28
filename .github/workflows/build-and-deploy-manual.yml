@@ -62,7 +62,8 @@ jobs:
       run: echo "Creating nf-web artifact"
     - name: Add placeholder so artifact exists
       run: |
-        mkdir -p "${GITHUB_PATH}/docs/assets/fonts/tmp"
+        echo "tmp" > tmp
+        mv tmp docs/assets/fonts/
     - uses: actions/upload-artifact@v4
       id: nf-create-artifact
       with:
