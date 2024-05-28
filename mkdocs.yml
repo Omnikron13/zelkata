@@ -31,6 +31,23 @@ nav:
    - 󰭷 Introduction: index.md
    - 󱚊 Specifications: specifications/index.md
 
+plugins:
+  - search:
+    emoji: true
+  - minify:
+    minify_html: true
+    minify_js: true
+    minify_css: true
+    htmlmin_opts:
+      remove_comments: true
+    cache_safe: true
+    js_files:
+     - assets/**/*.js
+     - assets/**/*.ts
+     - assets/**javascript/*.tsx
+    css_files:
+     - assets/**/*.css
+
 # Leverage the impressive feature set of the material theme (though the actual theming needs some work...)
 theme:
    name: material
@@ -55,20 +72,4 @@ markdown_extensions:
  - admonition
  - pymdownx.details
  - pymdownx.superfences
-
-plugins:
-  #- search:
-  - minify:
-    minify_html: true
-    #  minify_js: true
-    #minify_css: true
-    #htmlmin_opts:
-    #    remove_comments: true
-    #cache_safe: true
-    #js_files:
-    #    - assets/**/*.js
-    #    - assets/**/*.ts
-    #    - assets/**javascript/*.tsx
-    #css_files:
-    #    - assets/**/*.css
 
