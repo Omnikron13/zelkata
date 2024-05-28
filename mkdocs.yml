@@ -66,9 +66,9 @@ plugins:
         remove_comments: true
     cache_safe: true
     js_files:
-        - assets/javascript/*.js
-        - assets/javascript/*.ts
-        - assets/javascript/*.tsx
+        - assets/**/*.js
+    #    - assets/javascript/*.ts
+    #    - assets/javascript/*.tsx
     css_files:
-        - assets/stylesheets/*.css
+        - assets/**/*.css
 
