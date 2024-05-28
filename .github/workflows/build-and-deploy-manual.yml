@@ -39,7 +39,7 @@ jobs:
       run: echo "Creating nf-web artifact"
     - name: Add placeholder so artifact exists
       run: |
-        cd $path
+        cd "${{path}}"
         pwd
         cat /dev/null > .exists
         #mkdir .exists
