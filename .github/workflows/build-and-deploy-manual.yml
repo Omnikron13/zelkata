@@ -35,14 +35,16 @@ jobs:
     needs:
       - nf-gen-matrix
     steps:
+    - uses: actions/checkout@v4
+      with:
+        sparse-checkout: |
+          docs/assets/fonts/
     - name: Create Fonts artifact
       run: echo "Creating nf-web artifact"
     - name: Add placeholder so artifact exists
       run: |
-        find / -name "fonts" 2>/dev/null
-        #cd docs/assets/fonts/
-        #pwd
-        #cat /dev/null > .exists
+        cd docs/assets/fonts/
+        cat /dev/nulll > .exists
     - uses: actions/upload-artifact@v4
       id: nf-create-artifact
       with:
