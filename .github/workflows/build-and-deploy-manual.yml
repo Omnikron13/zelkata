@@ -112,7 +112,7 @@ jobs:
           #env:
             #  ${{ if eq(archive, env.nf-default) }}:font: default
         run: |
-          default="${{ env.nf-archive == matrix.archive && '--gen-default' || '' }}"
+          default="${{ env.nf-default == matrix.archive && '--gen-default' || '' }}"
           python docs/scripts/nerdfontweb.py --version ${{ env.nf-version}} ${default} --mkdocs ${{ matrix.archive }}
 
       - uses: actions/upload-artifact@v4
@@ -167,14 +167,6 @@ jobs:
           sparse-checkout: |
             .github
             docs
-
-      #- uses: actions/cache/restore@v4
-      #  with:
-      #    path: |
-      #      docs/assets/fonts/${{env.font}}NerdFont
-      #      docs/assets/fonts/default-font.css
-      #    key: "${{ env.font }}-${{ env.version }}"
-      #    fail-on-cache-miss: true
 
       - uses: actions/download-artifact@v4
         with:
