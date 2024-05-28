@@ -55,6 +55,7 @@ jobs:
   nf-create-artifact:
     name: Create NerdFonts artifact
     runs-on: ubuntu-latest
+    permissions: write-all
     needs:
       - nf-gen-matrix
     steps:
