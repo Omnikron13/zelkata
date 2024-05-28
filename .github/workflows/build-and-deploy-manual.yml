@@ -76,7 +76,6 @@ jobs:
         with:
           name: nf-web
           path: docs/assets/fonts/
-          continue-on-error: true
           merge-multiple: true
 
       - uses: actions/cache@v4
