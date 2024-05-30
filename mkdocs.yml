@@ -26,11 +26,22 @@ exclude_docs: |
 draft_docs: |
   .draft.md
 
+# Leverage the impressive feature set of the material theme (though the actual theming needs some work...)
+theme:
+   name: material
+   palette:
+     scheme: catppuccin-macchiato
+     #scheme: slate
+   feature:
+     navigation.sections: true
+   # Disable default font loading from Google fonts - we are going to be using patched Nerd Fonts for now
+   fonts: none
+
 # Main navigation
 nav:
    - 󰭷 Introduction: index.md
-   - 󱥬 Concepts:
-     - concepts/index.md
+   - 󱥬 Concepts: concepts/index.md
+   #- concepts/index.md
      - 󰿀 Notes: notes.md
      -  Tags: tags.md
    - 󱚊 Specifications: specifications/index.md
@@ -45,16 +56,6 @@ plugins:
        - assets/javascript/*.js
        - assets/javascript/*.ts
        - assets/javascript/*.tsx
-
-# Leverage the impressive feature set of the material theme (though the actual theming needs some work...)
-theme:
-   name: material
-   palette:
-     scheme: catppuccin-macchiato
-     #scheme: slate
-
-   # Disable default font loading from Google fonts - we are going to be using patched Nerd Fonts for now
-   fonts: none
 
 extra_css:
    # Loading compiled version of the (WIP) Catppuccin theme.
