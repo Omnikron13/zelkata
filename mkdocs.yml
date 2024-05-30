@@ -29,6 +29,9 @@ draft_docs: |
 # Main navigation
 nav:
    - 󰭷 Introduction: index.md
+   - 󱥬 Concepts: concepts/index.md
+     - 󰿀 Notes: notes.md
+     -  Tags: tags.md
    - 󱚊 Specifications: specifications/index.md
 
 plugins:
@@ -63,7 +66,7 @@ extra_javascript:
 
 # TODO: properly review what we may need
 markdown_extensions:
- - admonition
+ - callouts
  - pymdownx.details
  - pymdownx.superfences
 

@@ -44,7 +44,8 @@ _'Kata'_ also has the serendipitous meaning of a (generally) solo practiced form
 
 ## 󰭰 History
 
-The delightfully German system of _Zettelkästen_ is, most directly, the influence behind this project.
+The delightfully German system of [_Zettelkästen_](https://wikipedia.org/wiki/Zettelkasten) is, most directly, the influence
+behind this project.
 The term itself translates to _'note boxes'_ or _'card boxes'_, and as you might guess they are essentially forms of
 _card catalogue_.
 
