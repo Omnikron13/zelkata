@@ -21,54 +21,56 @@ exclude_docs: |
   ./scripts/
   *.sass
   *.scss
+  #nav.md
+  SUMMARY.md
+  SUMMARY/
+
 
 # Only include drafts in serve, not in actual builds
 draft_docs: |
   .draft.md
 
+
 # Leverage the impressive feature set of the material theme (though the actual theming needs some work...)
 theme:
    name: material
    palette:
-     scheme: catppuccin-macchiato
-     #scheme: slate
+       scheme: catppuccin-macchiato
+       #scheme: slate
    feature:
-     navigation.sections: true
-   # Disable default font loading from Google fonts - we are going to be using patched Nerd Fonts for now
-   fonts: none
-
-# Main navigation
-nav:
-   - 󰭷 Introduction: index.md
-   - 󱥬 Concepts: concepts/index.md
-   #- concepts/index.md
-     - 󰿀 Notes: notes.md
-     -  Tags: tags.md
-   - 󱚊 Specifications: specifications/index.md
+       - fonts: none
+       - navigation.indexes
+       - navigation.tabs
+       - navigation.prune
+       # Disable default font loading from Google fonts - we are going to be using patched Nerd Fonts for now
 
 plugins:
-  - search:
-      enabled: true
-  - minify:
-      minify_html: true
-      minify_js: true
-      js_files:
-       - assets/javascript/*.js
-       - assets/javascript/*.ts
-       - assets/javascript/*.tsx
+    search:
+    minify:
+        minify_html: true
+        minify_js: true
+
+nav:
+  -  󰭷 Introduction: index.md
+  - 󱥬 Concepts:
+    - 󰗚 Overview: concepts/index.md
+    - 󰿀 Notes: concepts/notes.md
+    -  Tags: concepts/tags.md 
+  - 󱚊 Specifications: specifications/index.md
 
 extra_css:
-   # Loading compiled version of the (WIP) Catppuccin theme.
-   - assets/stylesheets/catppuccin-macchiato.compiled.css
-   # Pulling in a patched Nerd Font for the icons, at least for now; I think you may be able to just map the symbols?
-   - assets/fonts/default-font.css
+    # Loading compiled version of the (WIP) Catppuccin theme.
+    - assets/stylesheets/catppuccin-macchiato.compiled.css
+    # Pulling in a patched Nerd Font for the icons, at least for now; I think you may be able to just map the symbols?
+    - assets/fonts/default-font.css
 
 extra_javascript:
-   - assets/scripts/add_accents.js
+    - assets/scripts/add_accents.js
 
 # TODO: properly review what we may need
+
 markdown_extensions:
- - callouts
- - pymdownx.details
- - pymdownx.superfences
+    - callouts
+    - pymdownx.details
+    - pymdownx.superfences
 
