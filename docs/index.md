@@ -11,8 +11,7 @@ the
 [ GitHub issue tracker](https://github.com/omnikron13/Zelkata/issues/)
 for the project explaining your issues.
 
-!!! note
-    Further (less formal) areas to discus issues, ideas, problems, etc. will be made available in time
+NOTE: Further (less formal) areas to discus issues, ideas, problems, etc. will be made available in time
 
 
 ## 󰭶 Overview
@@ -45,7 +44,8 @@ _'Kata'_ also has the serendipitous meaning of a (generally) solo practiced form
 
 ## 󰭰 History
 
-The delightfully German system of _Zettelkästen_ is, most directly, the influence behind this project.
+The delightfully German system of [_Zettelkästen_](https://wikipedia.org/wiki/Zettelkasten) is, most directly, the influence
+behind this project.
 The term itself translates to _'note boxes'_ or _'card boxes'_, and as you might guess they are essentially forms of
 _card catalogue_.
 

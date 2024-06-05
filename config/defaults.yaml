@@ -32,7 +32,7 @@ notes:
             charset: StdEncoding
             padding: false
       date:
-         format: RFC3339
+         format: DateTime
    data:
       format:
          name: MarkDown

@@ -15,6 +15,7 @@ import (
    "github.com/charmbracelet/bubbles/textinput"
    tea "github.com/charmbracelet/bubbletea"
    "github.com/urfave/cli/v3"
+   "k8s.io/apimachinery/pkg/util/sets"
 )
 
 
@@ -52,19 +53,17 @@ func addCmd(ctx context.Context, cmd *cli.Command) error {
    acm := m.(addCmdModel)
 
    // Actually add the tags to the Note
-   note.Tags = acm.tags
+   note.Tags = sets.New(acm.tags...)
 
-   // Generate a byte slice of the note file and write it to the notes directory
-   b := note.GenFile()
-   if err := os.WriteFile(filepath.Join(paths.Notes(), note.GenFileName()), b, 0600); err != nil {
+   // Save the note to the configured notes dir with the configured filename
+   if err := note.Save(); err != nil {
       return err
    }
 
    // Update the specified tags with the new note ID
-   for _, t := range note.Tags {
-      if err := tag.Add(t, note.ID); err != nil {
-         return err
-      }
+   for s := range note.Tags {
+      if t, err := tag.LoadOrCreate(s); err != nil { return err } else
+         { t.AddNote(&note) }
    }
 
    // Return nil if everything went well
@@ -72,7 +71,7 @@ func addCmd(ctx context.Context, cmd *cli.Command) error {
 }
 
 
-// Bubbletea code for adding the tags to a Note
+// BubbleTea code for adding the tags to a Note
 type addCmdModel struct {
    tags []string
    input textinput.Model

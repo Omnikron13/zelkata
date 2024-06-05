@@ -1,15 +1,22 @@
 package tag
 
 import (
+   . "cmp"
+   "encoding/base32"
+   "encoding/binary"
    "fmt"
    "os"
    "path/filepath"
+   "regexp"
    "strings"
 
    "github.com/omnikron13/zelkata/config"
+   "github.com/omnikron13/zelkata/note"
    "github.com/omnikron13/zelkata/paths"
 
+   "github.com/cespare/xxhash"
    "gopkg.in/yaml.v3"
+   "k8s.io/apimachinery/pkg/util/sets"
 )
 
 
@@ -39,10 +46,11 @@ type Tag struct {
    Aliases []string
 
 
-   // TODO: define an actual TagSet type for this kind of functionality?
-   // Parents maps 'canonical' (human readable) tag names to their normalised (path friendly) form. It is implemented as
-   // a map rather than a simple slice to essentially act as a set, with the normalised forms being just a convenience.
-   Parents map[string]string
+   // Parents is a set of Tags that can be considered to be directly 'above' this tag in a perceptual hierarchy. It is
+   // probably best to lean on the broad side when considering what conceptually constitutes a 'parent'. For example,
+   // 'mathematics' could be considered a parent of 'algebra', 'geometry', etc. but also 'physics', 'engineering', even
+   // 'music'.
+   Parents sets.Set[string]
 
    // Children ?
 
@@ -52,9 +60,9 @@ type Tag struct {
    // They key is the related tags name, and the value in this instance is a short description of the relationship.
    Relations map[string]string
 
-   // Notes is a slice of the UUIDs of notes that have this tag. The canonical connection between note and tag is
+   // Notes is a set of the UUIDs of notes that have this tag. The canonical connection between note and tag is
    // actually the note file, but it is obviously useful to be able to perform the reverse lookup.
-   Notes []string
+   Notes sets.Set[string]
 }
 
 
@@ -67,10 +75,17 @@ func Add(name, noteID string) error {
    tag := tags.Get(name)
    // Create the tag if it doesn't exist
    if tag == nil {
-      tag = &Tag{Name: name, Notes: []string{}}
+      tag = &Tag{Name: name, Notes: sets.New[string]()}
    }
-   tag.Notes = append(tag.Notes, noteID)
+   tag.Notes.Insert(noteID)
    return tag.Save()
+}
+
+
+// AddNote adds a note ID to the tag.
+// n is a Note struct to take the ID from.
+func (t *Tag) AddNote(n *note.Note) {
+   t.Notes.Insert(n.ID)
 }
 
 
@@ -85,21 +100,6 @@ func (t *Tag) genFileName() (name string, err error) {
 }
 
 
-// LoadPath reads a tag file and returns a Tag struct
-func LoadPath(filePath string) (*Tag, error) {
-   t := Tag{}
-   b, err := os.ReadFile(filePath)
-   if err != nil {
-      return nil, err
-   }
-   err = yaml.Unmarshal(b, &t)
-   if err != nil {
-      return nil, err
-   }
-   return &t, nil
-}
-
-
 // LoadName reads a tag file by name and returns a Tag struct.
 // This is a convenience function that calls LoadPath with the full path and normalised tag name.
 func LoadName(name string) (*Tag, error) {
@@ -111,11 +111,31 @@ func LoadName(name string) (*Tag, error) {
 }
 
 
+// LoadOrCreate reads a tag file by name and returns a Tag struct, or creates a new Tag struct with the given name if
+// the tag doesn't already exist. This mirrors how a user would generally treat tags when adding them to their new note
+// before saving it; near-zero friction when making notes is paramount.
+func LoadOrCreate(name string) (t *Tag, err error) {
+   var tags TagMap
+   if tags, err = LoadAll(); err != nil { return } else
+      { t = Or(tags.Get(name), &Tag{Name: name}) }
+   return
+}
+
+
+// LoadPath reads a tag file and returns a Tag struct
+func LoadPath(filePath string) (t *Tag, err error) {
+   var b []byte
+   if b, err = os.ReadFile(filePath); err != nil { return } else
+      { err = yaml.Unmarshal(b, &t) }
+   return
+}
+
+
 // MarshalYAML implements the yaml.Marshaler interface for the Tag struct.
 func (t Tag) MarshalYAML() (interface{}, error) {
    data := map[string]any{
       "name": t.Name,
-      "notes": t.Notes,
+      "notes": sets.List(t.Notes),
    }
    if t.Virtual { data["virtual"] = t.Virtual }
    if len(t.Aliases) > 0 { data["aliases"] = t.Aliases }
@@ -145,50 +165,11 @@ func (t *Tag) normalisedName() string {
 }
 
 
-// UnmarshalYAML implements the yaml.Unmarshaler interface for the Tag struct.
-func (t *Tag) UnmarshalYAML(value *yaml.Node) error {
-   data := map[string]any{}
-   if err := value.Decode(&data); err != nil {
-      return err
-   }
-   t.Name = data["name"].(string)
-   if t.Name== "" {
-      t = nil
-      return fmt.Errorf("Missing tag name.")
-   }
-   t.Notes = []string{}
-   for _, n := range data["notes"].([]any){
-      t.Notes = append(t.Notes, n.(string))
-   }
-   if _, ok := data["virtual"]; ok {
-      t.Virtual = true
-   }
-   if aliases, ok := data["aliases"]; ok {
-      t.Aliases = []string{}
-      for _, a := range aliases.([]any) {
-         t.Aliases = append(t.Aliases, a.(string))
-      }
-   }
-   if description, ok := data["description"]; ok {
-      t.Description = description.(string)
-   }
-   if icon, ok := data["icon"]; ok {
-      t.Icon = icon.(string)
-   }
-   if parents, ok := data["parents"]; ok {
-      t.Parents = map[string]string{}
-      for _, p := range parents.([]any) {
-         t.Parents[p.(string)] = normaliseName(p.(string))
-      }
-   }
-   if relations, ok := data["relations"]; ok {
-      t.Relations = map[string]string{}
-      for _, r := range relations.([]any) {
-         m := r.(map[string]any)
-         t.Relations[m["name"].(string)] = m["description"].(string)
-      }
-   }
-   return nil
+// normaliseName takes a tag name and returns a normalised (more path friendly, mostly) version of it.
+func normaliseName(name string) string {
+   // TODO: config allowed characters and strip others? would need to e.g. add a hash to the end of the name to ensure
+   // uniqueness in the case of a collision (64bit xxhash base32 encoded = 15 chars, truncated to 32/16 bits = 8/5)
+   return strings.ReplaceAll(strings.ToLower(name), " ", "-")
 }
 
 
@@ -213,10 +194,49 @@ func (t *Tag) saveAs(filePath string) error {
 }
 
 
-// normaliseName takes a tag name and returns a normalised (more path friendly, mostly) version of it.
-func normaliseName(name string) string {
-   // TODO: config allowed characters and strip others? would need to e.g. add a hash to the end of the name to ensure
-   // uniqueness in the case of a collision (64bit xxhash base32 encoded = 15 chars, truncated to 32/16 bits = 8/5)
-   return strings.ReplaceAll(strings.ToLower(name), " ", "-")
+// UnmarshalYAML implements the yaml.Unmarshaler interface for the Tag struct.
+func (t *Tag) UnmarshalYAML(value *yaml.Node) error {
+   data := map[string]any{}
+   if err := value.Decode(&data); err != nil {
+      return err
+   }
+   t.Name = data["name"].(string)
+   if t.Name== "" {
+      t = nil
+      return fmt.Errorf("Missing tag name.")
+   }
+   t.Notes = sets.New[string]()
+   for _, n := range data["notes"].([]any){
+      t.Notes.Insert(n.(string))
+   }
+   if _, ok := data["virtual"]; ok {
+      t.Virtual = true
+   }
+   if aliases, ok := data["aliases"]; ok {
+      t.Aliases = []string{}
+      for _, a := range aliases.([]any) {
+         t.Aliases = append(t.Aliases, a.(string))
+      }
+   }
+   if description, ok := data["description"]; ok {
+      t.Description = description.(string)
+   }
+   if icon, ok := data["icon"]; ok {
+      t.Icon = icon.(string)
+   }
+   if parents, ok := data["parents"]; ok {
+      t.Parents = sets.New[string]()
+      for _, p := range parents.([]any) {
+         t.Parents.Insert(p.(string))
+      }
+   }
+   if relations, ok := data["relations"]; ok {
+      t.Relations = map[string]string{}
+      for _, r := range relations.([]any) {
+         m := r.(map[string]any)
+         t.Relations[m["name"].(string)] = m["description"].(string)
+      }
+   }
+   return nil
 }
 

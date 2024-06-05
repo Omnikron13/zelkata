@@ -7,6 +7,8 @@ import (
 
    "github.com/omnikron13/zelkata/note"
    "github.com/omnikron13/zelkata/paths"
+
+   "k8s.io/apimachinery/pkg/util/sets"
 )
 
 // TagMap is a map of tag names to Tag structs, representing all tags in the system.
@@ -67,7 +69,7 @@ func (m *TagMap) Reindex() error {
       if name != normaliseName(tag.Name) {
          continue
       }
-      tag.Notes = []string{}
+      tag.Notes = sets.New[string]()
    }
 
    // Read notes and add their IDs to the appropriate tags, creating new tags as necessary
@@ -80,13 +82,13 @@ func (m *TagMap) Reindex() error {
       if  err != nil {
          return err
       }
-      for _, t := range note.Tags {
+      for t := range note.Tags {
          tag := m.Get(t)
          if tag == nil {
-            tag = &Tag{Name: t, Notes: []string{}}
+            tag = &Tag{Name: t, Notes: sets.New[string]()}
             _ = m.Add(t, tag)
          }
-         tag.Notes = append(tag.Notes, note.ID)
+         tag.Notes.Insert(note.ID)
       }
    }
    return nil

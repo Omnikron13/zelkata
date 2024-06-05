@@ -3,7 +3,10 @@ package note
 
 import (
    "bytes"
+   "path/filepath"
    "os"
+
+   "github.com/omnikron13/zelkata/paths"
 
    "gopkg.in/yaml.v3"
 )
@@ -42,11 +45,11 @@ func New(body string) Note {
 }
 
 
-// GenFile generates a byte slice representing the on-disk representation of the note.
-func (n *Note) GenFile() []byte {
+// genFile generates a byte slice representing the on-disk representation of the note.
+func (n *Note) genFile() []byte {
    var b bytes.Buffer
    b.WriteString("---\n")
-   yml, err := yaml.Marshal(n.Meta)
+   yml, err := yaml.Marshal(&n.Meta)
    if err != nil {
       // TODO: rework this to more idiomatic Go error handling
       panic(err)
@@ -78,5 +81,17 @@ func readBytes(b []byte) (n Note, err error) {
    }
    n.Body = string(b[metaEnd+6:])
    return
+}
+
+
+// Save saves the note to the configured notes directory and filename.
+func (n *Note) Save() error {
+   return n.saveAs(filepath.Join(paths.Notes(), n.GenFileName()))
+}
+
+
+// saveAs saves the note to the given path.
+func (n *Note) saveAs(path string) error {
+   return os.WriteFile(path, n.genFile(), 0600)
 }
 

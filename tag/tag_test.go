@@ -6,6 +6,7 @@ import (
 
    "github.com/stretchr/testify/assert"
    "gopkg.in/yaml.v3"
+   "k8s.io/apimachinery/pkg/util/sets"
 )
 
 
@@ -17,10 +18,10 @@ func Test_LoadPath(t *testing.T) {
       Name: "Test Tag",
       Description: "An example tag for testing purposes.",
       Icon: "󰓹",
-      Notes: []string{
+      Notes: sets.New[string](
          "QWERTYUIOP",
          "ASDFGHJKLZ",
-      },
+      ),
    }, *tag)
 }
 
@@ -28,7 +29,7 @@ func Test_LoadPath(t *testing.T) {
 func Test_normaliseName(t *testing.T) {
    assert.Equal(t, "test-tag-name", normaliseName("Test TAG name"))
    assert.Equal(t, "already-normalised", normaliseName("already-normalised"))
- }
+}
 
 
 func Test_MarshalYAML(t *testing.T) {
@@ -51,14 +52,14 @@ func Test_MarshalYAML(t *testing.T) {
             "TestTag",
             "Test",
          },
-         Notes: []string{
+         Notes: sets.New(
             "QWERTYUIOP",
             "ASDFGHJKLZ",
-         },
-         Parents: map[string]string {
-            "Parent 1": "parent-1",
-            "Parent Number Two": "parent-number-two",
-         },
+         ),
+         Parents: sets.New(
+            "Parent 1",
+            "Parent Number Two",
+         ),
          Relations: map[string]string {
             "Relation 1": "similar subject",
             "Relation Number Two": "first encountered in the same book",
@@ -66,7 +67,7 @@ func Test_MarshalYAML(t *testing.T) {
       }
       data, err := yaml.Marshal(tag)
       assert.Nil(t, err)
-      assert.Equal(t, "aliases:\n    - TestTag\n    - Test\ndescription: An example tag for testing purposes.\nicon: \"\\U000F04F9\"\nname: Test Tag\nnotes:\n    - QWERTYUIOP\n    - ASDFGHJKLZ\nparents:\n    - Parent 1\n    - Parent Number Two\nrelations:\n    - name: Relation 1\n      description: similar subject\n    - name: Relation Number Two\n      description: first encountered in the same book\nvirtual: true\n", string(data))
+      assert.Equal(t, "aliases:\n    - TestTag\n    - Test\ndescription: An example tag for testing purposes.\nicon: \"\\U000F04F9\"\nname: Test Tag\nnotes:\n    - ASDFGHJKLZ\n    - QWERTYUIOP\nparents:\n    - Parent 1\n    - Parent Number Two\nrelations:\n    - name: Relation 1\n      description: similar subject\n    - name: Relation Number Two\n      description: first encountered in the same book\nvirtual: true\n", string(data))
    })
 }
 
@@ -78,7 +79,7 @@ func Test_UnmarshalYAML(t *testing.T) {
       assert.Nil(t, err)
       assert.Equal(t, Tag{
          Name: "Test Tag",
-         Notes: []string{},
+         Notes: sets.New[string](),
       }, tag)
    })
 
@@ -96,14 +97,14 @@ func Test_UnmarshalYAML(t *testing.T) {
             "TestTag",
             "Test",
          },
-         Notes: []string{
+         Notes: sets.New(
             "QWERTYUIOP",
             "ASDFGHJKLZ",
-         },
-         Parents: map[string]string {
-            "Parent 1": "parent-1",
-            "Parent Number Two": "parent-number-two",
-         },
+         ),
+         Parents: sets.New(
+            "Parent 1",
+            "Parent Number Two",
+         ),
          Relations: map[string]string {
             "Relation 1": "similar subject",
             "Relation Number Two": "first encountered in the same book",
