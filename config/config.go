@@ -52,6 +52,7 @@ func init() {
 }
 
 
+// Get retrieves a value from the config hierarchy by key specified in dot notation; e.g. 'notes.metadata.id.type'.
 func Get[T any](key string) (v T, err error) {
    defer func() {
       if r := recover(); r != nil {
@@ -59,6 +60,7 @@ func Get[T any](key string) (v T, err error) {
       }
    }()
 
+   // TODO: split out to top-level functions for better readability?
    var walk func(m *map[string]any, key string) T
    walk = func(m *map[string]any, key string) T {
       i := strings.Index(key, ".")
@@ -76,10 +78,16 @@ func Get[T any](key string) (v T, err error) {
          return walk(m, key)
       }
       n, ok := (*m)[key[:i]].(map[string]any)
-      if !ok {
-         panic(errors.New("Failed to get next nested map"))
+      if ok {
+         return walk(&n, key[i+1:])
       }
-      return walk(&n, key[i+1:])
+      if len(filesData) == 0 {
+         panic(errors.New("Failed to get next nested map: " + key))
+      }
+      if err := unmarshalNext(); err != nil {
+         panic(err)
+      }
+      return walk(m, key)
    }
 
    v = walk(&configValues, key)

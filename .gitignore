@@ -20,6 +20,9 @@ coverage.html
 # Output of MkDocs
 site/
 
+# Output of gen_nerdfont_css.py
+docs/assets/fonts/
+
 # Dependency directories (remove the comment below to include it)
 # vendor/
 

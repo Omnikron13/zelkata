@@ -1,0 +1,114 @@
+/*
+ * Catppuccin Macchiato color scheme draft.
+ * There are seemingly interesting differences in design between the two color scheme formats, so a fair amoutn of
+ * tweaking and testing seems to be required to produce pleasant results.
+ */
+
+[data-md-color-scheme="catppuccin-macchiato"]
+  @import "catppuccin-macchiato-palette"
+
+  h1, h2
+    text-decoration: underline
+  h1
+    color: $catppuccin-sapphire
+    $accent: $catppuccin-blue
+    text-decoration-color: $accent
+    .accent
+      color: $accent
+  h2
+    color: $catppuccin-lavender
+    &:nth-of-type(4n+1)
+      $accent: $catppuccin-sky
+      text-decoration-color: $accent
+      .accent
+        color: $accent
+    &:nth-of-type(4n+2)
+      $accent: $catppuccin-sapphire
+      text-decoration-color: $accent
+      .accent
+        color: $accent
+    &:nth-of-type(4n+3)
+      $accent: $catppuccin-mauve
+      text-decoration-color: $accent
+      .accent
+        color: $accent
+    &:nth-of-type(4n+4)
+      $accent: $catppuccin-teal
+      text-decoration-color: $accent
+      .accent
+        color: $accent
+
+    .nerd-font
+      text-shadow: 2px 2px 3px $catppuccin-mantle
+
+  // Default color shades
+  --md-default-fg-color: #{$catppuccin-text}
+  --md-default-fg-color--light: #{$catppuccin-blue}
+  --md-default-fg-color--lighter: #{$catppuccin-peach}
+  --md-default-fg-color--lightest: #{$catppuccin-maroon}
+  --md-default-bg-color: #{$catppuccin-base}
+  --md-default-bg-color--light: #{$catppuccin-surface-0}
+  --md-default-bg-color--lighter: #{$catppuccin-surface-1}
+  --md-default-bg-color--lightest: #{$catppuccin-surface-2}
+
+  // --md-primary-fg-color: #{$catppuccin-blue;}
+  --md-primary-fg-color: #{$catppuccin-surface-2}
+  --md-accent-fg-color: #{$catppuccin-mauve}
+
+  // Main text/typesetting colours
+  --md-typeset-color: var(--md-default-fg-color)
+
+  // Links
+  --md-typeset-a-color: #{$catppuccin-blue}
+
+  // Admonition color shades
+  --md-admonition-fg-color: #{$catppuccin-blue}
+  --md-admonition-bg-color: #{$catppuccin-surface-0}
+
+  // Warning color shades
+  --md-warning-fg-color: #{$catppuccin-red}
+  --md-warning-bg-color: #{$catppuccin-yellow}
+
+  // Footer color shades
+  --md-footer-fg-color: #{$catppuccin-subtext-0}
+  --md-footer-fg-color--light: #{$catppuccin-subtext-1}
+  --md-footer-fg-color--lighter: #{$catppuccin-text}
+  --md-footer-bg-color: #{$catppuccin-mantle}
+  --md-footer-bg-color--dark: #{$catppuccin-crust}
+
+  // Syntax highlighting color shades
+  // Code color shades
+  --md-code-fg-color: #{$catppuccin-subtext-1}
+  --md-code-bg-color: #{$catppuccin-surface-0}
+
+  // Code highlighting color shades
+  // --md-code-hl-color:                  hsla(#{hex2hsl($clr-blue-a200)}, 1);
+  // --md-code-hl-color--light:           hsla(#{hex2hsl($clr-blue-a200)}, 0.1);
+  // Code highlighting syntax color shades
+  --md-code-hl-number-color: #{$catppuccin-peach}
+  --md-code-hl-special-color: #{$catppuccin-red} // Special..?
+  --md-code-hl-function-color: #{$catppuccin-blue}
+  --md-code-hl-constant-color: #{$catppuccin-lavender}
+  --md-code-hl-keyword-color: #{$catppuccin-mauve}
+  --md-code-hl-string-color: #{$catppuccin-green}
+  --md-code-hl-name-color: #{$catppuccin-sky} // Name..?
+  --md-code-hl-operator-color: #{$catppuccin-sapphire}
+  --md-code-hl-punctuation-color: #{$catppuccin-subtext-1} // Punctuation..?
+  --md-code-hl-comment-color: #{$catppuccin-teal}
+  --md-code-hl-generic-color: #{$catppuccin-yellow}
+  --md-code-hl-variable-color: #{$catppuccin-flamingo}
+
+// TODO: figure out why this just breaks all following styles...
+//  Typeset `del` and `ins` color shades
+//   --md-typeset-del-color:              hsla(6, 90%, 60%, 0.15);
+//   --md-typeset-ins-color:              hsla(150, 90%, 44%, 0.15);
+// Typeset `kbd` color shades
+//   --md-typeset-kbd-color:              hsla(0, 0%, 98%, 1);
+//   --md-typeset-kbd-accent-color:       hsla(0, 100%, 100%, 1);
+//   --md-typeset-kbd-border-color:       hsla(0, 0%, 72%, 1);
+// Typeset `mark` color shades
+//   --md-typeset-mark-color:             hsla(#{hex2hsl($clr-yellow-a200)}, 0.5);
+// Typeset `table` color shades
+//   --md-typeset-table-color:            hsla(0, 0%, 0%, 0.12);
+//   --md-typeset-table-color--light:     hsla(0, 0%, 0%, 0.035);
+
