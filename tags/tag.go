@@ -1,4 +1,4 @@
-package tag
+package tags
 
 import (
    . "cmp"
@@ -91,7 +91,7 @@ func (t *Tag) AddNote(n *note.Note) {
 
 // genFileName generates a filename for a tag file based on the tag name.
 func (t *Tag) genFileName() (name string, err error) {
-   ext, err := config.Get[string]("tags.extension")
+   ext, err := config.Get[string]("tags.metadata.extension")
    if err != nil {
       return
    }

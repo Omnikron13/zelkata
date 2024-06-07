@@ -10,7 +10,7 @@ import (
 
    "github.com/omnikron13/zelkata/note"
    "github.com/omnikron13/zelkata/paths"
-   "github.com/omnikron13/zelkata/tag"
+   "github.com/omnikron13/zelkata/tags"
 
    "github.com/charmbracelet/bubbles/textinput"
    tea "github.com/charmbracelet/bubbletea"
@@ -62,7 +62,7 @@ func addCmd(ctx context.Context, cmd *cli.Command) error {
 
    // Update the specified tags with the new note ID
    for s := range note.Tags {
-      if t, err := tag.LoadOrCreate(s); err != nil { return err } else
+      if t, err := tags.LoadOrCreate(s); err != nil { return err } else
          { t.AddNote(&note) }
    }
 

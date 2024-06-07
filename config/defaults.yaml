@@ -50,4 +50,12 @@ notes:
          extension: md
 
 tags:
-  extension: .tag.yaml
+   metadata:
+      extension: .tag.yaml
+      hash:
+         encode:
+            format: base32
+            charset: StdEncoding
+            padding: false
+         truncate: 0
+
