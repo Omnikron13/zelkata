@@ -96,6 +96,17 @@ func Get[T any](key string) (v T, err error) {
 }
 
 
+// GetOrPanic retrieves a value from the config hierarchy by key specified in dot notation; e.g. 'notes.metadata.id'
+// and panics if the key is not found.
+func GetOrPanic[T any](key string) T {
+   v, err := Get[T](key)
+   if err != nil {
+      panic(err)
+   }
+   return v
+}
+
+
 // unmarshalNext unmarshals the next YAML document from the byte slice and integrates it with the existing config data.
 // It operates top-down, effectively lazy-loading the config data.
 func unmarshalNext() error {
