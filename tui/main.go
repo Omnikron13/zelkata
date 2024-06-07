@@ -1,7 +1,6 @@
 package tui
 
 import (
-   _"fmt"
    "os"
    "context"
 
