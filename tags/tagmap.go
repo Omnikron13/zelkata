@@ -1,4 +1,4 @@
-package tag
+package tags
 
 import (
    "errors"
@@ -18,7 +18,7 @@ type TagMap map[string]*Tag
 
 // LoadAll reads all tag files into a TagMap.
 func LoadAll() (TagMap, error) {
-   tags := TagMap{}
+   tm := TagMap{}
    files, err := os.ReadDir(paths.Tags())
    if err != nil {
       return nil, err
@@ -31,16 +31,16 @@ func LoadAll() (TagMap, error) {
       if err != nil {
          return nil, err
       }
-      if err := tags.Add(tag.Name, tag); err != nil {
+      if err := tm.Add(tag.Name, tag); err != nil {
          return nil, err
       }
       for _, t := range tag.Aliases {
-         if err := tags.Add(t, tag); err != nil {
+         if err := tm.Add(t, tag); err != nil {
             return nil, err
          }
       }
    }
-   return tags, nil
+   return tm, nil
 }
 
 

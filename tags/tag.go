@@ -1,20 +1,16 @@
-package tag
+package tags
 
 import (
    . "cmp"
-   "encoding/base32"
-   "encoding/binary"
    "fmt"
    "os"
    "path/filepath"
-   "regexp"
    "strings"
 
    "github.com/omnikron13/zelkata/config"
    "github.com/omnikron13/zelkata/note"
    "github.com/omnikron13/zelkata/paths"
 
-   "github.com/cespare/xxhash"
    "gopkg.in/yaml.v3"
    "k8s.io/apimachinery/pkg/util/sets"
 )
@@ -91,11 +87,8 @@ func (t *Tag) AddNote(n *note.Note) {
 
 // genFileName generates a filename for a tag file based on the tag name.
 func (t *Tag) genFileName() (name string, err error) {
-   ext, err := config.Get[string]("tags.extension")
-   if err != nil {
-      return
-   }
-   name = t.normalisedName() + ext
+   ext := config.GetOrPanic[string]("tags.metadata.extension")
+   name = fmt.Sprintf("%s.%s%s", t.normalisedName(), HashName(t.Name), ext)
    return
 }
 
