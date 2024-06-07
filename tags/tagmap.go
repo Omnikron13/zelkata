@@ -24,6 +24,7 @@ func LoadAll() (TagMap, error) {
       return nil, err
    }
    for _, file := range files {
+
       if !file.Type().IsRegular() {
          continue
       }

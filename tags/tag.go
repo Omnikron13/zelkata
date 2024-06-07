@@ -5,7 +5,6 @@ import (
    "fmt"
    "os"
    "path/filepath"
-   "strings"
 
    "github.com/omnikron13/zelkata/config"
    "github.com/omnikron13/zelkata/note"
@@ -158,14 +157,6 @@ func (t *Tag) normalisedName() string {
 }
 
 
-// normaliseName takes a tag name and returns a normalised (more path friendly, mostly) version of it.
-func normaliseName(name string) string {
-   // TODO: config allowed characters and strip others? would need to e.g. add a hash to the end of the name to ensure
-   // uniqueness in the case of a collision (64bit xxhash base32 encoded = 15 chars, truncated to 32/16 bits = 8/5)
-   return strings.ReplaceAll(strings.ToLower(name), " ", "-")
-}
-
-
 // Save writes a Tag struct to a file in the tags directory.
 func (t *Tag) Save() error {
    name, err := t.GenFileName()
@@ -173,17 +164,18 @@ func (t *Tag) Save() error {
       return err
    }
    path := filepath.Join(paths.Tags(), name)
-   return t.saveAs(path)
+   return t.SaveAs(path)
 }
 
 
-// saveAs writes a Tag struct to an arbitrary file path.
-func (t *Tag) saveAs(filePath string) error {
+// SaveAs writes a Tag struct to an arbitrary file path.
+func (t *Tag) SaveAs(filePath string) error {
    b, err := yaml.Marshal(t)
    if err != nil {
       return err
    }
-   return os.WriteFile(filePath, b, 0600)
+   if err = os.WriteFile(filePath, b, 0600); err == nil { return nil }
+   return fmt.Errorf("Failure writing tag file at %s during Save()", filePath)
 }
 
 

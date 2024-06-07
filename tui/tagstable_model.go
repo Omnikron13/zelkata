@@ -59,7 +59,13 @@ func (m *TagsTableModel) Init() bt.Cmd {
 
       r := make([]string, 0, 3)
       r = append(r,
-         fmt.Sprintf("%s %s", t.Icon, t.Name), t.Description, fmt.Sprintf("%v", t.Aliases), fmt.Sprintf("%v", t.Parents), string(len(t.Notes)), fmt.Sprintf("%v", t.Notes), filename,
+         fmt.Sprintf("%s %s", t.Icon, t.Name),
+         t.Description,
+         fmt.Sprintf("%v", t.Aliases),
+         fmt.Sprintf("%v", t.Parents),
+         fmt.Sprintf("%d", len(t.Notes)),
+         fmt.Sprintf("%v", t.Notes),
+         filename,
       )
       rows = append(rows, r)
    }
