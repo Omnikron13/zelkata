@@ -164,17 +164,18 @@ func (t *Tag) Save() error {
       return err
    }
    path := filepath.Join(paths.Tags(), name)
-   return t.saveAs(path)
+   return t.SaveAs(path)
 }
 
 
-// saveAs writes a Tag struct to an arbitrary file path.
-func (t *Tag) saveAs(filePath string) error {
+// SaveAs writes a Tag struct to an arbitrary file path.
+func (t *Tag) SaveAs(filePath string) error {
    b, err := yaml.Marshal(t)
    if err != nil {
       return err
    }
-   return os.WriteFile(filePath, b, 0600)
+   if err = os.WriteFile(filePath, b, 0600); err == nil { return nil }
+   return fmt.Errorf("Failure writing tag file at %s during Save()", filePath)
 }
 
 
