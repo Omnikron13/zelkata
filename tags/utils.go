@@ -116,3 +116,21 @@ func encodeHash(raw uint64) string {
    }
 }
 
+
+// normaliseName takes a tag name and returns a normalised (more path friendly, mostly) version of it.
+func normaliseName(name string) string {
+   sb := strings.Builder{}
+   for i, c := range strings.ToLower(name) {
+      if c == ' ' {
+         if i != 0 { sb.WriteRune('-') } else { sb.WriteRune('_') }
+      }
+      // TODO: alllow config of allowed characters. This is the 'POSIX portable file charset'.
+      if !strings.ContainsRune("abcdefghijklmnopqrstuvwxyz0123456789-_.", c) { continue }
+      sb.WriteRune(c)
+   }
+   // TODO: don't write this is disabled in config
+   sb.WriteRune('.')
+   sb.WriteString(HashName(name))
+   return sb.String()
+}
+
