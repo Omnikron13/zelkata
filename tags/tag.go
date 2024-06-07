@@ -85,8 +85,8 @@ func (t *Tag) AddNote(n *note.Note) {
 }
 
 
-// genFileName generates a filename for a tag file based on the tag name.
-func (t *Tag) genFileName() (name string, err error) {
+// GenFileName generates a filename for a tag file based on the tag name.
+func (t *Tag) GenFileName() (name string, err error) {
    ext := config.GetOrPanic[string]("tags.metadata.extension")
    name = fmt.Sprintf("%s.%s%s", t.normalisedName(), HashName(t.Name), ext)
    return
@@ -168,7 +168,7 @@ func normaliseName(name string) string {
 
 // Save writes a Tag struct to a file in the tags directory.
 func (t *Tag) Save() error {
-   name, err := t.genFileName()
+   name, err := t.GenFileName()
    if err != nil {
       return err
    }

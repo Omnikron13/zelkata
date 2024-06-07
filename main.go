@@ -7,6 +7,8 @@ import (
    "context"
    "os"
 
+   "github.com/omnikron13/zelkata/tui"
+
    "github.com/urfave/cli/v3"
 )
 
@@ -25,6 +27,12 @@ func main() {
             Aliases: []string{"a"},
             Usage: "add a note",
             Action: addCmd,
+         },
+         {
+            Name: "tui",
+            Aliases: []string{"t"},
+            Usage: "start the TUI",
+            Action: tui.MainTui,
          },
       },
    }

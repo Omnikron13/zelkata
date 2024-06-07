@@ -9,7 +9,6 @@ require (
 	github.com/charmbracelet/bubbles v0.18.0
 	github.com/charmbracelet/bubbletea v0.26.1
 	github.com/charmbracelet/lipgloss v0.9.1
-	github.com/erikgeiser/promptkit v0.9.0
 	github.com/google/uuid v1.6.0
 	github.com/stretchr/testify v1.8.4
 	github.com/urfave/cli/v3 v3.0.0-alpha9
