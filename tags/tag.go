@@ -2,19 +2,15 @@ package tags
 
 import (
    . "cmp"
-   "encoding/base32"
-   "encoding/binary"
    "fmt"
    "os"
    "path/filepath"
-   "regexp"
    "strings"
 
    "github.com/omnikron13/zelkata/config"
    "github.com/omnikron13/zelkata/note"
    "github.com/omnikron13/zelkata/paths"
 
-   "github.com/cespare/xxhash"
    "gopkg.in/yaml.v3"
    "k8s.io/apimachinery/pkg/util/sets"
 )
