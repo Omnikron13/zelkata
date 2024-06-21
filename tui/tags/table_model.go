@@ -2,9 +2,11 @@ package tui
 
 import (
    "fmt"
+   "strings"
    "unicode/utf8"
 
    "github.com/omnikron13/zelkata/tags"
+   "k8s.io/apimachinery/pkg/util/sets"
 
    bt "github.com/charmbracelet/bubbletea"
    "github.com/charmbracelet/lipgloss"
@@ -83,14 +85,18 @@ func (m *TagsTableModel) Init() bt.Cmd {
       filename, err := t.GenFileName()
       if err != nil { panic(err) }
 
+      aliasesStr := strings.Join(t.Aliases, ", ")
+      parentsStr := strings.Join(sets.List(t.Parents), ", ")
+      notesStr := strings.Join(sets.List(t.Notes), ", ")
+
       r := make([]string, 0, 3)
       r = append(r,
          fmt.Sprintf("%s %s", t.Icon, t.Name),
          t.Description,
-         fmt.Sprintf("%v", t.Aliases),
-         fmt.Sprintf("%v", t.Parents),
+         aliasesStr,
+         parentsStr,
          fmt.Sprintf("%d", len(t.Notes)),
-         fmt.Sprintf("%v", t.Notes),
+         notesStr,
          filename,
       )
       rows = append(rows, r)
