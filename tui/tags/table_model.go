@@ -37,6 +37,16 @@ type TagsTableModel struct {
 
 
 func (m *TagsTableModel) Init() bt.Cmd {
+   m.headers = []string{
+      "󱤇 Name",
+      "Description",
+      "Aliases",
+      "Parents",
+      "󰭷 Note Count",
+      "Note IDs",
+      "Filename",
+   }
+
    m.selectedRow = 0
    m.selectedCol = 0
 
@@ -68,15 +78,6 @@ func (m *TagsTableModel) Init() bt.Cmd {
       }
    }
 
-   m.headers = []string{
-      "󱤇 Name",
-      "Description",
-      "Aliases",
-      "Parents",
-      "󰭷 Note Count",
-      "Note IDs",
-      "Filename",
-   }
    m.table = stickers.NewTableSingleType[string](min(250, m.windowStyle.GetWidth()), max(20, m.windowStyle.GetHeight()), m.headers)
    m.flex = stickers.NewFlexBox(1, 1)
 
