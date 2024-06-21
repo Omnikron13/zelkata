@@ -49,7 +49,7 @@ func (m *TagsTableModel) Init() bt.Cmd {
    }
 
    m.selectedRow = 0
-   m.selectedCol = 0
+   m.selectedCol = 1
 
    m.widthRatio = []int{1, 10, 20, 20, 20, 5, 100, 10}
    m.widthMin = make([]int, len(m.widthRatio))
@@ -112,6 +112,9 @@ func (m *TagsTableModel) Init() bt.Cmd {
 
    m.table.SetRatio(m.widthRatio)
    m.table.SetMinWidth(m.widthMin)
+
+   // Move the table cursor from the icon to name column by default
+   m.table.CursorRight()
 
    return nil
 }
