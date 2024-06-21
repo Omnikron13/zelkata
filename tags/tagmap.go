@@ -33,7 +33,7 @@ func LoadAll() (TagMap, error) {
          return nil, err
       }
       if err := tm.Add(tag.Name, tag); err != nil {
-         return nil, err
+         continue
       }
       for _, t := range tag.Aliases {
          if err := tm.Add(t, tag); err != nil {
