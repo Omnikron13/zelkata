@@ -38,7 +38,7 @@ func (m *TagsTableModel) Init() bt.Cmd {
    m.selectedRow = 0
    m.selectedCol = 0
 
-   m.widthRatio = []int{1, 4, 4, 4, 1, 4, 1}
+   m.widthRatio = []int{10, 20, 20, 20, 5, 100, 10}
    m.widthMin = []int{6, 11, 7, 7, 12, 8, 8}
 
    m.windowStyle = lipgloss.NewStyle().
