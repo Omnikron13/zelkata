@@ -16,7 +16,7 @@ func (m *TagsTableModel) View() string {
    m.table.SetWidth(cell.GetWidth())
    m.table.SetHeight(cell.GetHeight())
 
-   cell.SetContent(m.table.Render())
+   cell.SetContent(m.tableStyle.Render(m.table.Render()))
 
-   return flexboxStyle.Render(m.flex.Render())
+   return m.windowStyle.Render(m.flex.Render())
 }

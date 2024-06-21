@@ -24,6 +24,7 @@ type TagsTableModel struct {
    widthMin []int;
    table *stickers.TableSingleType[string];
    windowStyle lipgloss.Style;
+   tableStyle lipgloss.Style;
 }
 
 
@@ -56,10 +57,10 @@ func (m *TagsTableModel) Init() bt.Cmd {
    }
 
    m.windowStyle = lipgloss.NewStyle().
-      Padding(1).
-      Margin(1).
-      Border(lipgloss.RoundedBorder())
-      //Background(lipgloss.Color("#24273A"))
+      Background(lipgloss.Color("#24273A"))
+
+   m.tableStyle = lipgloss.NewStyle().
+      Background(lipgloss.Color("#24273A"))
 
    var err error
    if m.Tags, err = tags.LoadAll(); err != nil {
