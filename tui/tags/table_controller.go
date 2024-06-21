@@ -32,7 +32,7 @@ func (m *TagsTableModel) Update(msg bt.Msg) (bt.Model, bt.Cmd) {
             case "right", "l", "L":
                m.table.CursorRight()
 
-            case "q", "Q":
+            case "ctrl+c", "q", "Q":
                return m, bt.Quit
 
             default:
