@@ -41,7 +41,7 @@ func (m *TagsTableModel) Init() bt.Cmd {
       "Description",
       //"Aliases",
       //"Parents",
-      "󰭷 Note Count",
+      "󰭷 Notes",
       //"Note IDs",
       //"Filename",
    }
