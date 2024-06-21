@@ -11,7 +11,7 @@ import (
    bt "github.com/charmbracelet/bubbletea"
    "github.com/charmbracelet/lipgloss"
 
-   "github.com/76creates/stickers"
+   "github.com/omnikron13/stickers"
 )
 
 
