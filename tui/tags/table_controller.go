@@ -13,8 +13,6 @@ func (m *TagsTableModel) Update(msg bt.Msg) (bt.Model, bt.Cmd) {
          flexboxStyle.Height(max(60, msg.Height))
          m.flex.SetWidth(msg.Width)
          m.flex.SetHeight(msg.Height)
-         m.table.SetWidth(msg.Width)
-         m.table.SetHeight(msg.Height)
 
       case bt.KeyMsg:
          switch msg.String() {
