@@ -9,8 +9,6 @@ func (m *TagsTableModel) Update(msg bt.Msg) (bt.Model, bt.Cmd) {
    if len(m.Tags) < 1 { m.Init() }
    switch msg := msg.(type) {
       case bt.WindowSizeMsg:
-         flexboxStyle.Width(max(100, msg.Width))
-         flexboxStyle.Height(max(60, msg.Height))
          m.flex.SetWidth(msg.Width)
          m.flex.SetHeight(msg.Height)
 
