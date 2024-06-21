@@ -75,7 +75,7 @@ func (m *TagsTableModel) Init() bt.Cmd {
    m.HashMap = make(map[string]*tags.Tag)
    for _, t := range m.Tags {
       m.HashMap[t.Name] = t
-      if length := utf8.RuneCountInString(t.Name); length > m.widthMin[1] {
+      if length := utf8.RuneCountInString(t.Name) + 1; length > m.widthMin[1] {
          m.widthMin[1] = length
       }
       //fn, err := t.GenFileName()
