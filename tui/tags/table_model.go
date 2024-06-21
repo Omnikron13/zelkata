@@ -93,7 +93,6 @@ func (m *TagsTableModel) Init() bt.Cmd {
    }
 
    m.table = stickers.NewTableSingleType[string](120, 20, m.headers)
-   m.flex = stickers.NewFlexBox(1, 1)
 
    rows := make([][]string, 0, 16)
    for _, t := range m.Tags {
@@ -124,6 +123,8 @@ func (m *TagsTableModel) Init() bt.Cmd {
 
    // Move the table cursor from the icon to name column by default
    m.table.CursorRight()
+
+   m.flex = stickers.NewFlexBox(1, 1)
 
    return nil
 }
