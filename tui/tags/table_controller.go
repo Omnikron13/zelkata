@@ -34,6 +34,7 @@ func (m *TagsTableModel) Update(msg bt.Msg) (bt.Model, bt.Cmd) {
 
             case "q", "Q":
                return m, bt.Quit
+
             default:
                return m, nil
          }
