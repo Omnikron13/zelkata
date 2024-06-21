@@ -120,6 +120,10 @@ func (m *TagsTableModel) Init() bt.Cmd {
    m.table.CursorRight()
 
    m.flex = stickers.NewFlexBox(1, 1)
+   row := m.flex.NewRow()
+   cell := stickers.NewFlexBoxCell(1, 1)
+   row.AddCells([]*stickers.FlexBoxCell{cell})
+   m.flex.AddRows([]*stickers.FlexBoxRow{row})
 
    return nil
 }
