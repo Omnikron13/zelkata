@@ -24,9 +24,9 @@ func (m *TagsTableModel) Update(msg bt.Msg) (bt.Model, bt.Cmd) {
                }
 
             case "down", "k", "K":
-               n := min(m.selectedRow + 1, uint(len(m.Tags) - 1))
+               n := min(m.selectedRow + 1, uint(len(m.HashMap) - 1))
                if n != m.selectedRow {
-                  m.selectedRow = n
+                  m.selectedRow = n - 1
                   m.table.CursorDown()
                }
 
