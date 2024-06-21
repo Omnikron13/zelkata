@@ -128,7 +128,7 @@ func normaliseName(name string) string {
       if !strings.ContainsRune("abcdefghijklmnopqrstuvwxyz0123456789-_.", c) { continue }
       sb.WriteRune(c)
    }
-   // TODO: don't write this is disabled in config
+   // TODO: don't write this if disabled in config
    sb.WriteRune('.')
    sb.WriteString(HashName(name))
    return sb.String()
