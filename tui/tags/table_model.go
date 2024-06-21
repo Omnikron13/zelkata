@@ -38,7 +38,8 @@ type TagsTableModel struct {
 
 func (m *TagsTableModel) Init() bt.Cmd {
    m.headers = []string{
-      "󱤇 Name",
+      "󱤇  ",
+      "Name",
       "Description",
       "Aliases",
       "Parents",
@@ -50,7 +51,7 @@ func (m *TagsTableModel) Init() bt.Cmd {
    m.selectedRow = 0
    m.selectedCol = 0
 
-   m.widthRatio = []int{10, 20, 20, 20, 5, 100, 10}
+   m.widthRatio = []int{1, 10, 20, 20, 20, 5, 100, 10}
    m.widthMin = make([]int, len(m.widthRatio))
 
    for i, s := range m.headers {
@@ -73,11 +74,11 @@ func (m *TagsTableModel) Init() bt.Cmd {
          panic(err)
       } else {
          m.HashMap[fn] = t
-         if length := utf8.RuneCountInString(t.Name) + 2; length > m.widthMin[0] {
-            m.widthMin[0] = length
+         if length := utf8.RuneCountInString(t.Name); length > m.widthMin[1] {
+            m.widthMin[1] = length
          }
-         if length := utf8.RuneCountInString(fn); length > m.widthMin[6] {
-            m.widthMin[6] = length
+         if length := utf8.RuneCountInString(fn); length > m.widthMin[7] {
+            m.widthMin[7] = length
          }
       }
    }
@@ -96,7 +97,8 @@ func (m *TagsTableModel) Init() bt.Cmd {
 
       r := make([]string, 0, 3)
       r = append(r,
-         fmt.Sprintf("%s %s", t.Icon, t.Name),
+         fmt.Sprintf("%s ", t.Icon),
+         t.Name,
          t.Description,
          aliasesStr,
          parentsStr,
