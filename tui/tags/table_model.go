@@ -59,7 +59,7 @@ func (m *TagsTableModel) Init() bt.Cmd {
    m.widthMin = make([]int, len(m.widthRatio))
 
    for i, s := range m.headers {
-      m.widthMin[i] = utf8.RuneCountInString(s)
+      m.widthMin[i] = utf8.RuneCountInString(s) + 1
    }
 
    m.windowStyle = lipgloss.NewStyle().
