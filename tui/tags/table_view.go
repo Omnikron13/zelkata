@@ -4,11 +4,11 @@ package tui
 func (m *TagsTableModel) View() string {
    m.flex.ForceRecalculate()
 
-   row, exists := m.flex.GetRow(0)
-   if !exists {
+   row := m.flex.GetRow(0)
+   if row == nil{
       panic("could not find flexbox table row: 0")
    }
-   cell := row.Cell(0)
+   cell := row.GetCell(0)
    if cell == nil {
       panic("could not find the flexbox table cell: 0")
    }

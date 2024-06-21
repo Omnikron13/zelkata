@@ -11,18 +11,19 @@ import (
    bt "github.com/charmbracelet/bubbletea"
    "github.com/charmbracelet/lipgloss"
 
-   "github.com/omnikron13/stickers"
+   "github.com/omnikron13/stickers/flexbox"
+   "github.com/omnikron13/stickers/table"
 )
 
 
 type TagsTableModel struct {
    Tags tags.TagMap;
    HashMap map[string]*tags.Tag;
-   flex *stickers.FlexBox;
+   flex *flexbox.FlexBox;
    headers []string;
    widthRatio []int;
    widthMin []int;
-   table *stickers.TableSingleType[string];
+   table *table.TableSingleType[string];
    windowStyle lipgloss.Style;
    tableStyle lipgloss.Style;
 }
@@ -60,6 +61,7 @@ func (m *TagsTableModel) Init() bt.Cmd {
       Background(lipgloss.Color("#24273A"))
 
    m.tableStyle = lipgloss.NewStyle().
+      Border(lipgloss.RoundedBorder()).
       Background(lipgloss.Color("#24273A"))
 
    var err error
@@ -79,7 +81,7 @@ func (m *TagsTableModel) Init() bt.Cmd {
       //}
    }
 
-   m.table = stickers.NewTableSingleType[string](120, 20, m.headers)
+   m.table = table.NewTableSingleType[string](120, 20, m.headers)
 
    rows := make([][]string, 0, 16)
    for _, t := range m.HashMap {
@@ -113,11 +115,11 @@ func (m *TagsTableModel) Init() bt.Cmd {
    // Move the table cursor from the icon to name column by default
    m.table.CursorRight()
 
-   m.flex = stickers.NewFlexBox(1, 1)
+   m.flex = flexbox.New(1, 1)
    row := m.flex.NewRow()
-   cell := stickers.NewFlexBoxCell(1, 1)
-   row.AddCells([]*stickers.FlexBoxCell{cell})
-   m.flex.AddRows([]*stickers.FlexBoxRow{row})
+   cell := flexbox.NewCell(1, 1)
+   row.AddCells(cell)
+   m.flex.AddRows([]*flexbox.Row{row})
 
    return nil
 }

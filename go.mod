@@ -3,14 +3,13 @@ module github.com/omnikron13/zelkata
 go 1.22.2
 
 require (
-   github.com/omnikron13/stickers/flexbox v1.3.3
-   github.com/omnikron13/stickers/table v1.3.3
 	github.com/adrg/xdg v0.4.0
 	github.com/cespare/xxhash v1.1.0
 	github.com/charmbracelet/bubbles v0.18.0
 	github.com/charmbracelet/bubbletea v0.26.1
 	github.com/charmbracelet/lipgloss v0.9.1
 	github.com/google/uuid v1.6.0
+	github.com/omnikron13/stickers v1.3.7
 	github.com/stretchr/testify v1.8.4
 	github.com/urfave/cli/v3 v3.0.0-alpha9
 	gopkg.in/yaml.v3 v3.0.1
@@ -31,7 +30,6 @@ require (
 	github.com/muesli/cancelreader v0.2.2 // indirect
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.15.2 // indirect
-	github.com/omnikron13/stickers v1.3.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.6 // indirect
 	github.com/xrash/smetrics v0.0.0-20240312152122-5f08fbb34913 // indirect
