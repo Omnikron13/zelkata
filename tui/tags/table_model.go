@@ -74,7 +74,7 @@ func (m *TagsTableModel) Init() bt.Cmd {
       "Aliases",
       "Parents",
       "󰭷 Note Count",
-      "󰊕 Hashes",
+      "Note IDs",
       "Filename",
    }
    m.table = stickers.NewTableSingleType[string](min(250, m.windowStyle.GetWidth()), max(20, m.windowStyle.GetHeight()), m.headers)
