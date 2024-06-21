@@ -119,6 +119,8 @@ func (m *TagsTableModel) Init() bt.Cmd {
    m.table.SetRatio(m.widthRatio)
    m.table.SetMinWidth(m.widthMin)
 
+   m.table.OrderByColumn(1)
+
    // Move the table cursor from the icon to name column by default
    m.table.CursorRight()
 
