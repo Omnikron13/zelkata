@@ -79,16 +79,14 @@ func (m *TagsTableModel) Init() bt.Cmd {
    }
    m.HashMap = make(map[string]*tags.Tag)
    for _, t := range m.Tags {
-      if fn, err := t.GenFileName(); err != nil {
-         panic(err)
-      } else {
-         m.HashMap[fn] = t
-         if length := utf8.RuneCountInString(t.Name); length > m.widthMin[1] {
-            m.widthMin[1] = length
-         }
-         if length := utf8.RuneCountInString(fn); length > m.widthMin[7] {
-            m.widthMin[7] = length
-         }
+      m.HashMap[t.Name] = t
+      if length := utf8.RuneCountInString(t.Name); length > m.widthMin[1] {
+         m.widthMin[1] = length
+      }
+      fn, err := t.GenFileName()
+      if err != nil { panic(err) }
+      if length := utf8.RuneCountInString(fn); length > m.widthMin[7] {
+         m.widthMin[7] = length
       }
    }
 
