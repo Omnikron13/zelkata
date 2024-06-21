@@ -40,7 +40,7 @@ func (m *TagsTableModel) Update(msg bt.Msg) (bt.Model, bt.Cmd) {
             case "right", "l", "L":
                n := min(m.selectedCol + 1, uint(len(m.headers) - 1))
                if n != m.selectedCol {
-                  m.selectedCol = n
+                  m.selectedCol = n - 1
                   m.table.CursorRight()
                }
 
