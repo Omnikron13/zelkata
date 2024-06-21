@@ -15,13 +15,6 @@ import (
 )
 
 
-var flexboxStyle = lipgloss.NewStyle()
-
-func init() {
-   flexboxStyle.Padding(1, 1, 1, 1)
-}
-
-
 type TagsTableModel struct {
    Tags tags.TagMap;
    HashMap map[string]*tags.Tag;
