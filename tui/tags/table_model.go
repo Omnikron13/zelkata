@@ -2,11 +2,11 @@ package tui
 
 import (
    "fmt"
-   "strings"
+   //"strings"
    "unicode/utf8"
 
    "github.com/omnikron13/zelkata/tags"
-   "k8s.io/apimachinery/pkg/util/sets"
+   //"k8s.io/apimachinery/pkg/util/sets"
 
    bt "github.com/charmbracelet/bubbletea"
    "github.com/charmbracelet/lipgloss"
@@ -41,11 +41,11 @@ func (m *TagsTableModel) Init() bt.Cmd {
       "󱤇 ",
       "Name",
       "Description",
-      "Aliases",
-      "Parents",
+      //"Aliases",
+      //"Parents",
       "󰭷 Note Count",
-      "Note IDs",
-      "Filename",
+      //"Note IDs",
+      //"Filename",
    }
 
    m.selectedRow = 0
@@ -55,11 +55,11 @@ func (m *TagsTableModel) Init() bt.Cmd {
       1,
       10,
       20,
-      20,
-      20,
+      //20,
+      //20,
       5,
-      100,
-      10,
+      //100,
+      //10,
    }
    m.widthMin = make([]int, len(m.widthRatio))
 
@@ -83,34 +83,34 @@ func (m *TagsTableModel) Init() bt.Cmd {
       if length := utf8.RuneCountInString(t.Name); length > m.widthMin[1] {
          m.widthMin[1] = length
       }
-      fn, err := t.GenFileName()
-      if err != nil { panic(err) }
-      if length := utf8.RuneCountInString(fn); length > m.widthMin[7] {
-         m.widthMin[7] = length
-      }
+      //fn, err := t.GenFileName()
+      //if err != nil { panic(err) }
+      //if length := utf8.RuneCountInString(fn); length > m.widthMin[7] {
+      //   m.widthMin[7] = length
+      //}
    }
 
    m.table = stickers.NewTableSingleType[string](120, 20, m.headers)
 
    rows := make([][]string, 0, 16)
    for _, t := range m.HashMap {
-      filename, err := t.GenFileName()
-      if err != nil { panic(err) }
+      //filename, err := t.GenFileName()
+      //if err != nil { panic(err) }
 
-      aliasesStr := strings.Join(t.Aliases, ", ")
-      parentsStr := strings.Join(sets.List(t.Parents), ", ")
-      notesStr := strings.Join(sets.List(t.Notes), ", ")
+      //aliasesStr := strings.Join(t.Aliases, ", ")
+      //parentsStr := strings.Join(sets.List(t.Parents), ", ")
+      //notesStr := strings.Join(sets.List(t.Notes), ", ")
 
       r := make([]string, 0, 3)
       r = append(r,
          fmt.Sprintf("%s ", t.Icon),
          t.Name,
          t.Description,
-         aliasesStr,
-         parentsStr,
+         //aliasesStr,
+         //parentsStr,
          fmt.Sprintf("%d", len(t.Notes)),
-         notesStr,
-         filename,
+         //notesStr,
+         //filename,
       )
       rows = append(rows, r)
    }
