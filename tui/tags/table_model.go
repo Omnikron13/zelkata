@@ -38,7 +38,7 @@ type TagsTableModel struct {
 
 func (m *TagsTableModel) Init() bt.Cmd {
    m.headers = []string{
-      "󱤇  ",
+      "󱤇 ",
       "Name",
       "Description",
       "Aliases",
