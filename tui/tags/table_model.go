@@ -95,7 +95,7 @@ func (m *TagsTableModel) Init() bt.Cmd {
    m.table = stickers.NewTableSingleType[string](120, 20, m.headers)
 
    rows := make([][]string, 0, 16)
-   for _, t := range m.Tags {
+   for _, t := range m.HashMap {
       filename, err := t.GenFileName()
       if err != nil { panic(err) }
 
