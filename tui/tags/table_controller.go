@@ -11,8 +11,10 @@ func (m *TagsTableModel) Update(msg bt.Msg) (bt.Model, bt.Cmd) {
       case bt.WindowSizeMsg:
          flexboxStyle.Width(max(100, msg.Width))
          flexboxStyle.Height(max(60, msg.Height))
-         //m.windowStyle.Width(msg.Width/2)
-         //m.windowStyle.Height(msg.Height)
+         m.flex.SetWidth(msg.Width)
+         m.flex.SetHeight(msg.Height)
+         m.table.SetWidth(msg.Width)
+         m.table.SetHeight(msg.Height)
 
       case bt.KeyMsg:
          switch msg.String() {

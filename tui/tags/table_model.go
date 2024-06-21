@@ -92,7 +92,7 @@ func (m *TagsTableModel) Init() bt.Cmd {
       }
    }
 
-   m.table = stickers.NewTableSingleType[string](min(250, m.windowStyle.GetWidth()), max(20, m.windowStyle.GetHeight()), m.headers)
+   m.table = stickers.NewTableSingleType[string](120, 20, m.headers)
    m.flex = stickers.NewFlexBox(1, 1)
 
    rows := make([][]string, 0, 16)
