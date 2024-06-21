@@ -1,7 +1,7 @@
 package tags
 
 import (
-   "errors"
+   "fmt"
    "os"
    "path/filepath"
 
@@ -50,7 +50,7 @@ func LoadAll() (TagMap, error) {
 func (m *TagMap) Add(name string, tag *Tag) error {
    name = normaliseName(name)
    if _, exists := (*m)[name]; exists {
-      return errors.New("Tag already exists")
+      return fmt.Errorf("Tag already exists: %s - %#v\n", name, tag)
    }
    (*m)[name] = tag
    return nil
