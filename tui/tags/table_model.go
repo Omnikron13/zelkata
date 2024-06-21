@@ -51,7 +51,16 @@ func (m *TagsTableModel) Init() bt.Cmd {
    m.selectedRow = 0
    m.selectedCol = 1
 
-   m.widthRatio = []int{1, 10, 20, 20, 20, 5, 100, 10}
+   m.widthRatio = []int{
+      1,
+      10,
+      20,
+      20,
+      20,
+      5,
+      100,
+      10,
+   }
    m.widthMin = make([]int, len(m.widthRatio))
 
    for i, s := range m.headers {
