@@ -53,11 +53,11 @@ func (m *TagsTableModel) Init() bt.Cmd {
 
    m.widthRatio = []int{
       1,
-      10,
       20,
+      200,
       //20,
       //20,
-      5,
+      1,
       //100,
       //10,
    }
