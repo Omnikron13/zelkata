@@ -30,8 +30,6 @@ type TagsTableModel struct {
    widthRatio []int;
    widthMin []int;
    table *stickers.TableSingleType[string];
-   selectedRow uint;
-   selectedCol uint;
    windowStyle lipgloss.Style;
 }
 
@@ -47,9 +45,6 @@ func (m *TagsTableModel) Init() bt.Cmd {
       //"Note IDs",
       //"Filename",
    }
-
-   m.selectedRow = 0
-   m.selectedCol = 1
 
    m.widthRatio = []int{
       1,

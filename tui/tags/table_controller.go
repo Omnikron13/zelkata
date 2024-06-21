@@ -19,32 +19,18 @@ func (m *TagsTableModel) Update(msg bt.Msg) (bt.Model, bt.Cmd) {
       case bt.KeyMsg:
          switch msg.String() {
             case "up", "i", "I":
-               n := max(m.selectedRow - 1, 0)
-               if n != m.selectedRow {
-                  m.selectedRow = n
-                  m.table.CursorUp()
-               }
+               m.table.CursorUp()
 
             case "down", "k", "K":
-               n := min(m.selectedRow + 1, uint(len(m.HashMap) - 1))
-               if n != m.selectedRow {
-                  m.selectedRow = n - 1
-                  m.table.CursorDown()
-               }
+               m.table.CursorDown()
 
             case "left", "j", "J":
-               n := max(m.selectedCol - 1, 1)
-               if n != m.selectedCol{
-                  m.selectedCol = n
+               if x, _ := m.table.GetCursorLocation(); x > 1 {
                   m.table.CursorLeft()
                }
 
             case "right", "l", "L":
-               n := min(m.selectedCol + 1, uint(len(m.headers) - 1))
-               if n != m.selectedCol {
-                  m.selectedCol = n
-                  m.table.CursorRight()
-               }
+               m.table.CursorRight()
 
             case "q", "Q":
                return m, bt.Quit
