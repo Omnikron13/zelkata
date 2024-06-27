@@ -95,7 +95,7 @@ func (t *Tag) GenFileName() (name string, err error) {
 // LoadName reads a tag file by name and returns a Tag struct.
 // This is a convenience function that calls LoadPath with the full path and normalised tag name.
 func LoadName(name string) (*Tag, error) {
-   ext, err := config.Get[string]("tags.extension")
+   ext, err := config.Get[string]("tags.metadata.extension")
    if err != nil {
       return nil, err
    }
