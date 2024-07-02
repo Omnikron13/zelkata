@@ -3,6 +3,7 @@ package config
 import (
    _ "embed"
    "errors"
+   "fmt"
    "io/fs"
    "maps"
    "os"
@@ -70,7 +71,7 @@ func Get[T any](key string) (v T, err error) {
          }
          if len(filesData) == 0 {
             // TODO: Define custom error types? Is this really worth it in Go?
-            panic(errors.New("key not found"))
+            panic(fmt.Errorf("config key not found: %s", key))
          }
          if err := unmarshalNext(); err != nil {
             panic(err)
