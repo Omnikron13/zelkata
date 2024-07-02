@@ -87,7 +87,7 @@ func (t *Tag) AddNote(n *note.Note) {
 // GenFileName generates a filename for a tag file based on the tag name.
 func (t *Tag) GenFileName() (name string, err error) {
    ext := config.GetOrPanic[string]("tags.metadata.extension")
-   name = fmt.Sprintf("%s%s", t.normalisedName(), ext)
+   name = fmt.Sprintf("%s%s", t.NormalisedName(), ext)
    return
 }
 
@@ -151,8 +151,8 @@ func (t Tag) MarshalYAML() (interface{}, error) {
 }
 
 
-// normalisedName returns the normalised name of a tag.
-func (t *Tag) normalisedName() string {
+// NormalisedName returns the normalised name of a tag.
+func (t *Tag) NormalisedName() string {
    return normaliseName(t.Name)
 }
 
