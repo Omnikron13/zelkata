@@ -36,8 +36,10 @@ type InlineListModel[T any] struct {
    focussed bool
 
    // Customisable keybindings
-   nextKey key.Binding
-   prevKey key.Binding
+   KeyMap struct {
+      Next key.Binding
+      Prev key.Binding
+   }
 
    // Customisable styling using lipgloss
    style lg.Style
@@ -81,12 +83,12 @@ func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
       m.renderItem = func (item T) string { return fmt.Sprintf("%v", item) }
    }
 
-   m.nextKey = key.NewBinding(
+   m.KeyMap.Next = key.NewBinding(
       key.WithKeys("right", "l"),
       key.WithHelp("󰜶 /l", "focus next item"),
    )
 
-   m.prevKey = key.NewBinding(
+   m.KeyMap.Prev = key.NewBinding(
       key.WithKeys("left", "h"),
       key.WithHelp("󰜳 /h", "focus previous item"),
    )
@@ -97,8 +99,8 @@ func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
 
 // Update updates the InlineListModel; part of the bubbletea Model interface.
 func (m *InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
-   m.nextKey.SetEnabled(m.focussed)
-   m.prevKey.SetEnabled(m.focussed)
+   m.KeyMap.Next.SetEnabled(m.focussed)
+   m.KeyMap.Prev.SetEnabled(m.focussed)
 
    switch msg := msg.(type) {
       case bt.KeyMsg:
@@ -110,11 +112,11 @@ func (m *InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
       if m.selectable {
          i := m.findIndex(m.selected)
          switch {
-            case key.Matches(msg, m.nextKey):
+            case key.Matches(msg, m.KeyMap.Next):
                if i < len(m.items)-1 {
                   m.selected = &m.items[i+1]
                }
-            case key.Matches(msg, m.prevKey):
+            case key.Matches(msg, m.KeyMap.Prev):
                if i > 0 {
                   m.selected = &m.items[i-1]
                } else if i < 0 {
