@@ -13,7 +13,7 @@ import (
 // 'curosr'.
 // TODO: add interface requirement for generic type T
 type InlineListModel[T any] struct {
-   items []*T
+   items []T
 
    prefix string
    suffix string
