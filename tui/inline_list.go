@@ -35,7 +35,7 @@ type InlineListModel[T any] struct {
 
 
 // Init initializes the InlineListModel; part of the bubbletea Model interface.
-func (m InlineListModel[T]) Init() (cmd bt.Cmd) {
+func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
    m.separator = Or(m.separator, ", ")
 
    return
@@ -43,7 +43,7 @@ func (m InlineListModel[T]) Init() (cmd bt.Cmd) {
 
 
 // Update updates the InlineListModel; part of the bubbletea Model interface.
-func (m InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
+func (m *InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
    switch msg := msg.(type) {
       case bt.KeyMsg:
          switch msg.String() {
@@ -59,8 +59,8 @@ func (m InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
 
 
 // View renders the InlineListModel; part of the bubbletea Model interface.
-func (m InlineListModel[T]) View() string {
    // TODO: actually render the list
    return ""
+func (m *InlineListModel[T]) View() string {
 }
 
