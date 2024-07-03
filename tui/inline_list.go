@@ -50,6 +50,16 @@ type InlineListModel[T any] struct {
 }
 
 
+// GetSelected returns a pointer to the selected item, or nil if nothing is selected (yet?) or the list is not flagged
+// as selectable.
+func (m *InlineListModel[T]) GetSelected() *T {
+   if !m.selectable || m.selected < 0 {
+      return nil
+   }
+   return &m.items[m.selected]
+}
+
+
 // Init initializes the InlineListModel; part of the bubbletea Model interface.
 func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
    m.separator = Or(m.separator, ", ")
