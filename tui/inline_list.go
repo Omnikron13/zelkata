@@ -58,6 +58,9 @@ func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
       m.renderItem = func (item T) string { return fmt.Sprintf("%v", item) }
    }
 
+   // Default the selected index to -1 rather than the default 0 value for int, as 0 is a valid index.
+   m.selected = -1
+
    m.nextKey = key.NewBinding(
       key.WithKeys("right", "l"),
       key.WithHelp("󰜶 /l", "focus next item"),
