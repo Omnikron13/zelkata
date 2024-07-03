@@ -7,6 +7,7 @@ import (
 
    bt "github.com/charmbracelet/bubbletea"
    lg "github.com/charmbracelet/lipgloss"
+   "github.com/charmbracelet/bubbles/key"
 )
 
 
@@ -30,6 +31,10 @@ type InlineListModel[T any] struct {
    selectable bool
    selected int
 
+   // Customisable keybindings
+   nextKey key.Binding
+   prevKey key.Binding
+
    // Customisable styling using lipgloss
    style lg.Style
    itemStyle lg.Style
@@ -50,6 +55,16 @@ func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
       m.renderItem = func (item T) string { return fmt.Sprintf("%v", item) }
    }
 
+   m.nextKey = key.NewBinding(
+      key.WithKeys("right", "l"),
+      key.WithHelp("󰜶 /l", "focus next item"),
+   )
+
+   m.prevKey = key.NewBinding(
+      key.WithKeys("left", "h"),
+      key.WithHelp("󰜳 /h", "focus previous item"),
+   )
+
    return
 }
 
@@ -63,6 +78,18 @@ func (m *InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
                cmd = bt.Quit
                return
          }
+      if m.selectable {
+         switch {
+            case key.Matches(msg, m.nextKey):
+               if m.selected < len(m.items)-1 {
+                  m.selected++
+               }
+            case key.Matches(msg, m.prevKey):
+               if m.selected > 0 {
+                  m.selected--
+               }
+         }
+      }
    }
 
    model = m
