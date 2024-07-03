@@ -60,7 +60,7 @@ func (m InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
 
 // View renders the InlineListModel; part of the bubbletea Model interface.
 func (m InlineListModel[T]) View() string {
-   // TODOL actually render the list
+   // TODO: actually render the list
    return ""
 }
 
