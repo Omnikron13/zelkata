@@ -27,9 +27,11 @@ type InlineListModel[T any] struct {
    // Seperator that will be rendered between items
    separator string
 
-   // Whether the list can take focus to allow selecting items, and the index of the selected item if so.
+   // Whether the list can take focus to allow selecting items, the index of the selected item if so, and a pointer to
+   // the selected item.
    selectable bool
-   selected int
+   selectedIndex int
+   selected *T
 
    // Whether the list has focus, which will enable or disable keybindings, possibly change styles, etc.
    focussed bool
@@ -62,13 +64,13 @@ func (m *InlineListModel[T]) findIndex(item *T) int {
 }
 
 
-// GetSelected returns a pointer to the selected item, or nil if nothing is selected (yet?) or the list is not flagged
-// as selectable.
+// GetSelected returns a pointer to the selected item, or nil if nothing is selected (yet?), the selected item is now
+// gone (e.g. if the list has been filtered), or the list is not flagged as selectable in the first place.
 func (m *InlineListModel[T]) GetSelected() *T {
-   if !m.selectable || m.selected < 0 {
+   if !m.selectable || m.findIndex(m.selected) < 0 {
       return nil
    }
-   return &m.items[m.selected]
+   return m.selected
 }
 
 
@@ -81,7 +83,7 @@ func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
    }
 
    // Default the selected index to -1 rather than the default 0 value for int, as 0 is a valid index.
-   m.selected = -1
+   m.selectedIndex = -1
 
    m.nextKey = key.NewBinding(
       key.WithKeys("right", "l"),
@@ -112,14 +114,15 @@ func (m *InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
       if m.selectable {
          switch {
             case key.Matches(msg, m.nextKey):
-               if m.selected < len(m.items)-1 {
-                  m.selected++
+               if m.selectedIndex < len(m.items)-1 {
+                  m.selectedIndex++
                }
             case key.Matches(msg, m.prevKey):
-               if m.selected > 0 {
-                  m.selected--
+               if m.selectedIndex > 0 {
+                  m.selectedIndex--
                }
          }
+         m.selected = &m.items[m.selectedIndex]
       }
    }
 
@@ -135,7 +138,7 @@ func (m *InlineListModel[T]) View() string {
    for i, item := range m.items {
       var itemStyle, prefixStyle, suffixStyle lg.Style
 
-      if m.selectable && i == m.selected {
+      if m.selectable && i == m.selectedIndex {
          itemStyle   = m.selectedItemStyle
          prefixStyle = m.selectedPrefixStyle
          suffixStyle = m.selectedSuffixStyle
