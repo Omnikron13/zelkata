@@ -121,26 +121,21 @@ func (m *InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
 
    switch msg := msg.(type) {
       case bt.KeyMsg:
-         switch msg.String() {
-            case "ctrl+c":
-               cmd = bt.Quit
-               return
+         if m.selectable {
+            i := m.findIndex(m.selected)
+            switch {
+               case key.Matches(msg, m.KeyMap.Next):
+                  if i < len(m.items)-1 {
+                     m.selected = &m.items[i+1]
+                  }
+               case key.Matches(msg, m.KeyMap.Prev):
+                  if i > 0 {
+                     m.selected = &m.items[i-1]
+                  } else if i < 0 {
+                     m.selected = &m.items[len(m.items)-1]
+                  }
+            }
          }
-      if m.selectable {
-         i := m.findIndex(m.selected)
-         switch {
-            case key.Matches(msg, m.KeyMap.Next):
-               if i < len(m.items)-1 {
-                  m.selected = &m.items[i+1]
-               }
-            case key.Matches(msg, m.KeyMap.Prev):
-               if i > 0 {
-                  m.selected = &m.items[i-1]
-               } else if i < 0 {
-                  m.selected = &m.items[len(m.items)-1]
-               }
-         }
-      }
    }
 
    model = m
