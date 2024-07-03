@@ -145,26 +145,22 @@ func (m *InlineListModel[T]) View() string {
    var sb strings.Builder
 
    for i, item := range m.items {
-      var itemStyle, prefixStyle, suffixStyle lg.Style
+      var itemStyles InlineListItemStyles
 
       if m.selectable && &m.items[i] == m.selected {
-         itemStyle   = m.Styles.Item.Selected.Main
-         prefixStyle = m.Styles.Item.Selected.Prefix
-         suffixStyle = m.Styles.Item.Selected.Suffix
+         itemStyles = m.Styles.Item.Selected
       } else {
-         itemStyle   = m.Styles.Item.Normal.Main
-         prefixStyle = m.Styles.Item.Normal.Prefix
-         suffixStyle = m.Styles.Item.Normal.Suffix
+         itemStyles = m.Styles.Item.Normal
       }
 
       if m.renderPrefix != nil {
-         sb.WriteString(prefixStyle.Render(m.renderPrefix(item)))
+         sb.WriteString(itemStyles.Prefix.Render(m.renderPrefix(item)))
       }
 
-      sb.WriteString(itemStyle.Render(m.renderItem(item)))
+      sb.WriteString(itemStyles.Main.Render(m.renderItem(item)))
 
       if m.renderSuffix != nil {
-         sb.WriteString(suffixStyle.Render(m.renderSuffix(item)))
+         sb.WriteString(itemStyles.Suffix.Render(m.renderSuffix(item)))
       }
 
       if i < len(m.items)-1 {
