@@ -20,6 +20,18 @@ type InlineListItemStyles struct {
 }
 
 
+// InlineListStyles is a type grouping lipgloss styles for a list and its items, to facilitate applying different styles
+// to different states of the list (e.g. focussed, etc.)
+type InlineListStyles struct {
+   List lg.Style
+   Item struct {
+      Normal InlineListItemStyles
+      Selected InlineListItemStyles
+   }
+   Seperator lg.Style
+}
+
+
 // InlineListModel is a widget that displays a list of items that flow horizontally as a paragraph, joined by a
 // separator, with optional prefix and/or suffix for each item. Additionally if suooorts selecting items with a
 // 'curosr'.
@@ -52,12 +64,8 @@ type InlineListModel[T any] struct {
 
    // Customisable styling using lipgloss
    Styles struct {
-      List lg.Style
-      Item struct {
-         Normal InlineListItemStyles
-         Selected InlineListItemStyles
-      }
-      Seperator lg.Style
+      Focussed InlineListStyles
+      Unfocussed InlineListStyles
    }
 }
 
@@ -144,13 +152,20 @@ func (m *InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
 func (m *InlineListModel[T]) View() string {
    var sb strings.Builder
 
+   var styles InlineListStyles
+   if m.focussed {
+      styles = m.Styles.Focussed
+   } else {
+      styles = m.Styles.Unfocussed
+   }
+
    for i, item := range m.items {
       var itemStyles InlineListItemStyles
 
       if m.selectable && &m.items[i] == m.selected {
-         itemStyles = m.Styles.Item.Selected
+         itemStyles = styles.Item.Selected
       } else {
-         itemStyles = m.Styles.Item.Normal
+         itemStyles = styles.Item.Normal
       }
 
       if m.renderPrefix != nil {
@@ -164,10 +179,10 @@ func (m *InlineListModel[T]) View() string {
       }
 
       if i < len(m.items)-1 {
-         sb.WriteString(m.Styles.Seperator.Render(m.separator))
+         sb.WriteString(styles.Seperator.Render(m.separator))
       }
    }
 
-   return m.Styles.List.Render(sb.String())
+   return styles.List.Render(sb.String())
 }
 
