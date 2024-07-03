@@ -26,13 +26,13 @@ type InlineListModel[T any] struct {
 
    // Customisable styling using lipgloss
    style lg.Style
-   seperatorStyle lg.Style
    itemStyle lg.Style
    prefixStyle lg.Style
    suffixStyle lg.Style
    selectedItemStyle lg.Style
    selectedPrefixStyle lg.Style
    selectedSuffixStyle lg.Style
+   seperatorStyle lg.Style
 }
 
 
