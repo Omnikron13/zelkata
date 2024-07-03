@@ -17,10 +17,16 @@ import (
 type InlineListModel[T any] struct {
    items []T
 
-   prefix string
-   suffix string
+   // These functions control how an item of type T should be rendered, with optional prefix and suffix which can have
+   // their own styles, and excluded from any filtering, sorting, etc. of the list.
+   renderItem func(T) string
+   renderPrefix func(T) string
+   renderSuffix func(T) string
+
+   // Seperator that will be rendered between items
    separator string
 
+   // Whether the list can take focus to allow selecting items, and the index of the selected item if so.
    selectable bool
    selected int
 
@@ -39,6 +45,10 @@ type InlineListModel[T any] struct {
 // Init initializes the InlineListModel; part of the bubbletea Model interface.
 func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
    m.separator = Or(m.separator, ", ")
+
+   if m.renderItem == nil {
+      m.renderItem = func (item T) string { return fmt.Sprintf("%v", item) }
+   }
 
    return
 }
@@ -65,14 +75,26 @@ func (m *InlineListModel[T]) View() string {
    var sb strings.Builder
 
    for i, item := range m.items {
+      var itemStyle, prefixStyle, suffixStyle lg.Style
+
       if m.selectable && i == m.selected {
-         sb.WriteString(m.selectedPrefixStyle.Render(m.prefix))
-         sb.WriteString(m.selectedItemStyle.Render(fmt.Sprintf("%v", item)))
-         sb.WriteString(m.selectedSuffixStyle.Render(m.suffix))
+         itemStyle   = m.selectedItemStyle
+         prefixStyle = m.selectedPrefixStyle
+         suffixStyle = m.selectedSuffixStyle
       } else {
-         sb.WriteString(m.prefixStyle.String())
-         sb.WriteString(m.itemStyle.Render(fmt.Sprintf("%v", item)))
-         sb.WriteString(m.suffixStyle.String())
+         itemStyle   = m.itemStyle
+         prefixStyle = m.prefixStyle
+         suffixStyle = m.suffixStyle
+      }
+
+      if m.renderPrefix != nil {
+         sb.WriteString(prefixStyle.Render(m.renderPrefix(item)))
+      }
+
+      sb.WriteString(itemStyle.Render(m.renderItem(item)))
+
+      if m.renderSuffix != nil {
+         sb.WriteString(suffixStyle.Render(m.renderSuffix(item)))
       }
 
       if i < len(m.items)-1 {
