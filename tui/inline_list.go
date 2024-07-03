@@ -50,6 +50,18 @@ type InlineListModel[T any] struct {
 }
 
 
+// findIndex returns the index in the (displayed) list of the given item, or -1 if not found.
+// This is intended to keep track of the selected item if/when the list is changed, e.g. by filtering, sorting, etc.
+func (m *InlineListModel[T]) findIndex(item *T) int {
+   for i := range m.items {
+      if &m.items[i] == item {
+         return i
+      }
+   }
+   return -1
+}
+
+
 // GetSelected returns a pointer to the selected item, or nil if nothing is selected (yet?) or the list is not flagged
 // as selectable.
 func (m *InlineListModel[T]) GetSelected() *T {
