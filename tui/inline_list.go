@@ -42,14 +42,16 @@ type InlineListModel[T any] struct {
    }
 
    // Customisable styling using lipgloss
-   style lg.Style
-   itemStyle lg.Style
-   prefixStyle lg.Style
-   suffixStyle lg.Style
-   selectedItemStyle lg.Style
-   selectedPrefixStyle lg.Style
-   selectedSuffixStyle lg.Style
-   seperatorStyle lg.Style
+   Styles struct {
+      List lg.Style
+      Item lg.Style
+      Prefix lg.Style
+      Suffix lg.Style
+      SelectedItem lg.Style
+      SelectedPrefix lg.Style
+      SelectedSuffix lg.Style
+      Seperator lg.Style
+   }
 }
 
 
@@ -139,13 +141,13 @@ func (m *InlineListModel[T]) View() string {
       var itemStyle, prefixStyle, suffixStyle lg.Style
 
       if m.selectable && &m.items[i] == m.selected {
-         itemStyle   = m.selectedItemStyle
-         prefixStyle = m.selectedPrefixStyle
-         suffixStyle = m.selectedSuffixStyle
+         itemStyle   = m.Styles.SelectedItem
+         prefixStyle = m.Styles.SelectedPrefix
+         suffixStyle = m.Styles.SelectedSuffix
       } else {
-         itemStyle   = m.itemStyle
-         prefixStyle = m.prefixStyle
-         suffixStyle = m.suffixStyle
+         itemStyle   = m.Styles.Item
+         prefixStyle = m.Styles.Prefix
+         suffixStyle = m.Styles.Suffix
       }
 
       if m.renderPrefix != nil {
@@ -159,10 +161,10 @@ func (m *InlineListModel[T]) View() string {
       }
 
       if i < len(m.items)-1 {
-         sb.WriteString(m.seperatorStyle.Render(m.separator))
+         sb.WriteString(m.Styles.Seperator.Render(m.separator))
       }
    }
 
-   return m.style.Render(sb.String())
+   return m.Styles.List.Render(sb.String())
 }
 
