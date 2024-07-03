@@ -54,7 +54,7 @@ type InlineListModel[T any] struct {
    selected *T
 
    // Whether the list has focus, which will enable or disable keybindings, possibly change styles, etc.
-   focussed bool
+   Focussed bool
 
    // Customisable keybindings
    KeyMap struct {
@@ -116,8 +116,8 @@ func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
 
 // Update updates the InlineListModel; part of the bubbletea Model interface.
 func (m *InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
-   m.KeyMap.Next.SetEnabled(m.focussed)
-   m.KeyMap.Prev.SetEnabled(m.focussed)
+   m.KeyMap.Next.SetEnabled(m.Focussed)
+   m.KeyMap.Prev.SetEnabled(m.Focussed)
 
    switch msg := msg.(type) {
       case bt.KeyMsg:
@@ -153,7 +153,7 @@ func (m *InlineListModel[T]) View() string {
    var sb strings.Builder
 
    var styles InlineListStyles
-   if m.focussed {
+   if m.Focussed {
       styles = m.Styles.Focussed
    } else {
       styles = m.Styles.Unfocussed
