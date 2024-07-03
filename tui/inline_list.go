@@ -14,9 +14,11 @@ import (
 // TODO: add interface requirement for generic type T
 type InlineListModel[T any] struct {
    items []*T
+
    prefix string
    suffix string
    separator string
+
    selectable bool
    selected int
 
