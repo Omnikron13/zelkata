@@ -11,6 +11,15 @@ import (
 )
 
 
+// InlineListItemStyles is a type grouping lipgloss styles for a list item and its prefix and suffix, to facilitate
+// applying a variety of different styles for different states of the list item (e.g. selected, focussed, etc.)
+type InlineListItemStyles struct {
+   Main lg.Style
+   Prefix lg.Style
+   Suffix lg.Style
+}
+
+
 // InlineListModel is a widget that displays a list of items that flow horizontally as a paragraph, joined by a
 // separator, with optional prefix and/or suffix for each item. Additionally if suooorts selecting items with a
 // 'curosr'.
@@ -45,16 +54,8 @@ type InlineListModel[T any] struct {
    Styles struct {
       List lg.Style
       Item struct {
-         Normal struct {
-            Main lg.Style
-            Prefix lg.Style
-            Suffix lg.Style
-         }
-         Selected struct {
-            Main lg.Style
-            Prefix lg.Style
-            Suffix lg.Style
-         }
+         Normal InlineListItemStyles
+         Selected InlineListItemStyles
       }
       Seperator lg.Style
    }
