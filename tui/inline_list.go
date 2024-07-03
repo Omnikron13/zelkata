@@ -27,10 +27,9 @@ type InlineListModel[T any] struct {
    // Seperator that will be rendered between items
    separator string
 
-   // Whether the list can take focus to allow selecting items, the index of the selected item if so, and a pointer to
-   // the selected item.
+   // Whether the list can take focus to allow selecting items, and a pointer to the selected item (or nil if no item
+   // is cyrrently selected).
    selectable bool
-   selectedIndex int
    selected *T
 
    // Whether the list has focus, which will enable or disable keybindings, possibly change styles, etc.
@@ -82,9 +81,6 @@ func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
       m.renderItem = func (item T) string { return fmt.Sprintf("%v", item) }
    }
 
-   // Default the selected index to -1 rather than the default 0 value for int, as 0 is a valid index.
-   m.selectedIndex = -1
-
    m.nextKey = key.NewBinding(
       key.WithKeys("right", "l"),
       key.WithHelp("󰜶 /l", "focus next item"),
@@ -112,17 +108,19 @@ func (m *InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
                return
          }
       if m.selectable {
+         i := m.findIndex(m.selected)
          switch {
             case key.Matches(msg, m.nextKey):
-               if m.selectedIndex < len(m.items)-1 {
-                  m.selectedIndex++
+               if i < len(m.items)-1 {
+                  m.selected = &m.items[i+1]
                }
             case key.Matches(msg, m.prevKey):
-               if m.selectedIndex > 0 {
-                  m.selectedIndex--
+               if i > 0 {
+                  m.selected = &m.items[i-1]
+               } else if i < 0 {
+                  m.selected = &m.items[len(m.items)-1]
                }
          }
-         m.selected = &m.items[m.selectedIndex]
       }
    }
 
@@ -138,7 +136,7 @@ func (m *InlineListModel[T]) View() string {
    for i, item := range m.items {
       var itemStyle, prefixStyle, suffixStyle lg.Style
 
-      if m.selectable && i == m.selectedIndex {
+      if m.selectable && &m.items[i] == m.selected {
          itemStyle   = m.selectedItemStyle
          prefixStyle = m.selectedPrefixStyle
          suffixStyle = m.selectedSuffixStyle
