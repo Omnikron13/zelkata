@@ -2,6 +2,8 @@ package tui
 
 import (
    . "cmp"
+   "fmt"
+   "strings"
 
    bt "github.com/charmbracelet/bubbletea"
    lg "github.com/charmbracelet/lipgloss"
@@ -59,8 +61,25 @@ func (m *InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
 
 
 // View renders the InlineListModel; part of the bubbletea Model interface.
-   // TODO: actually render the list
-   return ""
 func (m *InlineListModel[T]) View() string {
+   var sb strings.Builder
+
+   for i, item := range m.items {
+      if m.selectable && i == m.selected {
+         sb.WriteString(m.selectedPrefixStyle.Render(m.prefix))
+         sb.WriteString(m.selectedItemStyle.Render(fmt.Sprintf("%v", item)))
+         sb.WriteString(m.selectedSuffixStyle.Render(m.suffix))
+      } else {
+         sb.WriteString(m.prefixStyle.String())
+         sb.WriteString(m.itemStyle.Render(fmt.Sprintf("%v", item)))
+         sb.WriteString(m.suffixStyle.String())
+      }
+
+      if i < len(m.items)-1 {
+         sb.WriteString(m.seperatorStyle.Render(m.separator))
+      }
+   }
+
+   return m.style.Render(sb.String())
 }
 
