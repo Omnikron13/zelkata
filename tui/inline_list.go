@@ -31,6 +31,9 @@ type InlineListModel[T any] struct {
    selectable bool
    selected int
 
+   // Whether the list has focus, which will enable or disable keybindings, possibly change styles, etc.
+   focussed bool
+
    // Customisable keybindings
    nextKey key.Binding
    prevKey key.Binding
@@ -71,6 +74,9 @@ func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
 
 // Update updates the InlineListModel; part of the bubbletea Model interface.
 func (m *InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
+   m.nextKey.SetEnabled(m.focussed)
+   m.prevKey.SetEnabled(m.focussed)
+
    switch msg := msg.(type) {
       case bt.KeyMsg:
          switch msg.String() {
