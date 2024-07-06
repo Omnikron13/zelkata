@@ -37,7 +37,7 @@ type InlineListStyles struct {
 // 'curosr'.
 // TODO: add interface requirement for generic type T
 type InlineListModel[T any] struct {
-   items []T
+   Items []T
 
    // These functions control how an item of type T should be rendered, with optional prefix and suffix which can have
    // their own styles, and excluded from any filtering, sorting, etc. of the list.
@@ -50,7 +50,7 @@ type InlineListModel[T any] struct {
 
    // Whether the list can take focus to allow selecting items, and a pointer to the selected item (or nil if no item
    // is cyrrently selected).
-   selectable bool
+   Selectable bool
    selected *T
 
    // Whether the list has focus, which will enable or disable keybindings, possibly change styles, etc.
@@ -73,8 +73,8 @@ type InlineListModel[T any] struct {
 // findIndex returns the index in the (displayed) list of the given item, or -1 if not found.
 // This is intended to keep track of the selected item if/when the list is changed, e.g. by filtering, sorting, etc.
 func (m *InlineListModel[T]) findIndex(item *T) int {
-   for i := range m.items {
-      if &m.items[i] == item {
+   for i := range m.Items {
+      if &m.Items[i] == item {
          return i
       }
    }
@@ -85,7 +85,7 @@ func (m *InlineListModel[T]) findIndex(item *T) int {
 // GetSelected returns a pointer to the selected item, or nil if nothing is selected (yet?), the selected item is now
 // gone (e.g. if the list has been filtered), or the list is not flagged as selectable in the first place.
 func (m *InlineListModel[T]) GetSelected() *T {
-   if !m.selectable || m.findIndex(m.selected) < 0 {
+   if !m.Selectable || m.findIndex(m.selected) < 0 {
       return nil
    }
    return m.selected
@@ -121,18 +121,18 @@ func (m *InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
 
    switch msg := msg.(type) {
       case bt.KeyMsg:
-         if m.selectable {
+         if m.Selectable {
             i := m.findIndex(m.selected)
             switch {
                case key.Matches(msg, m.KeyMap.Next):
-                  if i < len(m.items)-1 {
-                     m.selected = &m.items[i+1]
+                  if i < len(m.Items)-1 {
+                     m.selected = &m.Items[i+1]
                   }
                case key.Matches(msg, m.KeyMap.Prev):
                   if i > 0 {
-                     m.selected = &m.items[i-1]
+                     m.selected = &m.Items[i-1]
                   } else if i < 0 {
-                     m.selected = &m.items[len(m.items)-1]
+                     m.selected = &m.Items[len(m.Items)-1]
                   }
             }
          }
@@ -154,10 +154,10 @@ func (m *InlineListModel[T]) View() string {
       styles = m.Styles.Unfocussed
    }
 
-   for i, item := range m.items {
+   for i, item := range m.Items {
       var itemStyles InlineListItemStyles
 
-      if m.selectable && &m.items[i] == m.selected {
+      if m.Selectable && &m.Items[i] == m.selected {
          itemStyles = styles.Item.Selected
       } else {
          itemStyles = styles.Item.Normal
@@ -173,7 +173,7 @@ func (m *InlineListModel[T]) View() string {
          sb.WriteString(itemStyles.Suffix.Render(m.renderSuffix(item)))
       }
 
-      if i < len(m.items)-1 {
+      if i < len(m.Items)-1 {
          sb.WriteString(styles.Seperator.Render(m.separator))
       }
    }
