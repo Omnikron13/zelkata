@@ -41,9 +41,9 @@ type InlineListModel[T any] struct {
 
    // These functions control how an item of type T should be rendered, with optional prefix and suffix which can have
    // their own styles, and excluded from any filtering, sorting, etc. of the list.
-   renderItem func(T) string
-   renderPrefix func(T) string
-   renderSuffix func(T) string
+   RenderItem func(T) string
+   RenderPrefix func(T) string
+   RenderSuffix func(T) string
 
    // Seperator that will be rendered between items
    separator string
@@ -96,8 +96,8 @@ func (m *InlineListModel[T]) GetSelected() *T {
 func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
    m.separator = Or(m.separator, ", ")
 
-   if m.renderItem == nil {
-      m.renderItem = func (item T) string { return fmt.Sprintf("%v", item) }
+   if m.RenderItem == nil {
+      m.RenderItem = func (item T) string { return fmt.Sprintf("%v", item) }
    }
 
    m.KeyMap.Next = key.NewBinding(
@@ -163,14 +163,14 @@ func (m *InlineListModel[T]) View() string {
          itemStyles = styles.Item.Normal
       }
 
-      if m.renderPrefix != nil {
-         sb.WriteString(itemStyles.Prefix.Render(m.renderPrefix(item)))
+      if m.RenderPrefix != nil {
+         sb.WriteString(itemStyles.Prefix.Render(m.RenderPrefix(item)))
       }
 
-      sb.WriteString(itemStyles.Main.Render(m.renderItem(item)))
+      sb.WriteString(itemStyles.Main.Render(m.RenderItem(item)))
 
-      if m.renderSuffix != nil {
-         sb.WriteString(itemStyles.Suffix.Render(m.renderSuffix(item)))
+      if m.RenderSuffix != nil {
+         sb.WriteString(itemStyles.Suffix.Render(m.RenderSuffix(item)))
       }
 
       if i < len(m.Items)-1 {
