@@ -4,6 +4,7 @@ import (
    . "cmp"
    "fmt"
    "strings"
+   "unicode/utf8"
 
    bt "github.com/charmbracelet/bubbletea"
    lg "github.com/charmbracelet/lipgloss"
@@ -114,6 +115,32 @@ func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
 }
 
 
+// itemToString converts an item of type T to a string, using RenderPrefix(), RenderItem(), and RenderSuffix()
+// functions (if set), returning a styled string and the unstyled rune length.
+func (m *InlineListModel[T]) itemToString(item *T, style InlineListItemStyles) (string, int) {
+   var sb strings.Builder
+   var n int
+
+   if m.RenderPrefix != nil {
+      s := m.RenderPrefix(*item)
+      n += utf8.RuneCountInString(s)
+      sb.WriteString(style.Prefix.Render(s))
+   }
+
+   s := m.RenderItem(*item)
+   n += utf8.RuneCountInString(s)
+   sb.WriteString(style.Main.Render(s))
+
+   if m.RenderSuffix != nil {
+      s := m.RenderSuffix(*item)
+      n += utf8.RuneCountInString(s)
+      sb.WriteString(style.Suffix.Render(s))
+   }
+
+   return sb.String(), n
+}
+
+
 // Update updates the InlineListModel; part of the bubbletea Model interface.
 func (m *InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
    m.KeyMap.Next.SetEnabled(m.Focussed)
@@ -163,15 +190,8 @@ func (m *InlineListModel[T]) View() string {
          itemStyles = styles.Item.Normal
       }
 
-      if m.RenderPrefix != nil {
-         sb.WriteString(itemStyles.Prefix.Render(m.RenderPrefix(item)))
-      }
-
-      sb.WriteString(itemStyles.Main.Render(m.RenderItem(item)))
-
-      if m.RenderSuffix != nil {
-         sb.WriteString(itemStyles.Suffix.Render(m.RenderSuffix(item)))
-      }
+      s, _ := m.itemToString(&item, itemStyles)
+      sb.WriteString(s)
 
       if i < len(m.Items)-1 {
          sb.WriteString(styles.Seperator.Render(m.separator))
