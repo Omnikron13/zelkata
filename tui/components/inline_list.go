@@ -33,12 +33,25 @@ type InlineListStyles struct {
 }
 
 
+// inlineListCachedItem is a struct that holds _unstyled_ rendered strings for the prefix, item, and suffix of an item,
+// and the _styled_ rendered string.
+type inlineListCachedItem struct {
+   suffix, main, prefix, focussedNormal, unfocussedNormal, focussedSelected, unfocussedSelected string
+}
+
+
 // InlineListModel is a widget that displays a list of items that flow horizontally as a paragraph, joined by a
 // separator, with optional prefix and/or suffix for each item. Additionally if supports selecting items with a
 // 'cursor'.
 // TODO: add interface requirement for generic type T
 type InlineListModel[T any] struct {
    Items []T
+
+   // itemRenderCache is a cache of the strings the render functions return, operating on the assumption that they are
+   // supposed to always return the same string for a given item (i.e. pure functions).
+   // TODO: add a method to explicitly rebuild the cache for situations where the render functions are not pure.
+   itemRenderCache []inlineListCachedItem
+   itemRenderCacheChannel chan *inlineListCachedItem
 
    // These functions control how an item of type T should be rendered, with optional prefix and suffix which can have
    // their own styles, and excluded from any filtering, sorting, etc. of the list.
@@ -100,6 +113,48 @@ func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
    if m.RenderItem == nil {
       m.RenderItem = func (item T) string { return fmt.Sprintf("%v", item) }
    }
+
+   m.itemRenderCache = make([]inlineListCachedItem, 0, len(m.Items))
+   m.itemRenderCacheChannel = make(chan *inlineListCachedItem, len(m.Items))
+   go func() {
+      for _, i := range m.Items {
+         c := inlineListCachedItem {
+            main: m.RenderItem(i),
+         }
+         if m.RenderPrefix != nil {
+            c.prefix = m.RenderPrefix(i)
+         }
+         if m.RenderSuffix != nil {
+            c.suffix = m.RenderSuffix(i)
+         }
+         c.unfocussedNormal = fmt.Sprintf(
+            "%s%s%s",
+            m.Styles.Unfocussed.Item.Normal.Prefix.Render(c.prefix),
+            m.Styles.Unfocussed.Item.Normal.Main.Render(c.main),
+            m.Styles.Unfocussed.Item.Normal.Suffix.Render(c.suffix),
+         )
+         c.focussedNormal = fmt.Sprintf(
+            "%s%s%s",
+            m.Styles.Focussed.Item.Normal.Prefix.Render(c.prefix),
+            m.Styles.Focussed.Item.Normal.Main.Render(c.main),
+            m.Styles.Focussed.Item.Normal.Suffix.Render(c.suffix),
+         )
+         c.unfocussedSelected = fmt.Sprintf(
+            "%s%s%s",
+            m.Styles.Unfocussed.Item.Selected.Prefix.Render(c.prefix),
+            m.Styles.Unfocussed.Item.Selected.Main.Render(c.main),
+            m.Styles.Unfocussed.Item.Selected.Suffix.Render(c.suffix),
+         )
+         c.focussedSelected = fmt.Sprintf(
+            "%s%s%s",
+            m.Styles.Focussed.Item.Selected.Prefix.Render(c.prefix),
+            m.Styles.Focussed.Item.Selected.Main.Render(c.main),
+            m.Styles.Focussed.Item.Selected.Suffix.Render(c.suffix),
+         )
+         m.itemRenderCacheChannel <- &c
+      }
+      close(m.itemRenderCacheChannel)
+   }()
 
    m.KeyMap.Next = key.NewBinding(
       key.WithKeys("right", "l"),
@@ -172,6 +227,10 @@ func (m *InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
 
 // View renders the InlineListModel; part of the bubbletea Model interface.
 func (m *InlineListModel[T]) View() string {
+   for c := range m.itemRenderCacheChannel {
+      m.itemRenderCache = append(m.itemRenderCache, *c)
+   }
+
    var sb strings.Builder
 
    var styles InlineListStyles
@@ -181,17 +240,20 @@ func (m *InlineListModel[T]) View() string {
       styles = m.Styles.Unfocussed
    }
 
-   for i, item := range m.Items {
-      var itemStyles InlineListItemStyles
-
+   for i, c := range m.itemRenderCache {
       if m.Selectable && &m.Items[i] == m.selected {
-         itemStyles = styles.Item.Selected
+         if m.Focussed {
+            sb.WriteString(c.focussedSelected)
+         } else {
+            sb.WriteString(c.unfocussedSelected)
+         }
       } else {
-         itemStyles = styles.Item.Normal
+         if m.Focussed {
+            sb.WriteString(c.focussedNormal)
+         } else {
+            sb.WriteString(c.unfocussedNormal)
+         }
       }
-
-      s, _ := m.itemToString(&item, itemStyles)
-      sb.WriteString(s)
 
       if i < len(m.Items)-1 {
          sb.WriteString(styles.Seperator.Render(m.separator))
