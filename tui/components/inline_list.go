@@ -33,8 +33,8 @@ type InlineListStyles struct {
 
 
 // InlineListModel is a widget that displays a list of items that flow horizontally as a paragraph, joined by a
-// separator, with optional prefix and/or suffix for each item. Additionally if suooorts selecting items with a
-// 'curosr'.
+// separator, with optional prefix and/or suffix for each item. Additionally if supports selecting items with a
+// 'cursor'.
 // TODO: add interface requirement for generic type T
 type InlineListModel[T any] struct {
    Items []T
@@ -45,11 +45,11 @@ type InlineListModel[T any] struct {
    RenderPrefix func(T) string
    RenderSuffix func(T) string
 
-   // Seperator that will be rendered between items
+   // Separator that will be rendered between items
    separator string
 
    // Whether the list can take focus to allow selecting items, and a pointer to the selected item (or nil if no item
-   // is cyrrently selected).
+   // is currently selected).
    Selectable bool
    selected *T
 
