@@ -1,4 +1,4 @@
-package components
+package inlinelist
 
 import (
    . "cmp"
