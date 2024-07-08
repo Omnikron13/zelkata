@@ -117,15 +117,16 @@ func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
    m.itemRenderCache = make([]inlineListCachedItem, 0, len(m.Items))
    m.itemRenderCacheChannel = make(chan *inlineListCachedItem, len(m.Items))
    go func() {
-      for _, i := range m.Items {
          c := inlineListCachedItem {
-            main: m.RenderItem(i),
+      for i := range m.Items {
+         item := &m.Items[i]
+            main: m.RenderItem(*item),
          }
          if m.RenderPrefix != nil {
-            c.prefix = m.RenderPrefix(i)
+            c.prefix = m.RenderPrefix(*item)
          }
          if m.RenderSuffix != nil {
-            c.suffix = m.RenderSuffix(i)
+            c.suffix = m.RenderSuffix(*item)
          }
          c.unfocussedNormal = fmt.Sprintf(
             "%s%s%s",
