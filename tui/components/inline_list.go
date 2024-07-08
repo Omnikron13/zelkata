@@ -35,7 +35,8 @@ type InlineListStyles struct {
 
 // inlineListCachedItem is a struct that holds _unstyled_ rendered strings for the prefix, item, and suffix of an item,
 // and the _styled_ rendered string.
-type inlineListCachedItem struct {
+type inlineListCachedItem[T any] struct {
+   item *T
    suffix, main, prefix, focussedNormal, unfocussedNormal, focussedSelected, unfocussedSelected string
 }
 
@@ -50,8 +51,8 @@ type InlineListModel[T any] struct {
    // itemRenderCache is a cache of the strings the render functions return, operating on the assumption that they are
    // supposed to always return the same string for a given item (i.e. pure functions).
    // TODO: add a method to explicitly rebuild the cache for situations where the render functions are not pure.
-   itemRenderCache []inlineListCachedItem
-   itemRenderCacheChannel chan *inlineListCachedItem
+   itemRenderCache []inlineListCachedItem[T]
+   itemRenderCacheChannel chan *inlineListCachedItem[T]
 
    // These functions control how an item of type T should be rendered, with optional prefix and suffix which can have
    // their own styles, and excluded from any filtering, sorting, etc. of the list.
@@ -114,12 +115,13 @@ func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
       m.RenderItem = func (item T) string { return fmt.Sprintf("%v", item) }
    }
 
-   m.itemRenderCache = make([]inlineListCachedItem, 0, len(m.Items))
-   m.itemRenderCacheChannel = make(chan *inlineListCachedItem, len(m.Items))
+   m.itemRenderCache = make([]inlineListCachedItem[T], 0, len(m.Items))
+   m.itemRenderCacheChannel = make(chan *inlineListCachedItem[T], len(m.Items))
    go func() {
-         c := inlineListCachedItem {
       for i := range m.Items {
          item := &m.Items[i]
+         c := inlineListCachedItem[T] {
+            item: item,
             main: m.RenderItem(*item),
          }
          if m.RenderPrefix != nil {
@@ -242,7 +244,7 @@ func (m *InlineListModel[T]) View() string {
    }
 
    for i, c := range m.itemRenderCache {
-      if m.Selectable && &m.Items[i] == m.selected {
+      if m.Selectable && c.item == m.selected {
          if m.Focussed {
             sb.WriteString(c.focussedSelected)
          } else {
