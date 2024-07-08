@@ -12,47 +12,47 @@ import (
 )
 
 
-// InlineListItemStyles is a type grouping lipgloss styles for a list item and its prefix and suffix, to facilitate
+// ItemStyles is a type grouping lipgloss styles for a list item and its prefix and suffix, to facilitate
 // applying a variety of different styles for different states of the list item (e.g. selected, focussed, etc.)
-type InlineListItemStyles struct {
+type ItemStyles struct {
    Main lg.Style
    Prefix lg.Style
    Suffix lg.Style
 }
 
 
-// InlineListStyles is a type grouping lipgloss styles for a list and its items, to facilitate applying different styles
+// Styles is a type grouping lipgloss styles for a list and its items, to facilitate applying different styles
 // to different states of the list (e.g. focussed, etc.)
-type InlineListStyles struct {
+type Styles struct {
    List lg.Style
    Item struct {
-      Normal InlineListItemStyles
-      Selected InlineListItemStyles
+      Normal ItemStyles
+      Selected ItemStyles
    }
    Seperator lg.Style
 }
 
 
-// inlineListCachedItem is a struct that holds _unstyled_ rendered strings for the prefix, item, and suffix of an item,
+// CachedItem is a struct that holds _unstyled_ rendered strings for the prefix, item, and suffix of an item,
 // and the _styled_ rendered string.
-type inlineListCachedItem[T any] struct {
+type CachedItem[T any] struct {
    item *T
    suffix, main, prefix, focussedNormal, unfocussedNormal, focussedSelected, unfocussedSelected string
 }
 
 
-// InlineListModel is a widget that displays a list of items that flow horizontally as a paragraph, joined by a
+// Model is a widget that displays a list of items that flow horizontally as a paragraph, joined by a
 // separator, with optional prefix and/or suffix for each item. Additionally if supports selecting items with a
 // 'cursor'.
 // TODO: add interface requirement for generic type T
-type InlineListModel[T any] struct {
+type Model[T any] struct {
    Items []T
 
    // itemRenderCache is a cache of the strings the render functions return, operating on the assumption that they are
    // supposed to always return the same string for a given item (i.e. pure functions).
    // TODO: add a method to explicitly rebuild the cache for situations where the render functions are not pure.
-   itemRenderCache []inlineListCachedItem[T]
-   itemRenderCacheChannel chan *inlineListCachedItem[T]
+   itemRenderCache []CachedItem[T]
+   itemRenderCacheChannel chan *CachedItem[T]
 
    // These functions control how an item of type T should be rendered, with optional prefix and suffix which can have
    // their own styles, and excluded from any filtering, sorting, etc. of the list.
@@ -79,15 +79,15 @@ type InlineListModel[T any] struct {
 
    // Customisable styling using lipgloss
    Styles struct {
-      Focussed InlineListStyles
-      Unfocussed InlineListStyles
+      Focussed Styles
+      Unfocussed Styles
    }
 }
 
 
 // findIndex returns the index in the (displayed) list of the given item, or -1 if not found.
 // This is intended to keep track of the selected item if/when the list is changed, e.g. by filtering, sorting, etc.
-func (m *InlineListModel[T]) findIndex(item *T) int {
+func (m *Model[T]) findIndex(item *T) int {
    for i := range m.Items {
       if &m.Items[i] == item {
          return i
@@ -99,7 +99,7 @@ func (m *InlineListModel[T]) findIndex(item *T) int {
 
 // GetSelected returns a pointer to the selected item, or nil if nothing is selected (yet?), the selected item is now
 // gone (e.g. if the list has been filtered), or the list is not flagged as selectable in the first place.
-func (m *InlineListModel[T]) GetSelected() *T {
+func (m *Model[T]) GetSelected() *T {
    if !m.Selectable || m.findIndex(m.selected) < 0 {
       return nil
    }
@@ -107,20 +107,20 @@ func (m *InlineListModel[T]) GetSelected() *T {
 }
 
 
-// Init initializes the InlineListModel; part of the bubbletea Model interface.
-func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
+// Init initializes the Model; part of the bubbletea Model interface.
+func (m *Model[T]) Init() (cmd bt.Cmd) {
    m.separator = Or(m.separator, ", ")
 
    if m.RenderItem == nil {
       m.RenderItem = func (item T) string { return fmt.Sprintf("%v", item) }
    }
 
-   m.itemRenderCache = make([]inlineListCachedItem[T], 0, len(m.Items))
-   m.itemRenderCacheChannel = make(chan *inlineListCachedItem[T], len(m.Items))
+   m.itemRenderCache = make([]CachedItem[T], 0, len(m.Items))
+   m.itemRenderCacheChannel = make(chan *CachedItem[T], len(m.Items))
    go func() {
       for i := range m.Items {
          item := &m.Items[i]
-         c := inlineListCachedItem[T] {
+         c := CachedItem[T] {
             item: item,
             main: m.RenderItem(*item),
          }
@@ -175,7 +175,7 @@ func (m *InlineListModel[T]) Init() (cmd bt.Cmd) {
 
 // itemToString converts an item of type T to a string, using RenderPrefix(), RenderItem(), and RenderSuffix()
 // functions (if set), returning a styled string and the unstyled rune length.
-func (m *InlineListModel[T]) itemToString(item *T, style InlineListItemStyles) (string, int) {
+func (m *Model[T]) itemToString(item *T, style ItemStyles) (string, int) {
    var sb strings.Builder
    var n int
 
@@ -199,8 +199,8 @@ func (m *InlineListModel[T]) itemToString(item *T, style InlineListItemStyles) (
 }
 
 
-// Update updates the InlineListModel; part of the bubbletea Model interface.
-func (m *InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
+// Update updates the Model; part of the bubbletea Model interface.
+func (m *Model[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
    m.KeyMap.Next.SetEnabled(m.Focussed)
    m.KeyMap.Prev.SetEnabled(m.Focussed)
 
@@ -228,15 +228,15 @@ func (m *InlineListModel[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
 }
 
 
-// View renders the InlineListModel; part of the bubbletea Model interface.
-func (m *InlineListModel[T]) View() string {
+// View renders the Model; part of the bubbletea Model interface.
+func (m *Model[T]) View() string {
    for c := range m.itemRenderCacheChannel {
       m.itemRenderCache = append(m.itemRenderCache, *c)
    }
 
    var sb strings.Builder
 
-   var styles InlineListStyles
+   var styles Styles
    if m.Focussed {
       styles = m.Styles.Focussed
    } else {
