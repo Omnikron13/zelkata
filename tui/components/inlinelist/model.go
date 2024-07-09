@@ -1,7 +1,6 @@
 package inlinelist
 
 import (
-   . "cmp"
    "fmt"
    "strings"
    "unicode/utf8"
@@ -94,6 +93,18 @@ func (m *Model[T]) findIndex(item *T) int {
 }
 
 
+// New creates a new Model with the given items and options.
+func New[T any](items ...T) (m Model[T]) {
+   m = Model[T] {
+      Items: items,
+      separator: ", ",
+      RenderItem: func (item T) string { return fmt.Sprintf("%v", item) },
+      KeyBindings: defaultKeyMap(),
+   }
+   return
+}
+
+
 // GetSelected returns a pointer to the selected item, or nil if nothing is selected (yet?), the selected item is now
 // gone (e.g. if the list has been filtered), or the list is not flagged as selectable in the first place.
 func (m *Model[T]) GetSelected() *T {
@@ -106,12 +117,6 @@ func (m *Model[T]) GetSelected() *T {
 
 // Init initializes the Model; part of the bubbletea Model interface.
 func (m *Model[T]) Init() (cmd bt.Cmd) {
-   m.separator = Or(m.separator, ", ")
-
-   if m.RenderItem == nil {
-      m.RenderItem = func (item T) string { return fmt.Sprintf("%v", item) }
-   }
-
    m.itemRenderCache = make([]CachedItem[T], 0, len(m.Items))
    m.itemRenderCacheChannel = make(chan *CachedItem[T], len(m.Items))
    go func() {
