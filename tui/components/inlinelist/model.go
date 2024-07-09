@@ -72,10 +72,7 @@ type Model[T any] struct {
    Focussed bool
 
    // Customisable keybindings
-   KeyMap struct {
-      Next key.Binding
-      Prev key.Binding
-   }
+   KeyBindings KeyMap
 
    // Customisable styling using lipgloss
    Styles struct {
@@ -159,16 +156,6 @@ func (m *Model[T]) Init() (cmd bt.Cmd) {
       close(m.itemRenderCacheChannel)
    }()
 
-   m.KeyMap.Next = key.NewBinding(
-      key.WithKeys("right", "l"),
-      key.WithHelp("󰜶 /l", "focus next item"),
-   )
-
-   m.KeyMap.Prev = key.NewBinding(
-      key.WithKeys("left", "h"),
-      key.WithHelp("󰜳 /h", "focus previous item"),
-   )
-
    return
 }
 
@@ -201,19 +188,19 @@ func (m *Model[T]) itemToString(item *T, style ItemStyles) (string, int) {
 
 // Update updates the Model; part of the bubbletea Model interface.
 func (m *Model[T]) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
-   m.KeyMap.Next.SetEnabled(m.Focussed)
-   m.KeyMap.Prev.SetEnabled(m.Focussed)
+   m.KeyBindings.Next.SetEnabled(m.Focussed)
+   m.KeyBindings.Prev.SetEnabled(m.Focussed)
 
    switch msg := msg.(type) {
       case bt.KeyMsg:
          if m.Selectable {
             i := m.findIndex(m.selected)
             switch {
-               case key.Matches(msg, m.KeyMap.Next):
+               case key.Matches(msg, m.KeyBindings.Next):
                   if i < len(m.Items)-1 {
                      m.selected = &m.Items[i+1]
                   }
-               case key.Matches(msg, m.KeyMap.Prev):
+               case key.Matches(msg, m.KeyBindings.Prev):
                   if i > 0 {
                      m.selected = &m.Items[i-1]
                   } else if i < 0 {
