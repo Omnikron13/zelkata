@@ -62,13 +62,6 @@ func (m *TagsListModel) Init() (cmd bt.Cmd) {
 // updated model and any (further) commands to be executed.
 func (m *TagsListModel) Update(msg bt.Msg) (model bt.Model, cmd bt.Cmd) {
    switch msg := msg.(type) {
-      case bt.KeyMsg:
-         switch msg.String() {
-            case "ctrl+c":
-               cmd = bt.Quit
-               return
-         }
-
       case bt.WindowSizeMsg:
          _, v := m.style.GetFrameSize()
          m.List.SetSize(40, msg.Height-v)
