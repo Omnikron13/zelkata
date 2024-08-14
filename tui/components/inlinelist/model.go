@@ -11,23 +11,25 @@ import (
 )
 
 
-// ItemStyles is a type grouping lipgloss styles for a list item and its prefix and suffix, to facilitate
+// ItemStyle is a type grouping lipgloss styles for a list item and its prefix and suffix, to facilitate
 // applying a variety of different styles for different states of the list item (e.g. selected, focussed, etc.)
-type ItemStyles struct {
+type ItemStyle struct {
    Main lg.Style
    Prefix lg.Style
    Suffix lg.Style
 }
 
+// ItemStyleStates is a type grouping ItemStyle structs for different states of a list item
+type ItemStyleStates struct {
+   Normal ItemStyle
+   Selected ItemStyle
+}
 
 // Styles is a type grouping lipgloss styles for a list and its items, to facilitate applying different styles
 // to different states of the list (e.g. focussed, etc.)
 type Styles struct {
    List lg.Style
-   Item struct {
-      Normal ItemStyles
-      Selected ItemStyles
-   }
+   Item ItemStyleStates
    Seperator lg.Style
 }
 
@@ -167,24 +169,24 @@ func (m *Model[T]) Init() (cmd bt.Cmd) {
 
 // itemToString converts an item of type T to a string, using RenderPrefix(), RenderItem(), and RenderSuffix()
 // functions (if set), returning a styled string and the unstyled rune length.
-func (m *Model[T]) itemToString(item *T, style ItemStyles) (string, int) {
+func (m *Model[T]) itemToString(item *T, style ItemStyleStates) (string, int) {
    var sb strings.Builder
    var n int
 
    if m.RenderPrefix != nil {
       s := m.RenderPrefix(*item)
       n += utf8.RuneCountInString(s)
-      sb.WriteString(style.Prefix.Render(s))
+      sb.WriteString(style.Normal.Prefix.Render(s))
    }
 
    s := m.RenderItem(*item)
    n += utf8.RuneCountInString(s)
-   sb.WriteString(style.Main.Render(s))
+   sb.WriteString(style.Normal.Main.Render(s))
 
    if m.RenderSuffix != nil {
       s := m.RenderSuffix(*item)
       n += utf8.RuneCountInString(s)
-      sb.WriteString(style.Suffix.Render(s))
+      sb.WriteString(style.Normal.Suffix.Render(s))
    }
 
    return sb.String(), n
